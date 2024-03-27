@@ -1,0 +1,69 @@
+package ar.edu.itba.paw.services;
+
+import ar.edu.itba.paw.model.User;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Optional;
+
+// Me permite testear mi UserService
+@RunWith(MockitoJUnitRunner.class)
+public class UserServiceImplTest {
+
+    private static final long USER_ID = 1;
+    private static final String USERNAME = "My user";
+
+    // Los Mocks hacen el constructor automaticamente (no necesito hacer un Before setup)
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    @Mock
+    private UserDao userDao;
+
+    @Test
+    public void testFindByIdNonExisting() {
+        // 1. Precondiciones (una sola)
+        Mockito.when(userDao.findById(Mockito.anyLong())).thenReturn(Optional.empty());
+
+        // 2. Ejecuta la class under test (una sola)
+        Optional<User> maybeUser = userService.findById(1);
+
+        // 3. Postcondiciones - assertions (todas las que sean necesarias)
+        Assert.assertNotNull(maybeUser);
+        Assert.assertFalse(maybeUser.isPresent());
+        Assert.assertEquals(1, maybeUser.get().getUserId());
+    }
+
+    @Test
+    public void testFindByIdExistingUser() {
+        // 1. Precondiciones (una sola)
+        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, "username")));
+
+        // 2. Ejecuta la class under test (una sola)
+        Optional<User> maybeUser = userService.findById(USER_ID);
+
+        // 3. Postcondiciones - assertions (todas las que sean necesarias)
+        Assert.assertNotNull(maybeUser);
+        Assert.assertFalse(maybeUser.isPresent());
+        Assert.assertEquals(USER_ID, maybeUser.get().getUserId());
+
+    }
+
+    @Test
+    public void testCreate() {
+        // 1. Precondiciones (una sola)
+        Mockito.when(userDao.create(Mockito.eq(USERNAME))).thenReturn(new User(USER_ID, USERNAME ));
+
+        // 2. Ejecuta la class under test (una sola)
+        User user = userService.create(USERNAME);
+
+        // 3. Postcondiciones - assertions (todas las que sean necesarias)
+        Assert.assertNotNull(user);
+        Assert.assertEquals(USERNAME, user.getUsername());
+    }
+}

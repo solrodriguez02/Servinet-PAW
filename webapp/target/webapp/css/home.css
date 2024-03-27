@@ -1,0 +1,39 @@
+
+.services-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-box {
+    border-radius: 15px;
+    width: 95%;
+    height: 180px;
+    margin-bottom: 25px;
+    padding: 15px;
+    box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
+}
+
+.service-data-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.service-img-container {
+    height: 100%;
+}
+
+.service-img {
+    border-radius: 15px;
+}
+
+.service-info {
+    margin: 20px;
+}
+
+.service-text {
+    text-decoration: none;
+    color: black;
+}
