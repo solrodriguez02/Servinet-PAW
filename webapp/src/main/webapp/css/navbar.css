@@ -1,0 +1,23 @@
+.nav-bar {
+    width: 75%;
+    display: flex;
+    align-items: center;
+    margin: 30px 50px;
+}
+
+.nav-items {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: black;
+    margin-left: 20px;
+}
+
+.logo-img-container {
+    height: 40px;
+    width: 150px;
+}
