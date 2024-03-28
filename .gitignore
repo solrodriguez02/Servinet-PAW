@@ -7,6 +7,9 @@
 node_modules/
 dist/
 
+
+
+
 # Compiled Java class files
 *.class
 
@@ -21,7 +24,9 @@ dist/
 
 # Maven
 target/
-dist/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
 # JetBrains IDE
 .idea/
