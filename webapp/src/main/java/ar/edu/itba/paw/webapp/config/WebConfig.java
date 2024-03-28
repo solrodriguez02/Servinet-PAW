@@ -26,7 +26,7 @@ import javax.sql.DataSource;
 })
 public class WebConfig extends WebMvcConfigurerAdapter {
 
-    @Value("classpath:sql/schema.sql")
+    @Value("classpath:schema.sql")
     private Resource schemaSql;
 
     @Bean
@@ -39,8 +39,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
         return viewResolver;
     }
-
-    /*
 
     @Bean
     public DataSource dataSource() {
@@ -66,8 +64,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return populator;
     }
 
-
-     */
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

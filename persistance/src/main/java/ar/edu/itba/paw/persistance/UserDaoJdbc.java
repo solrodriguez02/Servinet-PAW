@@ -13,8 +13,6 @@ import java.util.*;
 @Repository
 public class UserDaoJdbc implements UserDao {
 
-    /*
-
     private static final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getInt("userid") ,rs.getString("username"));
 
     private final JdbcTemplate jdbcTemplate;
@@ -44,8 +42,9 @@ public class UserDaoJdbc implements UserDao {
         return new User(generatedId.longValue(), username);
     }
 
-     */
 
+
+    /*
     @Override
     public User create(final String username) {
         return new User(1, "username");
@@ -59,5 +58,7 @@ public class UserDaoJdbc implements UserDao {
         User u = new User(1, "sol");
         return Optional.of(u);
     }
+
+     */
 
 }
