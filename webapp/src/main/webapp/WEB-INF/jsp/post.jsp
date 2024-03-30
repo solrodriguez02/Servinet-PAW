@@ -7,7 +7,7 @@
     <title></title>
 </head>
 <body>
-    <c:url value="/crear" var="postUrl"/>
+    <c:url value="/datospersonales" var="postUrl"/>
     <div class="postForm page">
         <form action="${postUrl}" method="post" class="form">
 
@@ -15,7 +15,7 @@
 
             <label>
                 <p class="label">Nombre:</p>
-                <input type="text" class="input" name="nombre" placeholder="Elegi un nombre para tu servicio"/>
+                <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
             </label>
             <label>
                 <p class="label">Descripcion:</p>

@@ -57,12 +57,30 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crear")
-    public ModelAndView post(
-            @RequestParam(value = "nombre") final String name,
+    @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
+    public ModelAndView dataForm(
+            @RequestParam(value = "titulo") final String title,
             @RequestParam(value = "descripcion") final String description,
             @RequestParam(value = "ubicacion") final String location,
-            @RequestParam(value = "categoria") final String categoria
+            @RequestParam(value = "categoria") final String category
+    ) {
+        final ModelAndView mav = new ModelAndView("postPersonal");
+        mav.addObject("title", title);
+        mav.addObject("description", description);
+        mav.addObject("location", location);
+        mav.addObject("category", category);
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/crear")
+    public ModelAndView post(
+            @RequestParam(value = "titulo") final String title,
+            @RequestParam(value = "descripcion") final String description,
+            @RequestParam(value = "ubicacion") final String location,
+            @RequestParam(value = "categoria") final String category,
+            @RequestParam(value = "nombre") final String name,
+            @RequestParam(value = "apellido") final String apellido,
+            @RequestParam(value = "email") final String email
     ) {
         // Aca se debería crear el nuevo servicio
         return new ModelAndView("redirect:/misservicios");

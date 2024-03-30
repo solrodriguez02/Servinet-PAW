@@ -44,3 +44,7 @@ body {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+.transparent {
+    display: none;
+}
