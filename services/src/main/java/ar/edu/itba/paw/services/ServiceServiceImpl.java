@@ -1,7 +1,11 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.model.Categories;
+import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Optional;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
 
@@ -14,7 +18,22 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service findById(long id) {
+    public Optional<Service> findById(long id) {
         return serviceDao.findById(id);
+    }
+
+    @Override
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, PricingTypes pricing, int price, Boolean additionalCharges) {
+        return serviceDao.create(businessid, name, description, homeservice, location, category, pricing, price, additionalCharges);
+    }
+
+    @Override
+    public Service edit(long serviceid, String field, String newvalue) {
+        return serviceDao.edit(serviceid, field, newvalue);
+    }
+
+    @Override
+    public Boolean delete(long serviceid) {
+        return serviceDao.delete(serviceid);
     }
 }
