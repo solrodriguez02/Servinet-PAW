@@ -39,3 +39,20 @@ END;
 
 
 CREATE TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
+
+CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoría', 'Salud');
+CREATE TYPE pricingType AS ENUM ('Per hour', 'Per total', 'Budget', 'TBD');
+
+CREATE TABLE IF NOT EXISTS services (
+    id SERIAL PRIMARY KEY,
+    businessid INT REFERENCES business(id) ON DELETE CASCADE,
+    servicename VARCHAR(255) NOT NULL,
+    servicedescription VARCHAR(255),
+    homeservice BOOLEAN,
+    location VARCHAR(255) NOT NULL,
+    category serviceCategory NOT NULL,
+    minimalduration INT,
+    pricingtype pricingType NOT NULL,
+    price VARCHAR(255),
+    additionalcharges BOOLEAN
+    );
