@@ -13,7 +13,9 @@ import java.util.*;
 @Repository
 public class UserDaoJdbc implements UserDao {
 
-    private static final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getInt("userid") ,rs.getString("username"));
+    private static final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getInt("userid") ,
+            rs.getString("username"), rs.getString("name"), rs.getString("surname"), rs.getString("email"),
+            rs.getString("telephone"), rs.getBoolean("isprovider"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -21,8 +23,8 @@ public class UserDaoJdbc implements UserDao {
     @Autowired
     public UserDaoJdbc(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
-        simpleJdbcInsert = new SimpleJdbcInsert(ds)
-                .withSchemaName("schema.sql");
+        simpleJdbcInsert = new SimpleJdbcInsert(ds).usingGeneratedKeyColumns("userid")
+                .withTableName("users");
     }
 
     @Override
@@ -34,11 +36,11 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(final String username) {
+    public User create(final String username,final String name, final String surname, final String email, final String telephone, final Boolean isProvider) {
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new User(generatedId.longValue(), username);
+        return new User(generatedId.longValue(), username , name, surname, email, telephone, isProvider);
     }
 
 
