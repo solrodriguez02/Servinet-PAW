@@ -1,6 +1,8 @@
-DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS services;
+DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS users;
+DROP TYPE serviceCategory;
+DROP TYPE pricingType;
 
 CREATE TABLE IF NOT EXISTS users (
     userid SERIAL PRIMARY KEY,
@@ -40,7 +42,7 @@ END;
 
 CREATE TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
 
-CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoría', 'Salud');
+CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud');
 CREATE TYPE pricingType AS ENUM ('Per hour', 'Per total', 'Budget', 'TBD');
 
 CREATE TABLE IF NOT EXISTS services (
