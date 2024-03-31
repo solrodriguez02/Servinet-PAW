@@ -22,6 +22,11 @@ import javax.sql.DataSource;
 public class UserDaoJdbcTest {
 
     private static final String USERNAME = "username";
+    private static final String NAME = "name";
+    private static final String SURNAME = "surname";
+    private static final String EMAIL = "email";
+    private static final String TELEPHONE = "telephone";
+
 
     @Autowired
     private UserDaoJdbc userDao;
@@ -42,7 +47,7 @@ public class UserDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userDao.create(USERNAME);
+        User user = userDao.create(USERNAME, NAME, SURNAME, EMAIL, TELEPHONE, false);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);

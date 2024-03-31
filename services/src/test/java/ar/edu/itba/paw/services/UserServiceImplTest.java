@@ -17,6 +17,11 @@ public class UserServiceImplTest {
 
     private static final long USER_ID = 1;
     private static final String USERNAME = "My user";
+    private static final String NAME = "My name";
+    private static final String SURNAME = "My surname";
+    private static final String EMAIL = "My email";
+    private static final String TELEPHONE = "My telephone";
+
 
     // Los Mocks hacen el constructor automaticamente (no necesito hacer un Before setup)
     @InjectMocks
@@ -42,7 +47,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindByIdExistingUser() {
         // 1. Precondiciones (una sola)
-        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, "username")));
+        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, USERNAME, NAME, SURNAME, EMAIL, TELEPHONE, false)));
 
         // 2. Ejecuta la class under test (una sola)
         Optional<User> maybeUser = userService.findById(USER_ID);
@@ -57,10 +62,11 @@ public class UserServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones (una sola)
-        Mockito.when(userDao.create(Mockito.eq(USERNAME))).thenReturn(new User(USER_ID, USERNAME ));
+        Mockito.when(userDao.create(Mockito.eq(USERNAME),
+                Mockito.eq(NAME),Mockito.eq(SURNAME), Mockito.eq(EMAIL),Mockito.eq(TELEPHONE),Mockito.eq(false))).thenReturn(new User(USER_ID, USERNAME, NAME, SURNAME, EMAIL, TELEPHONE, false));
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userService.create(USERNAME);
+        User user = userService.create(USERNAME,NAME,SURNAME,EMAIL,TELEPHONE);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);
