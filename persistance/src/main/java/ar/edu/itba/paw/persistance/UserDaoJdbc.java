@@ -34,6 +34,18 @@ public class UserDaoJdbc implements UserDao {
         final List<User> list = jdbcTemplate.query("SELECT * from users WHERE userid = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }
+    @Override
+    public void changeUsername(long userid,String value){
+        changeField("username",userid,value);
+    }
+    @Override
+    public void changeEmail(long userid,String value){
+        changeField("email",userid,value);
+    }
+
+    private void changeField(final String field,long userid,String value){//CONSULTAR: si se puede concatenar asi el field
+        jdbcTemplate.update(String.format("update users set  %s  = ? where userid = ? ", field),value,userid);//deberia ser seguro, pues field es un parametro que no viene del usuario
+    }
 
     @Override
     public User create(final String username, final String password,final String name,final String surname, final String email, final String telephone, final Boolean isProvider) {
