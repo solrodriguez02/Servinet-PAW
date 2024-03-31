@@ -4,7 +4,7 @@ public class UserNotFoundException extends RuntimeException{
     private static final long serialVersionUID = 676070613730583976L;
 
     //TODO: verificar si vale la pena unificar excepciones de "0 results" de consultas a la db
-    private static String  username;
+    private String  username;
     private static final String message = "The user with id: %s was not found";
 
 
