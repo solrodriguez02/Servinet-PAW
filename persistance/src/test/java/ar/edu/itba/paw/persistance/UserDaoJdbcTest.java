@@ -16,12 +16,13 @@ import javax.sql.DataSource;
 
 // Uso una base de datos provista por un tercero
 
-@Sql("classpath:schema.sql")
+@Sql("classpath:sql/schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class UserDaoJdbcTest {
 
     private static final String USERNAME = "username";
+    private static final String PASSWORD = "mepassword";
     private static final String NAME = "name";
     private static final String SURNAME = "surname";
     private static final String EMAIL = "email";
@@ -47,12 +48,27 @@ public class UserDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userDao.create(USERNAME, NAME, SURNAME, EMAIL, TELEPHONE, false);
+        User user = userDao.create(USERNAME, PASSWORD,NAME, SURNAME, EMAIL, TELEPHONE, false);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);
         Assert.assertEquals(USERNAME, user.getUsername());
-        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "user"));
+        Assert.assertEquals(NAME, user.getName());
+        Assert.assertEquals(SURNAME, user.getSurname());
+        Assert.assertEquals(EMAIL, user.getEmail());
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+    }
 
+    @Test
+    public void testChangeUsername() {//CONSULTAR: como testear funciones void
+        // 1. Precondiciones
+        jdbcTemplate.execute(String.format("INSERT INTO users (username, password, name, surname, email, telephone, isprovider) VALUES ('%s','%s','%s','%s','%s','%s',false)",USERNAME, PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE));
+
+        // 2. Ejecuta la class under test (una sola)
+        userDao.changeUsername(1,"newUsername");
+
+        // 3. Postcondiciones - assertions (todas las que sean necesarias)
+        Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
+        Assert.assertEquals("newUsername", userDao.findById(1).get().getUsername());
     }
 }
