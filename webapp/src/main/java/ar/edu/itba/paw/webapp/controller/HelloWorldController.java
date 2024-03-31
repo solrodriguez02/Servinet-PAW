@@ -90,7 +90,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
-        mav.addObject("service",service.findById(serviceId));
+        mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));
         return mav;
     }
 
