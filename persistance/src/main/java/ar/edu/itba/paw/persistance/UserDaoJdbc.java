@@ -22,8 +22,7 @@ public class UserDaoJdbc implements UserDao {
     public UserDaoJdbc(final DataSource ds) {
         jdbcTemplate = new JdbcTemplate(ds);
         simpleJdbcInsert = new SimpleJdbcInsert(ds)
-                .usingGeneratedKeyColumns("userid")
-                .withTableName("users");
+                .withSchemaName("schema.sql");
     }
 
     @Override
