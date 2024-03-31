@@ -2,18 +2,33 @@ package ar.edu.itba.paw.model;
 
 public class Service {
     private long id;
+    private long businessid;
     private String name;
     private String description;
+    private Boolean homeService;
     private String location;
-    private String category;
+    private Neighbourhoods neighbourhoodAvailable;
+    private int duration;
+    private PricingTypes pricing;
+    private String price;
+    private Categories category;
+    private Boolean additionalCharges;
 
     // Constructor
-    public Service(long id, String name, String description, String location, String category) {
+    public Service(long id, long businessid, String name, String description, Boolean homeService, String location, String neighbourhoodAvailable, String category, int duration, String pricingType, String price, Boolean additionalCharges) {
         this.id = id;
+        this.businessid = businessid;
         this.name = name;
         this.description = description;
+        this.homeService = homeService;
         this.location = location;
-        this.category = category;
+        this.neighbourhoodAvailable = Neighbourhoods.findByValue(neighbourhoodAvailable);
+        this.category = Categories.findByValue(category);
+        this.duration = duration;
+        this.pricing = PricingTypes.findByValue(pricingType);
+        this.price = price;
+        this.additionalCharges = additionalCharges;
+
     }
 
     // Getters and setters
@@ -50,12 +65,66 @@ public class Service {
     }
 
     public String getCategory() {
-        return category;
+        return category.getValue();
     }
 
     public void setCategory(String category) {
-        this.category = category;
+        this.category = Categories.findByValue(category);
     }
 
+    public Boolean getHomeService() {
+        return homeService;
+    }
 
+    public void setHomeService(Boolean homeService) {
+        this.homeService = homeService;
+    }
+
+    public void setBusinessid(long businessid) {
+        this.businessid = businessid;
+    }
+
+    public long getBusinessid() {
+        return businessid;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getNeighbourhoodAvailable() {
+        return neighbourhoodAvailable.getValue();
+    }
+
+    public void setNeighbourhoodAvailable(String neighbourhoodAvailable) {
+        this.neighbourhoodAvailable = Neighbourhoods.findByValue(neighbourhoodAvailable);
+    }
+
+    public String getPricing() {
+        return pricing.getValue();
+    }
+
+    public void setPricing(String pricing) {
+        this.pricing = PricingTypes.findByValue(pricing);
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public Boolean getAdditionalCharges() {
+        return additionalCharges;
+    }
+
+    public void setAdditionalCharges(Boolean additionalCharges) {
+        this.additionalCharges = additionalCharges;
+    }
 }
