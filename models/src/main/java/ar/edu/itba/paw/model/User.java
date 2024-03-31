@@ -3,6 +3,7 @@ package ar.edu.itba.paw.model;
 public class User {
     private String username;
     private long userId;
+    private String password;
     private String name;
     private String surname;
     private String email;
@@ -30,14 +31,18 @@ public class User {
         return isProvider;
     }
 
-    public User(long userId, String username, String name, String surname, String email, String telephone, Boolean isProvider) {
+    public User(long userId, String username,String password ,String name, String surname, String email, String telephone, Boolean isProvider) {
         this.username = username;
         this.userId = userId;
+        this.password=password;
         this.name = name;
         this.surname = surname;
         this.email = email;
         this.telephone = telephone;
         this.isProvider = isProvider;
+    }
+    public String getPassword() {
+        return password;
     }
 
     public long getUserId() {

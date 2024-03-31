@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface UserDao {
     // Data Access Object
     Optional<User> findById(long id);
-    User create(String username, String name, String surname, String email, String telephone, Boolean isProvider);
+    User create(String username, String name,String password ,String surname, String email, String telephone, Boolean isProvider);
 
 }
