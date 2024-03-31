@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ServiceService;
+import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -39,10 +40,10 @@ public class HelloWorldController {
         List<Service> serviceList = new ArrayList<>();
         if (category != null && !category.isEmpty()) {
             // Se debería crear un metodo que devuelva los servicios de la categoria recibida por parametro
-            serviceList.add(service.findById(10));
+            serviceList.add(service.findById(10).orElseThrow(ServiceNotFoundException::new));
         } else {
             for (int i = 1; i < 5; i++) {
-                serviceList.add(service.findById(i));
+                serviceList.add(service.findById(i).orElseThrow(ServiceNotFoundException::new));
             }
         }
         mav.addObject("services", serviceList);
