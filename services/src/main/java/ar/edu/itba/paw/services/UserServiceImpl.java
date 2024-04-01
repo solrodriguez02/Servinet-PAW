@@ -23,9 +23,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(final String username) {
-        return userDao.create(username);
+    public User create(final String username, final String password ,final String name, final String surname, final String email, final String telephone) {
+        return userDao.create(username, password,name, surname, email, telephone,false);
     }
 
+    @Override
+    public void changeUsername(long userid,String value){
+        userDao.changeUsername(userid,value);
+    }
+    @Override
+    public void changeEmail(long userid,String value){
+        userDao.changeEmail(userid,value);
+    }
 
 }
