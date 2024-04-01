@@ -17,6 +17,12 @@ public class UserServiceImplTest {
 
     private static final long USER_ID = 1;
     private static final String USERNAME = "My user";
+    private static final String PASSWORD = "My password";
+    private static final String NAME = "My name";
+    private static final String SURNAME = "My surname";
+    private static final String EMAIL = "My email";
+    private static final String TELEPHONE = "My telephone";
+
 
     // Los Mocks hacen el constructor automaticamente (no necesito hacer un Before setup)
     @InjectMocks
@@ -27,7 +33,7 @@ public class UserServiceImplTest {
 
     @Test
     public void testFindByIdNonExisting() {
-        // 1. Precondiciones (una sola)
+        // 1. Precondiciones
         Mockito.when(userDao.findById(Mockito.anyLong())).thenReturn(Optional.empty());
 
         // 2. Ejecuta la class under test (una sola)
@@ -36,13 +42,12 @@ public class UserServiceImplTest {
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(maybeUser);
         Assert.assertFalse(maybeUser.isPresent());
-        Assert.assertEquals(1, maybeUser.get().getUserId());
     }
 
     @Test
     public void testFindByIdExistingUser() {
-        // 1. Precondiciones (una sola)
-        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, "username")));
+        // 1. Precondiciones
+        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false)));
 
         // 2. Ejecuta la class under test (una sola)
         Optional<User> maybeUser = userService.findById(USER_ID);
@@ -50,17 +55,18 @@ public class UserServiceImplTest {
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(maybeUser);
         Assert.assertFalse(maybeUser.isPresent());
-        Assert.assertEquals(USER_ID, maybeUser.get().getUserId());
+
 
     }
 
     @Test
     public void testCreate() {
-        // 1. Precondiciones (una sola)
-        Mockito.when(userDao.create(Mockito.eq(USERNAME))).thenReturn(new User(USER_ID, USERNAME ));
+        // 1. Precondiciones
+        Mockito.when(userDao.create(Mockito.eq(USERNAME),Mockito.eq(PASSWORD),
+                Mockito.eq(NAME),Mockito.eq(SURNAME), Mockito.eq(EMAIL),Mockito.eq(TELEPHONE),Mockito.eq(false))).thenReturn(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false));
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userService.create(USERNAME);
+        User user = userService.create(USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);

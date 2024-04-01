@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 public class ServiceDaoJdbc implements ServiceDao {
     @Override
     public Service findById(long id) {
-
         return new Service(id, "Nombre del servicio", "Breve descripcion del servicio prestado", "Ubicacion", "Categoria");
     }
 }
