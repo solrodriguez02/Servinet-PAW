@@ -81,19 +81,23 @@ public class AppointmentDaoJdbcTest {
 
     @Test
     public void testConfirmAppointment(){
-        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        Appointment toConfirmAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        Appointment pendingAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
 
-        appointmentDao.confirmAppointment(appointment.getId());
+        appointmentDao.confirmAppointment(toConfirmAppointment.getId());
 
-        Appointment confirmedAppointment = appointmentDao.findById(appointment.getId()).get();
+        Appointment confirmedAppointment = appointmentDao.findById(toConfirmAppointment.getId()).get();
         Assert.assertTrue(confirmedAppointment.getConfirmed());
+        Assert.assertFalse(pendingAppointment.getConfirmed());
     }
 
     @Test
     public void testCancelAppointment(){
         Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        Appointment anotherAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
 
         appointmentDao.cancelAppointment(appointment.getId());
         Assert.assertFalse( appointmentDao.findById(appointment.getId()).isPresent());
+        Assert.assertTrue( appointmentDao.findById(anotherAppointment.getId()).isPresent());
     }
 }
