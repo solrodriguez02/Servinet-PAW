@@ -26,6 +26,11 @@ public class BusinessServiceImpl implements BusinessService{
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }
+
+    @Override
+    public void deleteBusiness(long businessid){
+        businessDao.deleteBusiness(businessid);
+    }
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         return businessDao.createBusiness(businessName,userId,telephone,email,location);

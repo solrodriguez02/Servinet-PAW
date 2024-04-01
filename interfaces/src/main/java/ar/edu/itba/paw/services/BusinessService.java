@@ -5,7 +5,10 @@ import ar.edu.itba.paw.model.Business;
 import java.util.Optional;
 
 public interface BusinessService {
+
     Optional<Business> findById(long id);
+
+    void deleteBusiness(long businessid);
 
     void changeBusinessEmail(long businessId, String value);
 

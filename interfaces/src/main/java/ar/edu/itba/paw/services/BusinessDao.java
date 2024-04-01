@@ -9,5 +9,7 @@ public interface BusinessDao {
 
      void changeBusinessEmail(long businessId, String value);
 
+     void deleteBusiness(long businessid);
+
      Business createBusiness(String businessName, long userId, String telephone, String email, String location);
 }

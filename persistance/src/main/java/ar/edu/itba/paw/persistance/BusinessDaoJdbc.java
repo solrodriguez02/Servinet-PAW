@@ -35,6 +35,10 @@ public class BusinessDaoJdbc implements BusinessDao {
         return list.stream().findFirst();
     }
 
+    @Override
+    public void deleteBusiness(long businessid) {
+        jdbcTemplate.update("delete from business where businessid = ?", businessid);
+    }
     private void changeField(final String field, long businessId, String value) {
         jdbcTemplate.update(String.format("update business set %s = ? where businessid = ?", field), value, businessId);
     }
