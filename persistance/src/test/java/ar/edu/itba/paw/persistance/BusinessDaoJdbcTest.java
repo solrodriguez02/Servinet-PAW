@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistance;
 
 
 import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.persistance.config.TestConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -52,6 +51,18 @@ public class BusinessDaoJdbcTest {
         Assert.assertNotNull(business);
         Assert.assertEquals(BUSINESS_NAME, business.getBusinessName());
         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate, "business"));
+    }
+
+    @Test
+    public void testDeleteBusiness(){
+        // 1. Precondiciones
+        jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
+        jdbcTemplate.execute(String.format("INSERT INTO business (businessid, businessname, userid, businessTelephone, businessEmail, businessLocation) VALUES (1,'%s', 1, '%s','%s','%s')",BUSINESS_NAME, TELEPHONE, EMAIL, LOCATION));
+
+        businessDaoJdbc.deleteBusiness(ID);
+
+        Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate, "business"));
+
     }
 
 }

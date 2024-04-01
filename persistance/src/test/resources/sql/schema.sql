@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS business(
-                                       id SERIAL PRIMARY KEY,
+                                       businessid SERIAL PRIMARY KEY,
                                        userid INT references users(userid) ON DELETE CASCADE,
                                        businessname VARCHAR(255),
                                        businessTelephone VARCHAR(255),
