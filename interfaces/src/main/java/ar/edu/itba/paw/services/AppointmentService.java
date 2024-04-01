@@ -9,7 +9,7 @@ public interface AppointmentService {
 
     Optional<Appointment> findById(long id);
 
-    Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, Boolean confirmed );
+    Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate);
 
     void confirmAppointment(long appointmentid);
 
