@@ -1,8 +1,8 @@
 DROP TABLE IF EXISTS services;
 DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS users;
-DROP TYPE serviceCategory;
-DROP TYPE pricingType;
+--DROP TYPE IF EXISTS serviceCategory;
+--DROP TYPE IF EXISTS pricingType;
 
 CREATE TABLE IF NOT EXISTS users (
     userid SERIAL PRIMARY KEY,
@@ -24,26 +24,8 @@ CREATE TABLE IF NOT EXISTS business(
   businessLocation VARCHAR(255)
 );
 
-CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '
-BEGIN
-    IF NEW.businessname IS NULL THEN
-        NEW.businessname := (SELECT username FROM users WHERE userid = NEW.userid);
-    END IF;
-    IF NEW.businessTelephone IS NULL THEN
-        NEW.businessTelephone := (SELECT telephone FROM users WHERE userid = NEW.userid);
-    END IF;
-    IF NEW.businessEmail IS NULL THEN
-        NEW.businessEmail := (SELECT email FROM users WHERE userid = NEW.userid);
-    END IF;
-    RETURN NEW;
-END;
-' LANGUAGE plpgsql;
-
-
-CREATE TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
-
-CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud');
-CREATE TYPE pricingType AS ENUM ('Per hour', 'Per total', 'Budget', 'TBD');
+--CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud');
+--CREATE TYPE pricingType AS ENUM ('Per hour', 'Per total', 'Budget', 'TBD');
 
 CREATE TABLE IF NOT EXISTS services (
     id SERIAL PRIMARY KEY,
@@ -52,9 +34,9 @@ CREATE TABLE IF NOT EXISTS services (
     servicedescription VARCHAR(255),
     homeservice BOOLEAN,
     location VARCHAR(255) NOT NULL,
-    category serviceCategory NOT NULL,
+    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
-    pricingtype pricingType NOT NULL,
+    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'TBD')),
     price VARCHAR(255),
     additionalcharges BOOLEAN
     );
