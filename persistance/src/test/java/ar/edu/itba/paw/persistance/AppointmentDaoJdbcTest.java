@@ -65,4 +65,22 @@ public class AppointmentDaoJdbcTest {
         Assert.assertEquals(SERVICEID,appointment.getServiceid());
         Assert.assertTrue(ENDDATE.isAfter(appointment.getStartDate()));
     }
+
+    @Test
+    public void testConfirmAppointment(){
+        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+
+        appointmentDao.confirmAppointment(appointment.getId());
+
+        Appointment confirmedAppointment = appointmentDao.findById(appointment.getId()).get();
+        Assert.assertTrue(confirmedAppointment.getConfirmed());
+    }
+
+    @Test
+    public void testCancelAppointment(){
+        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+
+        appointmentDao.cancelAppointment(appointment.getId());
+        Assert.assertFalse( appointmentDao.findById(appointment.getId()).isPresent());
+    }
 }

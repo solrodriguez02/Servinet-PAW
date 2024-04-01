@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.AppointmentDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,10 +13,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class AppointmentDaoJdbc implements AppointmentDao {
@@ -41,6 +39,8 @@ public class AppointmentDaoJdbc implements AppointmentDao {
 
     @Override
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate) {
+
+        // CLAVE USER, SERVICE y DATE => evito q vuelva a pedir = turno -> + comodo para el prof, pero no indispensable
         final Map<String, Object> appointmentData = new HashMap<>();
         appointmentData.put("serviceid", serviceid);
         appointmentData.put("userid", userid);
@@ -55,11 +55,17 @@ public class AppointmentDaoJdbc implements AppointmentDao {
 
     @Override
     public void confirmAppointment(long appointmentid) {
-
+        try {
+            jdbcTemplate.update("UPDATE appointments SET confirmed=TRUE WHERE appointmentid = ?", appointmentid);
+        } catch (DataAccessException e) {
+            throw new NoSuchElementException(); //AppointmentNotFoundException;
+        }
+        // service deberia modif elem (modelo) a true
     }
 
     @Override
     public void cancelAppointment(long appointmentid) {
-
+        //TODO: Falta excep
+        jdbcTemplate.update("DELETE FROM appointments WHERE appointmentid = ?", appointmentid);
     }
 }
