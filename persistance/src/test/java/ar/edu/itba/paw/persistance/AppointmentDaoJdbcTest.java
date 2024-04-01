@@ -57,6 +57,19 @@ public class AppointmentDaoJdbcTest {
     }
 
     @Test
+    public void testCreate2() {
+        // 1. Precondiciones (una sola)
+
+        // 2. Ejecuta la class under test (una sola)
+        Appointment a1 = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        Appointment a2 = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
+
+        // 3. Postcondiciones - assertions (todas las que sean necesarias)
+        Assert.assertEquals(2, JdbcTestUtils.countRowsInTable(jdbcTemplate, "appointments"));
+        Assert.assertTrue( a1.getId() < a2.getId());
+    }
+
+    @Test
     public void testFindById(){
         appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
 
