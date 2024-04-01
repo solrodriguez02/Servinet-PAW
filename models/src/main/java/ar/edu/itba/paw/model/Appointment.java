@@ -44,4 +44,10 @@ public class Appointment {
     public Boolean getConfirmed() {
         return confirmed;
     }
+
+    public void setEndDate(){}
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 }
