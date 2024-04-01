@@ -33,7 +33,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Boolean delete(long serviceid) {
-        return serviceDao.delete(serviceid);
+    public void delete(long serviceid) {
+        serviceDao.delete(serviceid);
     }
 }
