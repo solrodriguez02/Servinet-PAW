@@ -22,6 +22,9 @@ public class TestConfig {
     @Value("classpath:sql/schema.sql")
     private Resource schemaSql;
 
+    @Value("classpath:sql/appointments.sql")
+    private Resource appointmentsSql;
+
     @Bean
     public DataSource dataSource() {
         final SingleConnectionDataSource ds = new SingleConnectionDataSource();
@@ -46,6 +49,7 @@ public class TestConfig {
         final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(pgsqlSyntax);
         populator.addScript(schemaSql);
+        populator.addScript(appointmentsSql);
         return populator;
     }
 }

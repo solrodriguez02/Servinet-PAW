@@ -20,4 +20,28 @@ public class Appointment {
         this.confirmed = confirmed;
 
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public long getServiceid() {
+        return serviceid;
+    }
+
+    public long getUserid() {
+        return userid;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
 }

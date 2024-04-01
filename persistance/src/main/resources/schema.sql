@@ -7,8 +7,8 @@ DROP TYPE IF EXISTS serviceCategory;
 DROP TYPE IF EXISTS pricingType;
 
 CREATE TABLE IF NOT EXISTS users (
-                                     userid SERIAL PRIMARY KEY,
-                                     username VARCHAR(255) NOT NULL UNIQUE,
+     userid SERIAL PRIMARY KEY,
+     username VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -18,8 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
     );
 
 CREATE TABLE IF NOT EXISTS business(
-                                       id SERIAL PRIMARY KEY,
-                                       userid INT references users(userid) ON DELETE CASCADE,
+       id SERIAL PRIMARY KEY,
+       userid INT references users(userid) ON DELETE CASCADE,
     businessname VARCHAR(255),
     businessTelephone VARCHAR(255),
     businessEmail VARCHAR(255),
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS services (
 
 CREATE TABLE IF NOT EXISTS appointments (
     appointmentid SERIAL PRIMARY KEY,
-    servid INT REFERENCES services ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    serviceid INT REFERENCES services ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     startDate TIMESTAMP NOT NULL,
     endDate TIMESTAMP,
