@@ -40,6 +40,8 @@ public class HelloWorldController {
         List<Service> serviceList = new ArrayList<>();
         if (category != null && !category.isEmpty()) {
             // Se debería crear un metodo que devuelva los servicios de la categoria recibida por parametro
+            // IMPORTANTE para front: usar try catch de la excepción para mostrar la información en la vista creando un service hardcodeado que se agrega a la lista
+            // o bien popular la db local con los ids que se busquen
             serviceList.add(service.findById(10).orElseThrow(ServiceNotFoundException::new));
         } else {
             for (int i = 1; i < 5; i++) {
