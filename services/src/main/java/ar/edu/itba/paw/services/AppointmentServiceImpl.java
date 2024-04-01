@@ -1,16 +1,18 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Appointment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Service
+@Service("appointmentServiceImpl")
 public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentDao appointmentDao;
 
+    @Autowired
     public AppointmentServiceImpl(final AppointmentDao appointmentDao) {
         this.appointmentDao = appointmentDao;
     }
@@ -29,11 +31,11 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     @Override
     public void confirmAppointment(long appointmentid) {
-        //TODO
+        appointmentDao.confirmAppointment(appointmentid);
     }
 
     @Override
     public void cancelAppointment(long appointmentid) {
-        //TODO
+        appointmentDao.cancelAppointment(appointmentid);
     }
 }
