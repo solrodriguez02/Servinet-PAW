@@ -15,17 +15,17 @@ public class Service {
     private Boolean additionalCharges;
 
     // Constructor
-    public Service(long id, long businessid, String name, String description, Boolean homeService, String location, String neighbourhoodAvailable, String category, int duration, String pricingType, String price, Boolean additionalCharges) {
+    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges) {
         this.id = id;
         this.businessid = businessid;
         this.name = name;
         this.description = description;
         this.homeService = homeService;
         this.location = location;
-        this.neighbourhoodAvailable = Neighbourhoods.findByValue(neighbourhoodAvailable);
-        this.category = Categories.findByValue(category);
+        this.neighbourhoodAvailable = neighbourhoodAvailable;
+        this.category = category;
         this.duration = duration;
-        this.pricing = PricingTypes.findByValue(pricingType);
+        this.pricing = pricingType;
         this.price = price;
         this.additionalCharges = additionalCharges;
 
