@@ -18,7 +18,7 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 
-@Sql("classpath:schema.sql")
+@Sql("classpath:sql/schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class ServiceDaoJdbcTest {
@@ -46,7 +46,7 @@ public class ServiceDaoJdbcTest {
        JdbcTestUtils.deleteFromTables(jdbcTemplate, "users" );
        JdbcTestUtils.deleteFromTables(jdbcTemplate, "business" );
        jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
-       jdbcTemplate.execute("INSERT INTO business(id, userid, businessname, businessTelephone, businessEmail, businessLocation) VALUES (1, 1, 'businessname', 'businessTelephone', 'businessEmail', 'businessLocation')");
+       jdbcTemplate.execute("INSERT INTO business(businessid, userid, businessname, businessTelephone, businessEmail, businessLocation) VALUES (1, 1, 'businessname', 'businessTelephone', 'businessEmail', 'businessLocation')");
    }
 
    @Test

@@ -1,13 +1,15 @@
+DROP TABLE IF EXISTS appointments;
 DROP TABLE IF EXISTS services;
 DROP TABLE IF EXISTS business;
 DROP TABLE IF EXISTS users;
+
 --DROP TYPE IF EXISTS serviceCategory;
 --DROP TYPE IF EXISTS pricingType;
 
 CREATE TABLE IF NOT EXISTS users (
     userid SERIAL PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL DEFAULT null, --todo: sacar el default null una vez que se implemente el login
+    password VARCHAR(255) NOT NULL, --todo: sacar el default null una vez que se implemente el login
     name VARCHAR(255) NOT NULL,
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -58,3 +60,14 @@ END;
 
 
 CREATE TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
+
+CREATE TABLE IF NOT EXISTS appointments (
+    appointmentid SERIAL PRIMARY KEY,
+    serviceid INT REFERENCES services ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    startDate TIMESTAMP NOT NULL,
+    endDate TIMESTAMP,
+    confirmed BOOLEAN DEFAULT FALSE
+);
+
+
