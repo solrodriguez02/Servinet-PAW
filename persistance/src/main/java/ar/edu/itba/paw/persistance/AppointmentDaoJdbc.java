@@ -55,11 +55,14 @@ public class AppointmentDaoJdbc implements AppointmentDao {
 
     @Override
     public void confirmAppointment(long appointmentid) {
+        /*
         try {
             jdbcTemplate.update("UPDATE appointments SET confirmed=TRUE WHERE appointmentid = ?", appointmentid);
         } catch (DataAccessException e) {
             throw new NoSuchElementException(); //AppointmentNotFoundException;
         }
+        */
+        jdbcTemplate.update("UPDATE appointments SET confirmed=TRUE WHERE appointmentid = ?", appointmentid);
         // service deberia modif elem (modelo) a true
     }
 
