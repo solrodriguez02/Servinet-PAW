@@ -25,8 +25,4 @@ CREATE TABLE appointments (
                 confirmed BOOLEAN DEFAULT FALSE
 );
 
--- INSERTS --
-insert into services values(default,'peluqueria');
-insert into users values (default,'agus');
-
 

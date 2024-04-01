@@ -39,6 +39,8 @@ public class AppointmentDaoJdbcTest {
     public void setup() {
         this.jdbcTemplate = new JdbcTemplate(ds);
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "appointments");
+        jdbcTemplate.execute("insert into services values(default,'peluqueria');");
+        jdbcTemplate.execute("insert into users values (default,'agus');");
     }
 
     @Test
@@ -54,8 +56,10 @@ public class AppointmentDaoJdbcTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "appointments"));
     }
 
-    @After
+    @Test
     public void testFindById(){
+        appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+
         Appointment appointment = appointmentDao.findById(1).get();
 
         Assert.assertEquals(SERVICEID,appointment.getServiceid());
