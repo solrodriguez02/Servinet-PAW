@@ -23,10 +23,10 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate) {
+    public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
         // PARAMS deberian ser validados aca?
         // ejem: startData < EndDate o desde el front?
-        return appointmentDao.create(serviceid,userid,startDate,endDate);
+        return appointmentDao.create(serviceid,userid,startDate,endDate, location);
     }
 
     @Override
