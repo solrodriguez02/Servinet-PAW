@@ -45,6 +45,9 @@ public class Appointment {
     public Boolean getConfirmed() {
         return confirmed;
     }
+    public String getLocation() {
+        return location;
+    }
 
     public void setEndDate(){}
 
