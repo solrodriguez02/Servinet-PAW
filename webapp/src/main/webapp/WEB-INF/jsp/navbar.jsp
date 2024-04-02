@@ -17,9 +17,9 @@
             <div class="dropdown">
                 <p class="nav-item">Categorias</p>
                 <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/?categoria=limpieza">Limpieza</a>
-                    <a href="${pageContext.request.contextPath}/?categoria=belleza">Belleza</a>
-                    <a href="${pageContext.request.contextPath}/?categoria=peluqueria">Peluqueria</a>
+                    <a href="${pageContext.request.contextPath}/?categoria=Limpieza">Limpieza</a>
+                    <a href="${pageContext.request.contextPath}/?categoria=Belleza">Belleza</a>
+                    <a href="${pageContext.request.contextPath}/?categoria=Peluqueria">Peluqueria</a>
                 </div>
             </div>
             <a class="nav-item" href="${pageContext.request.contextPath}/publicar">Publicar</a>

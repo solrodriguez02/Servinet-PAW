@@ -7,7 +7,7 @@
     <title></title>
 </head>
 <body>
-    <c:url value="/datospersonales" var="postUrl"/>
+    <c:url value="/crearservicio" var="postUrl"/>
     <div class="postForm page">
         <form action="${postUrl}" method="post" class="form">
 

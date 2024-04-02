@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
@@ -30,6 +31,11 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Service edit(long serviceid, String field, String newvalue) {
         return serviceDao.edit(serviceid, field, newvalue);
+    }
+
+    @Override
+    public Optional <List<Service>> getAllServices() {
+        return serviceDao.getAllServices();
     }
 
     @Override

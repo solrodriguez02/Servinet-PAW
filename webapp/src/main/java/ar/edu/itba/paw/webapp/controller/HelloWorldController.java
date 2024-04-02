@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Categories;
+import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
@@ -37,18 +38,13 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
         final ModelAndView mav = new ModelAndView("home");
-        List<Service> serviceList = new ArrayList<>();
-        if (category != null && !category.isEmpty()) {
-            // Se debería crear un metodo que devuelva los servicios de la categoria recibida por parametro
-            // IMPORTANTE para front: usar try catch de la excepción para mostrar la información en la vista creando un service hardcodeado que se agrega a la lista
-            // o bien popular la db local con los ids que se busquen
-            serviceList.add(service.findById(10).orElseThrow(ServiceNotFoundException::new));
-        } else {
-            for (int i = 1; i < 5; i++) {
-                serviceList.add(service.findById(i).orElseThrow(ServiceNotFoundException::new));
-            }
+        List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
+        List<Service> service = new ArrayList<>();
+        for(Service services : serviceList){
+            if(category == null || services.getCategory().equals(category))
+                service.add(services);
         }
-        mav.addObject("services", serviceList);
+        mav.addObject("services", service);
         mav.addObject("categories", categories);
         return mav;
     }
@@ -59,7 +55,13 @@ public class HelloWorldController {
         mav.addObject("user","home page");
         return mav;
     }
-
+    @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
+    public ModelAndView createService(@RequestParam(value = "titulo") final String title,
+                                      @RequestParam(value="descripcion") final String description,
+                                      @RequestParam(value="ubicacion") final String location, @RequestParam(value="categoria") final String category){
+        service.create(1,title,description,false,location,Categories.findByValue(category),1,PricingTypes.TBD,"100",false);
+        return new ModelAndView("redirect:/");
+    }
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
     public ModelAndView dataForm(
             @RequestParam(value = "titulo") final String title,
@@ -96,7 +98,7 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/micuenta")
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId}/micuenta")
     public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("username", us);
