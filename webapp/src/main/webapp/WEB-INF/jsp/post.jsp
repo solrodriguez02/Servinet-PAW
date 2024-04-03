@@ -12,7 +12,6 @@
         <form action="${postUrl}" method="post" class="form">
 
             <h3 class="form-title">Crea un nuevo servicio</h3>
-
             <label>
                 <p class="label">Nombre:</p>
                 <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
@@ -22,8 +21,17 @@
                 <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
             </label>
             <label>
-                <p class="label">Ubicacion:</p>
-                <input type="text" class="input" name="ubicacion" placeholder="Ingresa la ubicacon donde brindarias el servicio"/>
+                <input type="checkbox" id="homservice" name="homeservice"  />
+                <label for="homservice">Servicio a domicilio</label>
+                    <label>
+                        <p class="label">Ubicacion:</p>
+                        <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacon donde brindarias el servicio"/>
+                    </label>
+            </label>
+
+            <label>
+                <p class="label">Precio:</p>
+                <input type="text" class="input" name="precio" placeholder="Ingresa el precio de tu servicio"/>
             </label>
             <label>
                 <p class="label">Categoria:</p>

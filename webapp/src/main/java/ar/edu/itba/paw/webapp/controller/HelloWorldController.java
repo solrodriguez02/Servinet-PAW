@@ -35,7 +35,7 @@ public class HelloWorldController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/")
+    @RequestMapping(method = RequestMethod.GET, path = "/home")
     public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
         final ModelAndView mav = new ModelAndView("home");
         List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
@@ -58,8 +58,11 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
     public ModelAndView createService(@RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
-                                      @RequestParam(value="ubicacion") final String location, @RequestParam(value="categoria") final String category){
-        service.create(1,title,description,false,location,Categories.findByValue(category),1,PricingTypes.TBD,"100",false);
+                                      @RequestParam(value="homeservice") final boolean homeservice,
+                                      @RequestParam(value="ubicacion",required = false,defaultValue = "") final String location,
+                                      @RequestParam(value="categoria") final String category,
+                                      @RequestParam(value="precio") final String price){
+        service.create(1,title,description,homeservice,location,Categories.findByValue(category),1,PricingTypes.TBD,price,false);
         return new ModelAndView("redirect:/");
     }
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")

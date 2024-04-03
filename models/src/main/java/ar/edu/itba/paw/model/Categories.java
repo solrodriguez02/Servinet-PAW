@@ -9,6 +9,7 @@ public enum Categories {
     EVENTOS_Y_CELEBRACIONES ("Eventos y Celebraciones"),
     TRANSPORTE ("Transporte"),
     CONSULTORIA ("Consultoría"),
+    PELUQUERIA ("Peluqueria"),
     SALUD ("Salud");
 
     private final String value;
