@@ -31,9 +31,15 @@
             <label>
                 <input type="datetime-local"/>
             </label>
-            <button class="take-turn-btn">Reservar turno</button>
+            <button class="take-turn-btn" id="take-turn">Reservar turno</button>
         </div>
     </div>
+    <!--c:if test="${makeReservation}">
+        <div id="take-turn-modal" style="display: block">
+            <h2>hola</h2>
+        </div>
+    <!/c:if> -->
 </body>
 </html>
 
+<script src="../../js/service.js"></script>

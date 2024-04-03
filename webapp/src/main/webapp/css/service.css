@@ -37,11 +37,17 @@
     background-color: #21b8de;
     border-radius: 15px;
     font-family: 'Poppins', sans-serif;
-    border: none ;
+    border: none;
+    padding: 10px;
+    padding-inline: 25px;
 }
 
+.take-turn-btn:hover {
+    opacity: 0.7;
+}
 .take-turn-container {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
