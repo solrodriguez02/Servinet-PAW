@@ -27,9 +27,12 @@
             </div>
         </div>
 
-        <label>
-            <input type="datetime-local"/>
-        </label>
+        <div class="take-turn-container">
+            <label>
+                <input type="datetime-local"/>
+            </label>
+            <button class="take-turn-btn">Reservar turno</button>
+        </div>
     </div>
 </body>
 </html>

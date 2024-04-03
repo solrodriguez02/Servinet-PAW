@@ -31,3 +31,17 @@
 .category-text {
     color: gray;
 }
+
+.take-turn-btn {
+    color: white;
+    background-color: #21b8de;
+    border-radius: 15px;
+    font-family: 'Poppins', sans-serif;
+    border: none ;
+}
+
+.take-turn-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
