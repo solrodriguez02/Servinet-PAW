@@ -53,16 +53,19 @@ public class HelloWorldController {
     public ModelAndView postForm() {
         final ModelAndView mav = new ModelAndView("post");
         mav.addObject("user","home page");
+        mav.addObject("categories",categories);
         return mav;
     }
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
     public ModelAndView createService(@RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
-                                      @RequestParam(value="homeservice") final boolean homeservice,
+                                      @RequestParam(value="homeserv") final boolean homeserv,
                                       @RequestParam(value="ubicacion",required = false,defaultValue = "") final String location,
                                       @RequestParam(value="categoria") final String category,
                                       @RequestParam(value="precio") final String price){
-        service.create(1,title,description,homeservice,location,Categories.findByValue(category),1,PricingTypes.TBD,price,false);
+
+
+        service.create(1,title,description,homeserv,location,Categories.findByValue(category),1,PricingTypes.TBD,price,false);
         return new ModelAndView("redirect:/");
     }
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")

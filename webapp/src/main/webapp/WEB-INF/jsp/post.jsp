@@ -7,45 +7,46 @@
     <title></title>
 </head>
 <body>
-    <c:url value="/crearservicio" var="postUrl"/>
-    <div class="postForm page">
-        <form action="${postUrl}" method="post" class="form">
+<c:url value="/crearservicio" var="postUrl"/>
+<div class="postForm page">
+    <form action="${postUrl}" method="post" class="form">
 
-            <h3 class="form-title">Crea un nuevo servicio</h3>
-            <label>
-                <p class="label">Nombre:</p>
-                <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
-            </label>
-            <label>
-                <p class="label">Descripcion:</p>
-                <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
-            </label>
-            <label>
-                <input type="checkbox" id="homservice" name="homeservice"  />
-                <label for="homservice">Servicio a domicilio</label>
-                    <label>
-                        <p class="label">Ubicacion:</p>
-                        <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacon donde brindarias el servicio"/>
-                    </label>
-            </label>
+        <h3 class="form-title">Crea un nuevo servicio</h3>
+        <label>
+            <p class="label">Nombre:</p>
+            <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
+        </label>
+        <label>
+            <p class="label">Descripcion:</p>
+            <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
+        </label>
+        <label>
+            <input type="checkbox" id="homeservice" name="homeserv" />
+            <label for="homeservice">Servicio a domicilio</label>
+        </label>
 
+        <c:if test="${param.homeserv eq 'true'}">
             <label>
-                <p class="label">Precio:</p>
-                <input type="text" class="input" name="precio" placeholder="Ingresa el precio de tu servicio"/>
+                Ubicacion
+                <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
             </label>
-            <label>
-                <p class="label">Categoria:</p>
-                <select name="categoria" class="input">
-                    <option>Limpieza</option>
-                    <option>Belleza</option>
-                    <option>Peluqueria</option>
-                </select>
-            </label>
+        </c:if>
 
-            <input type="submit" value="Publicar" class="submitBtn">
+        <label>
+            <p class="label">Precio:</p>
+            <input type="text" class="input" name="precio" placeholder="Ingresa el precio de tu servicio"/>
+        </label>
 
-        </form>
-    </div>
+        <label>
+            <p class="label">Categoria:</p>
+            <select name="categoria" class="input">
+                <c:forEach items="${categories}" var="item">
+                <option>${item.value}</option>
+                </c:forEach>
+            </select>
+        </label>
+        <input type="submit" value="Publicar" class="submitBtn">
+    </form>
+</div>
 </body>
 </html>
-
