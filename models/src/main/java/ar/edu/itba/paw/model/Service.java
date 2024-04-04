@@ -13,9 +13,10 @@ public class Service {
     private String price;
     private Categories category;
     private Boolean additionalCharges;
+    private String imageurl;
 
     // Constructor
-    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges) {
+    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges, String imageurl) {
         this.id = id;
         this.businessid = businessid;
         this.name = name;
@@ -28,6 +29,7 @@ public class Service {
         this.pricing = pricingType;
         this.price = price;
         this.additionalCharges = additionalCharges;
+        this.imageurl = imageurl;
 
     }
 
@@ -126,5 +128,13 @@ public class Service {
 
     public void setAdditionalCharges(Boolean additionalCharges) {
         this.additionalCharges = additionalCharges;
+    }
+
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
     }
 }
