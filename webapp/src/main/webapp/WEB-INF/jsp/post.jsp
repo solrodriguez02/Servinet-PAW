@@ -4,7 +4,8 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <title></title>
+    <title>Service Creation</title>
+
 </head>
 <body>
 <c:url value="/crearservicio" var="postUrl"/>
@@ -25,28 +26,49 @@
             <label for="homeservice">Servicio a domicilio</label>
         </label>
 
-        <c:if test="${param.homeserv eq 'true'}">
-            <label>
-                Ubicacion
+        <label id="ubicacionLabel">
+               <p> Ubicacion:</p>
                 <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
-            </label>
-        </c:if>
+        </label>
 
         <label>
-            <p class="label">Precio:</p>
+            <p class="label">Precio:
+            <select name="pricingtype" class="input">
+                <c:forEach items="${pricingTypes}" var="item">
+                    <option value="${item}">${item.value}</option>
+                </c:forEach>
+            </select>
+            </p>
             <input type="text" class="input" name="precio" placeholder="Ingresa el precio de tu servicio"/>
         </label>
+
 
         <label>
             <p class="label">Categoria:</p>
             <select name="categoria" class="input">
                 <c:forEach items="${categories}" var="item">
-                <option>${item.value}</option>
+                <option value="${item}">${item.value}</option>
                 </c:forEach>
             </select>
+        </label>
+        <label>
+            <p class="label">Duracion minima del servicio (en minutos):</p>
+            <input type="number" class="input" name="minimalduration" />
         </label>
         <input type="submit" value="Publicar" class="submitBtn">
     </form>
 </div>
 </body>
 </html>
+<script>
+    const homeservice = document.getElementById('homeservice');
+    const ubicacionLabel = document.getElementById('ubicacionLabel');
+    homeservice.addEventListener('change', () => {
+        if (homeservice.checked) {
+            ubicacionLabel.style.visibility = 'hidden';
+            ubicacionLabel.querySelector('input').value = '';
+        } else {
+            ubicacionLabel.style.visibility = 'visible';
+        }
+    });
+</script>

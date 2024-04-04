@@ -26,12 +26,13 @@ public class HelloWorldController {
     private ServiceService service;
 
     List<Categories> categories = new ArrayList<>();
-
+    List<PricingTypes> pricingTypes = new ArrayList<>();
     @Autowired
     public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service) {
         this.us = us;
         this.service = service;
         categories.addAll(Arrays.asList(Categories.values()));
+        pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
     }
 
 
@@ -54,6 +55,7 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("post");
         mav.addObject("user","home page");
         mav.addObject("categories",categories);
+        mav.addObject("pricingTypes",pricingTypes);
         return mav;
     }
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
@@ -61,11 +63,12 @@ public class HelloWorldController {
                                       @RequestParam(value="descripcion") final String description,
                                       @RequestParam(value="homeserv") final boolean homeserv,
                                       @RequestParam(value="ubicacion",required = false,defaultValue = "") final String location,
-                                      @RequestParam(value="categoria") final String category,
-                                      @RequestParam(value="precio") final String price){
-
-
-        service.create(1,title,description,homeserv,location,Categories.findByValue(category),1,PricingTypes.TBD,price,false);
+                                      @RequestParam(value="categoria") final Categories category,
+                                      @RequestParam(value="pricingtype") final PricingTypes pricingtype,
+                                      @RequestParam(value="precio") final String price,
+                                      @RequestParam(value="minimalduration") final int minimalduration,
+                                      @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
+        service.create(1,title,description,homeserv,location,category,minimalduration,pricingtype,price,additionalCharges);
         return new ModelAndView("redirect:/");
     }
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
