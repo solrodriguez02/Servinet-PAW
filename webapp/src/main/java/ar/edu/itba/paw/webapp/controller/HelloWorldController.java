@@ -61,7 +61,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
     public ModelAndView createService(@RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
-                                      @RequestParam(value="homeserv") final boolean homeserv,
+                                      @RequestParam(value="homeserv",required = false,defaultValue = "false") final boolean homeserv,
                                       @RequestParam(value="ubicacion",required = false,defaultValue = "") final String location,
                                       @RequestParam(value="categoria") final Categories category,
                                       @RequestParam(value="pricingtype") final PricingTypes pricingtype,
