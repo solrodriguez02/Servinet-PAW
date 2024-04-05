@@ -36,7 +36,7 @@ public class HelloWorldController {
     }
 
 
-    @RequestMapping(method = RequestMethod.GET, path = "/home")
+    @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
         final ModelAndView mav = new ModelAndView("home");
         List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
@@ -96,7 +96,6 @@ public class HelloWorldController {
             @RequestParam(value = "apellido") final String apellido,
             @RequestParam(value = "email") final String email
     ) {
-        // Aca se debería crear el nuevo servicio
         return new ModelAndView("redirect:/misservicios");
     }
 

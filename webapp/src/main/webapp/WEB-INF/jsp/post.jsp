@@ -31,15 +31,15 @@
                 <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
         </label>
 
-        <label>
+        <label  >
             <p class="label">Precio:
-            <select name="pricingtype" class="input">
+            <select name="pricingtype" class="input" id="priceType">
                 <c:forEach items="${pricingTypes}" var="item">
-                    <option value="${item}">${item.value}</option>
+                    <option  value="${item}">${item.value}</option>
                 </c:forEach>
             </select>
             </p>
-            <input type="text" class="input" name="precio" placeholder="Ingresa el precio de tu servicio"/>
+            <input type="text" class="input" name="precio" id="priceTag" placeholder="Ingresa el precio de tu servicio"/>
         </label>
 
 
@@ -62,13 +62,27 @@
 </html>
 <script>
     const homeservice = document.getElementById('homeservice');
+
     const ubicacionLabel = document.getElementById('ubicacionLabel');
     homeservice.addEventListener('change', () => {
         if (homeservice.checked) {
-            ubicacionLabel.style.visibility = 'hidden';
+            ubicacionLabel.style.display = 'none';
             ubicacionLabel.querySelector('input').value = '';
         } else {
-            ubicacionLabel.style.visibility = 'visible';
+            ubicacionLabel.style.display = 'block';
         }
     });
+    const priceLabel = document.getElementById('priceType');
+    const priceInput = document.getElementById('priceTag');
+    console.log(priceLabel);
+    console.log(priceInput)
+    priceLabel.addEventListener('change', () => {
+        if (priceLabel.value == 'TBD') {
+            priceInput.style.display = 'none';
+            priceInput.querySelector('input').value = '';
+        } else {
+            priceInput.style.display = 'block';
+        }
+    })
+
 </script>
