@@ -39,18 +39,18 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<Service> services(int page, String category) {
-        if(category != null) {
-            return serviceDao.getServicesByCategory(page, category);
+    public List<Service> services(int page, String category, String location) {
+        if(category != null || location != null) {
+            return serviceDao.getServicesFilteredBy(page, category, location);
         } else {
             return serviceDao.getServices(page);
         }
     }
 
     @Override
-    public Boolean isMoreServices(int page, String category) {
-        if(category != null) {
-            return serviceDao.isMoreServicesInCategory(page, category);
+    public Boolean isMoreServices(int page, String category, String location) {
+        if(category != null || location != null) {
+            return serviceDao.isMoreServicesFiltered(page, category, location);
         } else {
             return serviceDao.isMoreServices(page);
         }

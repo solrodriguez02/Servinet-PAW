@@ -13,8 +13,8 @@ public interface ServiceDao {
     Service edit(long serviceid, String field, String newvalue);
     void delete(long serviceid);
     List<Service> getServices(int page);
-    List<Service> getServicesByCategory(int page, String category);
+    List<Service> getServicesFilteredBy(int page, String category, String location);
     Boolean isMoreServices(int page);
-    Boolean isMoreServicesInCategory(int page, String category);
+    Boolean isMoreServicesFiltered(int page, String category, String location);
 
 }

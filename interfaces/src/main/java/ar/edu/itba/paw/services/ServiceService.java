@@ -12,6 +12,6 @@ public interface ServiceService {
     Service create(long businessid, String name, String description,Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, String imageurl);
     Service edit(long serviceid, String field, String newvalue);
     void delete(long serviceid);
-    List<Service> services(int page, String category);
-    Boolean isMoreServices(int page, String category);
+    List<Service> services(int page, String category, String location);
+    Boolean isMoreServices(int page, String category, String location);
 }

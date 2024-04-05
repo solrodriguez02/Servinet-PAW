@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Categories;
+import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
@@ -25,30 +26,35 @@ public class HelloWorldController {
     private ServiceService service;
 
     List<Categories> categories = new ArrayList<>();
+    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
     public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service) {
         this.us = us;
         this.service = service;
         categories.addAll(Arrays.asList(Categories.values()));
+        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(
             @RequestParam(name = "categoria", required = false) String category,
+            @RequestParam(name = "ubicacion", required = false) String location,
             @RequestParam(name = "pagina", required = false) Integer page
     ) {
         final ModelAndView mav = new ModelAndView("home");
         if(page == null) page=0;
-        List<Service> serviceList = service.services(page, category);
-        Boolean isMoreServices = service.isMoreServices(page, category);
+        List<Service> serviceList = service.services(page, category, location);
+        Boolean isMoreServices = service.isMoreServices(page, category, location);
         Boolean isServicesEmpty = serviceList.isEmpty();
         mav.addObject("services", serviceList);
         mav.addObject("isMoreServices", isMoreServices);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", isServicesEmpty);
         mav.addObject("category", category);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("location", location);
         return mav;
     }
 
