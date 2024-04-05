@@ -28,7 +28,7 @@
                 </c:if>
                 <div class="align-right">
                     <div class="dropdown">
-                        <p class="filters-text"><i class="material-icons">filter_alt</i>Filter by Location</p>
+                        <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
                         <div class="dropdown-content">
                             <c:forEach items="${neighbourhoods}" var="neighbourhood">
                                 <c:choose>
