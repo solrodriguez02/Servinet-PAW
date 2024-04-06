@@ -7,6 +7,7 @@ import java.util.Optional;
 public interface UserDao {
     // Data Access Object
     Optional<User> findById(long id);
+    Optional<User> findByEmail(String email);
     User create(String username, String name,String password ,String surname, String email, String telephone, Boolean isProvider);
     void changeEmail(long userid,String value);
     void changeUsername(long userid,String value);

@@ -35,6 +35,14 @@ public class UserDaoJdbc implements UserDao {
         return list.stream().findFirst();
     }
     @Override
+    public Optional<User> findByEmail(String email) {
+        // nunca se debe concatenar parametros en una query
+        // "SELECT * from users WHERE userID " + id esta mal
+        final List<User> list = jdbcTemplate.query("SELECT * from users WHERE email = ?", new Object[] {email}, ROW_MAPPER);
+        return list.stream().findFirst();
+    }
+
+    @Override
     public void changeUsername(long userid,String value){
         changeField("username",userid,value);
     }
