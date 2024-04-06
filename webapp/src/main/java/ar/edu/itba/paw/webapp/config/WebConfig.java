@@ -18,7 +18,7 @@ import org.springframework.web.servlet.view.JstlView;
 import javax.sql.DataSource;
 
 
-@Configuration
+
 @EnableWebMvc
 @ComponentScan({
         "ar.edu.itba.paw.webapp.controller",
