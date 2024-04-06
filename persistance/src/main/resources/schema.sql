@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS appointments (
 
 
 -- HARDCODIE INSERTS, BORRARRRRRRR {
-INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone');
-INSERT INTO business VALUES (1, 1, 'businessname', 'businessTelephone', 'businessEmail', 'businessLocation');
+INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1000, 'username', 'password', 'name', 'surname', 'email', 'telephone');
+INSERT INTO business VALUES (1, 1000, 'businessname', 'businessTelephone', 'businessEmail', 'businessLocation');
 INSERT INTO services VALUES (1,1,'Peluqueria Ramon','Veni, peinate y divertite!',false,'Recoleta','Belleza',60,'Per Hour',5000,true);
 -- } NO OLVIDAR DE BORRAR

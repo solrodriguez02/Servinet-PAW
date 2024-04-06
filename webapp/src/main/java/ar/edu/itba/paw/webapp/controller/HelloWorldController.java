@@ -2,6 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.UserService;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,14 +26,17 @@ public class HelloWorldController {
 
     private UserService us;
     private ServiceService service;
+    private AppointmentService appointment;
 
     List<Categories> categories = new ArrayList<>();
 
     @Autowired
-    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service) {
+    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service,
+    @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService) {
         this.us = us;
         this.service = service;
         categories.addAll(Arrays.asList(Categories.values()));
+        this.appointment = appointmentService;
     }
 
 
@@ -94,6 +100,22 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("service");
         mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));
         return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}", params = "userEmail" )
+    public ModelAndView createAppointment(@PathVariable("serviceId") final long serviceId, @RequestParam("userEmail") final String userEmail ) {
+
+        // ! temp {
+        int index = userEmail.indexOf('@');
+        if (index == 0) throw new RuntimeException("not an email");
+        String username = userEmail.substring(0, index);
+        // ! }
+        User user = us.create(username,"juan","","juan",userEmail,"");
+        Service serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        LocalDateTime startDate = LocalDateTime.now(); //! temp
+        appointment.create(serviceId,user.getUserId(), startDate, startDate.plusMinutes(serv.getDuration()) );
+
+        return new ModelAndView("redirect:/"+serviceId);
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/micuenta")
