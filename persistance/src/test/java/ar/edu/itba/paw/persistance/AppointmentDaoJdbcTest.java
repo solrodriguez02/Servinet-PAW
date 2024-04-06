@@ -2,7 +2,6 @@ package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.persistance.config.TestConfig;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,6 @@ import org.springframework.test.jdbc.JdbcTestUtils;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
-import java.time.chrono.ChronoLocalDateTime;
 
 @Sql("classpath:sql/appointments.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
