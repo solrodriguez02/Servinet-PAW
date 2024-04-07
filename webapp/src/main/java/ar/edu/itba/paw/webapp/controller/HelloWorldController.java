@@ -58,6 +58,7 @@ public class HelloWorldController {
         mav.addObject("pricingTypes",pricingTypes);
         return mav;
     }
+
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
     public ModelAndView createService(@RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
@@ -71,6 +72,13 @@ public class HelloWorldController {
         service.create(1,title,description,homeserv,location,category,minimalduration,pricingtype,price,additionalCharges);
         return new ModelAndView("redirect:/");
     }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/deleteservicio")
+    public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
+        service.delete(serviceid);
+        return new ModelAndView("redirect:/");
+    }
+
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
     public ModelAndView dataForm(
             @RequestParam(value = "titulo") final String title,
