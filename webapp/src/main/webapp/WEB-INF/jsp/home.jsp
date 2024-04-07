@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <jsp:include page="navbar.jsp" />
+
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/home.css" rel="stylesheet" />
@@ -8,10 +9,33 @@
     <title></title>
 </head>
 <body>
+
+<c:choose>
+    <c:when test="${category==null}">
+        <c:set var="categoryPath" value="${pageContext.request.contextPath}/?"/>
+        <c:choose>
+            <c:when test="${location==null}">
+                <c:set var="filtersPath" value="${pageContext.request.contextPath}/?" />
+            </c:when>
+            <c:otherwise>
+                <c:set var="filtersPath" value="${pageContext.request.contextPath}/?ubicacion=${location}&" />
+            </c:otherwise>
+        </c:choose>
+    </c:when>
+    <c:otherwise>
+        <c:set var="categoryPath" value="${pageContext.request.contextPath}/?categoria=${category}&"/>
+        <c:choose>
+            <c:when test="${location==null}">
+                <c:set var="filtersPath" value="${pageContext.request.contextPath}/?categoria=${category}&" />
+            </c:when>
+            <c:otherwise>
+                <c:set var="filtersPath" value="${pageContext.request.contextPath}/?categoria=${category}&ubicacion=${location}&" />
+            </c:otherwise>
+        </c:choose>
+    </c:otherwise>
+</c:choose>
+
 <div class="page">
-
-<!--Creo que todos los choose se podrian minimizar y reutilizar de alguna manera, tengo que pensarlo y modificarlo-->
-
 <c:choose>
     <c:when test="${isServicesEmpty}">
         <div class="not-found-page">
@@ -31,14 +55,7 @@
                         <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
                         <div class="dropdown-content">
                             <c:forEach items="${neighbourhoods}" var="neighbourhood">
-                                <c:choose>
-                                    <c:when test="${category==null}">
-                                        <a href="${pageContext.request.contextPath}/?ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <a href="${pageContext.request.contextPath}/?categoria=${category}&ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
-                                    </c:otherwise>
-                                </c:choose>
+                                <a href="${categoryPath}ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
                             </c:forEach>
                         </div>
                     </div>
@@ -50,14 +67,7 @@
                     <h5>Filtros seleccionados:</h5>
                     <button class="filter-container">
                         <c:out value="${location}"/>
-                        <c:choose>
-                            <c:when test="${category != null}">
-                                <a href="${pageContext.request.contextPath}/?=categoria=${category}"><i class="material-icons close-filter-icon">close</i></a>
-                            </c:when>
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/"><i class="material-icons close-filter-icon">close</i></a>
-                            </c:otherwise>
-                        </c:choose>
+                        <a href="${categoryPath}"><i class="material-icons close-filter-icon">close</i></a>
                     </button>
                 </c:if>
             </div>
@@ -95,20 +105,7 @@
         <div class="page-manage-box">
             <c:choose>
                 <c:when test="${page != 0}">
-                    <c:choose>
-                        <c:when test="${category==null && location==null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page-1}">< Anterior</a>
-                        </c:when>
-                        <c:when test="${category==null && location!=null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page-1}&ubicacion=${location}">< Anterior</a>
-                        </c:when>
-                        <c:when test="${category!=null && location==null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page-1}&categoria=${category}">< Anterior</a>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page-1}&categoria=${category}&ubicacion=${location}">< Anterior</a>
-                        </c:otherwise>
-                    </c:choose>
+                    <a class="page-text" href="${filtersPath}pagina=${page-1}">< Anterior</a>
                 </c:when>
                 <c:otherwise>
                     <label class="none-page-text">Anterior</label>
@@ -122,20 +119,7 @@
 
             <c:choose>
                 <c:when test="${isMoreServices}">
-                    <c:choose>
-                        <c:when test="${category==null && location==null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page+1}">Siguiente ></a>
-                        </c:when>
-                        <c:when test="${category==null && location!=null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page+1}&ubicacion=${location}">Siguiente ></a>
-                        </c:when>
-                        <c:when test="${category!=null && location==null}">
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page+1}&categoria=${category}">Siguiente ></a>
-                        </c:when>
-                        <c:otherwise>
-                            <a class="page-text" href="${pageContext.request.contextPath}/?pagina=${page+1}&categoria=${category}&ubicacion=${location}">Siguiente ></a>
-                        </c:otherwise>
-                    </c:choose>
+                    <a class="page-text" href="${filtersPath}pagina=${page+1}">Siguiente ></a>
                 </c:when>
                 <c:otherwise>
                     <label class="none-page-text">Siguiente</label>
