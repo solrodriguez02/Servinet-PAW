@@ -1,6 +1,6 @@
 var makeReservation = false;
 const reservationBtn = document.getElementById("take-turn");
-reservationBtn.addEventListener("click", showReservationBox)
+//reservationBtn.addEventListener("click", showReservationBox)
 function showReservationBox(){
     makeReservation = true
     const url = new URLSearchParams(window.location.search)

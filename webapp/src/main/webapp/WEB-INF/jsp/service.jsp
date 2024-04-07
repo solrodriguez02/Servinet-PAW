@@ -31,7 +31,11 @@
             <label>
                 <input type="datetime-local"/>
             </label>
-            <button class="take-turn-btn" id="take-turn">Reservar turno</button>
+            <form>
+                <button class="take-turn-btn" type="submit" >Reservar turno
+                </button>
+            </form>
+
         </div>
     </div>
 

@@ -6,5 +6,5 @@ import java.util.Locale;
 public interface EmailService {
 
     // ! tuve q agregar dependencia javax.mail en pom
-    public void sendMail(final String recipientName, final String recipientEmail, final Locale locale) throws MessagingException;
+    public void sendMail( final String recipientEmail, final String subject, final String content, final Locale locale) throws MessagingException;
 }

@@ -1,8 +1,11 @@
 package ar.edu.itba.paw.webapp.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -15,17 +18,19 @@ import org.thymeleaf.templateresolver.ITemplateResolver;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Properties;
 
-
+@PropertySource("classpath:mail/emailConfig.properties")
 public class EmailConfig {
     private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
 
     /* en prop */
-    private static final String USERNAME = "andresdominguez5555@gmail.com";
-    private static final String PASSWORD = "andreylamorza1";
-    private static final int PORT = 587;
+
+
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
+    @Autowired
+    private Environment env;
 
     /*
         @Bean
@@ -43,17 +48,17 @@ public class EmailConfig {
         final JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 
         // Basic mail sender configuration, based on emailconfig.properties
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setUsername(USERNAME);
-        mailSender.setPassword(PASSWORD);
-        mailSender.setPort(PORT);
+        mailSender.setHost( env.getProperty("HOST"));
+        mailSender.setUsername(env.getProperty("USERNAME"));
+        mailSender.setPassword(env.getProperty("PASSWORD"));
+        mailSender.setPort(Integer.parseInt(env.getProperty("PORT")));
 
-        /*
-        // JavaMail-specific mail sender configuration, based on javamail.properties
-        final Properties javaMailProperties = new Properties();
-        javaMailProperties.load(this.applicationContext.getResource(JAVA_MAIL_FILE).getInputStream());
-        mailSender.setJavaMailProperties(javaMailProperties);
-        */
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
+
         return mailSender;
 
     }
@@ -62,7 +67,7 @@ public class EmailConfig {
     public TemplateEngine emailTemplateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         // Resolver for HTML emails (except the editable one)
-        templateEngine.addTemplateResolver(htmlTemplateResolver());
+        templateEngine.addTemplateResolver(TemplateResolver());
 
         /* Message source, internationalization specific to emails
         templateEngine.setTemplateEngineMessageSource(emailMessageSource());
@@ -71,10 +76,10 @@ public class EmailConfig {
         return templateEngine;
     }
 
-    private ITemplateResolver htmlTemplateResolver() {
+    private ITemplateResolver TemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setOrder(Integer.valueOf(2));
         templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+        templateResolver.setOrder(1);
         templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);

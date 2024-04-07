@@ -101,8 +101,8 @@ public class HelloWorldController {
         mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));
         return mav;
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}", params = "userEmail" )
+/*
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceId:\\d+}", params = "userEmail" )
     public ModelAndView createAppointment(@PathVariable("serviceId") final long serviceId, @RequestParam("userEmail") final String userEmail ) {
 
         // ! temp {
@@ -117,7 +117,7 @@ public class HelloWorldController {
 
         return new ModelAndView("redirect:/"+serviceId);
     }
-
+*/
     @RequestMapping(method = RequestMethod.GET, path = "/micuenta")
     public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");

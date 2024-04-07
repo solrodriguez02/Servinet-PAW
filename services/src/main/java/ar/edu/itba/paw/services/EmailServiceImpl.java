@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -25,11 +26,12 @@ public class EmailServiceImpl implements EmailService{
     }
 
     @Async
-    public void sendMail( final String recipientName, final String recipientEmail, final Locale locale) throws MessagingException {
+    public void sendMail( final String recipientEmail, final String subject, final String content, final Locale locale) throws MessagingException {
 
         // Prepare the evaluation context
         final Context ctx = new Context(locale);
-        ctx.setVariable("name", recipientName);
+        ctx.setVariable("subject", subject);
+
         //ctx.setVariable("subscriptionDate", new Date ());
         // ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
 
@@ -37,20 +39,27 @@ public class EmailServiceImpl implements EmailService{
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper message =
                 new MimeMessageHelper(mimeMessage, true, "UTF-8"); // true = multipart
-        message.setSubject("Example HTML email with inline image");
-        message.setFrom("servinet@example.com");
+        message.setSubject(subject);
+        message.setFrom("servinet@gmail.com");
         message.setTo(recipientEmail);
 
         // Create the HTML body using Thymeleaf
-        final String htmlContent = this.templateEngine.process("mail.html", ctx);
-        message.setText(htmlContent, true); // true = isHtml
-
+        //final String htmlContent = this.templateEngine.process("classpath:mail/mail.html", ctx);
+        //message.setText(htmlContent, true); // true = isHtml
+    message.setText("hola",true);
         // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
                 /*
         final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
         message.addInline(imageResourceName, imageSource, imageContentType);
         */
         // Send mail
-        this.mailSender.send(mimeMessage);
+        try {
+            this.mailSender.send(mimeMessage);
+        }
+        catch (MailException ex) {
+            // simply log it and go on...
+            System.err.println(ex.getMessage());
+        }
+
     }
 }
