@@ -33,15 +33,16 @@
 
         <label  >
             <p class="label">Precio:
+                <div class="service-div">
             <select name="pricingtype" class="input" id="priceType">
                 <c:forEach items="${pricingTypes}" var="item">
                     <option  value="${item}">${item.value}</option>
                 </c:forEach>
             </select>
-            </p>
             <input type="text" class="input" name="precio" id="priceTag" placeholder="Ingresa el precio de tu servicio"/>
+            </div>
+            </p>
         </label>
-
 
         <label>
             <p class="label">Categoria:</p>
@@ -74,8 +75,6 @@
     });
     const priceLabel = document.getElementById('priceType');
     const priceInput = document.getElementById('priceTag');
-    console.log(priceLabel);
-    console.log(priceInput)
     priceLabel.addEventListener('change', () => {
         if (priceLabel.value == 'TBD') {
             priceInput.style.display = 'none';
@@ -84,5 +83,7 @@
             priceInput.style.display = 'block';
         }
     })
+
+
 
 </script>
