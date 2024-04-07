@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS services (
     minimalduration INT,
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'To be determined')),
     price VARCHAR(255),
+    imageid INT REFERENCES Images(imageId),
     additionalcharges BOOLEAN
     );
 
@@ -65,9 +66,8 @@ CREATE TABLE IF NOT EXISTS appointments (
     confirmed BOOLEAN DEFAULT FALSE
 );
 
-create table if not exists serviceImages(
-id serial primary key,
-serviceid int references services(id) on delete cascade,
+create table if not exists Images(
+imageId serial primary key,
 imageBytes bytea
 );
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);

@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ServiceDao {
     Optional<List<Service>> getAllServices();
     Optional<Service> findById(long id);
-    Service create(long businessid, String name, String description,Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges);
+    Service create(long businessid, String name, String description,Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId);
     Service edit(long serviceid, String field, String newvalue);
     void delete(long serviceid);
 }

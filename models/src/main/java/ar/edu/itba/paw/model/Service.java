@@ -13,9 +13,10 @@ public class Service {
     private String price;
     private Categories category;
     private Boolean additionalCharges;
+    private long imageId;
 
     // Constructor
-    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges) {
+    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges,long imageId) {
         this.id = id;
         this.businessid = businessid;
         this.name = name;
@@ -28,7 +29,7 @@ public class Service {
         this.pricing = pricingType;
         this.price = price;
         this.additionalCharges = additionalCharges;
-
+        this.imageId= imageId;
     }
 
     // Getters and setters

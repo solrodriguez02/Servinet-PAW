@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service("imageServiceImpl")
-public class imageServiceImpl implements ImageService{
+public class ImageServiceImpl implements ImageService{
 
     private final ImageDao imageDao;
     @Autowired
-    public imageServiceImpl(final ImageDao imageDao){
+    public ImageServiceImpl(final ImageDao imageDao){
         this.imageDao = imageDao;
     }
     @Override

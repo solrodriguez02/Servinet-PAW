@@ -6,5 +6,5 @@ import java.util.Optional;
 
 public interface ImageService {
     Optional<ImageModel> getImageById(long id);
-    ImageModel addImage(long serviceId, byte[] imageBytes);
+    ImageModel addImage(byte[] imageBytes);
 }

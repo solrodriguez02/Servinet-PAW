@@ -10,13 +10,14 @@
 <body>
 <c:url value="/crearservicio" var="postUrl"/>
 <div class="postForm page">
-    <form action="${postUrl}" method="post" class="form">
+    <form action="${postUrl}" method="post" class="form" enctype="multipart/form-data">
 
         <h3 class="form-title">Crea un nuevo servicio</h3>
         <label>
             <p class="label">Nombre:</p>
             <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
         </label>
+        <input type="file" name="imageInput"/>
         <label>
             <p class="label">Descripcion:</p>
             <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>

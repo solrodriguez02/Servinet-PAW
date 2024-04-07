@@ -24,8 +24,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service create(long businessid, String name, String description,Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges) {
-        return serviceDao.create(businessid, name, description, homeservice, location, category,minimalduration ,pricing, price, additionalCharges);
+    public Service create(long businessid, String name, String description,Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+        return serviceDao.create(businessid, name, description, homeservice, location, category,minimalduration ,pricing, price, additionalCharges, imageId);
     }
 
     @Override

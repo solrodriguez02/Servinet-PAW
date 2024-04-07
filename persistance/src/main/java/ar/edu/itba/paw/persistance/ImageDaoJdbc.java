@@ -20,7 +20,7 @@ import java.util.Optional;
 public class ImageDaoJdbc implements ImageDao {
 
     private static final RowMapper<ImageModel> ROW_MAPPER = (rs, rowNum) -> new ImageModel(rs.getLong("id"),
-            rs.getLong("serviceid"), rs.getBytes("imageBytes"));
+             rs.getBytes("imageBytes"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -39,9 +39,9 @@ public class ImageDaoJdbc implements ImageDao {
     @Override
     public ImageModel addImage(long serviceid, byte[] image){
         final Map<String, Object> userData = new HashMap<>();
-        userData.put("serviceid", serviceid);
-        userData.put("url", image);
+        userData.put("serviceId", serviceid);
+        userData.put("imageId", image);
        final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new ImageModel(generatedId.longValue(), serviceid, image);
+        return new ImageModel(generatedId.longValue(), image);
     }
 }
