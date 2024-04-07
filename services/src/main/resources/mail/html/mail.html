@@ -5,10 +5,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> <!-- multipart/form-data-->
 </head>
 <body>
-<p th:text="#{(${name})}">
-    Hello,
+<p> <!--th:text="#{(${subject})}"-->
+    Estimado,
 </p>
-<p th:if="${name.length() > 10}">
+<p th:if="${subject.length() > 10}">
     Wow! You've got a long name (more than 10 chars)!
 </p>
 <p>
@@ -25,9 +25,14 @@
 <p>
     <!--img src="sample.png" th:src="|cid:${imageResourceName}|" /-->
 </p>
+<div>
+    <!--a th:href="@{/(serviceId=${service.id})}"-->
+    <button class="confirm"></button>
+    <!--</a-->
+</div>
 <p>
-    Regards, <br />
-    <em>The Thymeleaf Team</em>
+     <br />
+    <em>Servinet</em>
 </p>
 </body>
 </html>
