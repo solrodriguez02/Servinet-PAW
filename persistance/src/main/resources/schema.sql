@@ -65,6 +65,10 @@ CREATE TABLE IF NOT EXISTS appointments (
     confirmed BOOLEAN DEFAULT FALSE
 );
 
-
+create table if not exists serviceImages(
+id serial primary key,
+serviceid int references services(id) on delete cascade,
+imageBytes bytea
+);
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);
 --insert into business (userid, businessname, businessTelephone, businessEmail, businessLocation) values (1, 'adminbusiness', '123456789','adminbusiness@mail.com','Almagro');
