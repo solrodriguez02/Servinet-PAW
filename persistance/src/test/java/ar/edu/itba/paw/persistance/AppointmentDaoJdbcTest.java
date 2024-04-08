@@ -34,6 +34,7 @@ public class AppointmentDaoJdbcTest {
     private LocalDateTime ENDDATE = STARTDATE.plusHours(2);
     private final long SERVICEID = 1;
     private final long USERID = 1;
+    private final String LOCATION = "Palermo";
 
     @Before
     public void setup() {
@@ -48,7 +49,7 @@ public class AppointmentDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE, LOCATION);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(appointment);
@@ -61,8 +62,8 @@ public class AppointmentDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        Appointment a1 = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
-        Appointment a2 = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
+        Appointment a1 = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE, LOCATION);
+        Appointment a2 = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE, LOCATION);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertEquals(2, JdbcTestUtils.countRowsInTable(jdbcTemplate, "appointments"));
@@ -71,7 +72,7 @@ public class AppointmentDaoJdbcTest {
 
     @Test
     public void testFindById(){
-        appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
+        appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE, LOCATION);
 
         Appointment appointment = appointmentDao.findById(1).get();
 
@@ -81,8 +82,8 @@ public class AppointmentDaoJdbcTest {
 
     @Test
     public void testConfirmAppointment(){
-        Appointment toConfirmAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
-        Appointment pendingAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
+        Appointment toConfirmAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE, LOCATION);
+        Appointment pendingAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE, LOCATION);
 
         appointmentDao.confirmAppointment(toConfirmAppointment.getId());
 
@@ -93,8 +94,8 @@ public class AppointmentDaoJdbcTest {
 
     @Test
     public void testCancelAppointment(){
-        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE);
-        Appointment anotherAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE);
+        Appointment appointment = appointmentDao.create(SERVICEID, USERID, STARTDATE, ENDDATE, LOCATION);
+        Appointment anotherAppointment = appointmentDao.create(SERVICEID, USERID, STARTDATE.plusHours(1), ENDDATE, LOCATION);
 
         appointmentDao.cancelAppointment(appointment.getId());
         Assert.assertFalse( appointmentDao.findById(appointment.getId()).isPresent());

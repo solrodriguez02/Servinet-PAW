@@ -6,6 +6,7 @@ import java.util.Optional;
 
 public interface UserService {
     Optional<User> findById(long id);
+    Optional<User> findByEmail(String email);
 
     User create(String username, String name,String password ,String surname, String email, String telephone);
     void changeUsername(long userid,String value);

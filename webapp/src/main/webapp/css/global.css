@@ -48,3 +48,12 @@ body {
 .transparent {
     display: none;
 }
+
+.above-dropdown {
+    z-index: 3;
+}
+
+.highlight-text {
+    color: #585bfa;
+    font-weight: bold;
+}

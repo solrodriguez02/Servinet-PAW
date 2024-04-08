@@ -9,7 +9,7 @@ public interface AppointmentDao {
     Optional<Appointment> findById(long id);
 
     // siempre confirmed = false
-    Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate);
+    Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location);
 
     void confirmAppointment(long appointmentid);
 

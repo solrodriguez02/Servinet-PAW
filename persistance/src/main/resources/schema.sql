@@ -62,6 +62,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     startDate TIMESTAMP NOT NULL,
     endDate TIMESTAMP,
+    location VARCHAR(255),
     confirmed BOOLEAN DEFAULT FALSE
 );
 
