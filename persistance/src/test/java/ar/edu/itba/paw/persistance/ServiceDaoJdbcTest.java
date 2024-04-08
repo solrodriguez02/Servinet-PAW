@@ -51,7 +51,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testCreate() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
 
        Assert.assertNotNull(service);
        Assert.assertEquals(BUSINESSID, service.getBusinessid());
@@ -69,7 +69,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testFindById() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
        Service service2 = serviceDao.findById(service.getId()).get();
 
        Assert.assertNotNull(service2);
@@ -88,7 +88,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testEdit() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
        Service service2 = serviceDao.edit(service.getId(), "servicename", "newname");
 
        Assert.assertNotNull(service);
@@ -107,7 +107,7 @@ public class ServiceDaoJdbcTest {
    }
   @Test
    public void testDelete() {
-      Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+      Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
        serviceDao.delete(service.getId());
 
        Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "services"));

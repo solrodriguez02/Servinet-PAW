@@ -28,18 +28,18 @@ public class ImageDaoJdbc implements ImageDao {
     @Autowired
     public ImageDaoJdbc(final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
-        simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("images").usingGeneratedKeyColumns("id");
+        simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("images").usingGeneratedKeyColumns("imageid");
     }
     @Override
     public Optional<ImageModel> getImageById(long id){
-        final List<ImageModel> list = jdbcTemplate.query("SELECT * from ServiceImages WHERE id = ?", new Object[] {id}, ROW_MAPPER);
+        final List<ImageModel> list = jdbcTemplate.query("SELECT * from Images WHERE imageId = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }
 
     @Override
     public ImageModel addImage( byte[] image){
         final Map<String, Object> userData = new HashMap<>();
-        userData.put("imageId", image);
+        userData.put("imageBytes", image);
        final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
         return new ImageModel(generatedId.longValue(), image);
     }

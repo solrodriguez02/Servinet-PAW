@@ -35,8 +35,8 @@ CREATE TABLE IF NOT EXISTS services (
     minimalduration INT,
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'To be determined')),
     price VARCHAR(255),
-    imageid INT REFERENCES Images(imageId),
-    additionalcharges BOOLEAN
+    additionalcharges BOOLEAN,
+    imageid INT REFERENCES Images(imageId)
     );
 
 CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '

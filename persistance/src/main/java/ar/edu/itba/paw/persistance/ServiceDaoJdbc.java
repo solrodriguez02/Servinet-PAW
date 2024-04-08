@@ -23,7 +23,7 @@ public class ServiceDaoJdbc implements ServiceDao {
             rs.getString("location"), Neighbourhoods.findByValue(rs.getString("location")) ,
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
-            rs.getBoolean("additionalcharges"),rs.getLong("imageid"));
+            rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
