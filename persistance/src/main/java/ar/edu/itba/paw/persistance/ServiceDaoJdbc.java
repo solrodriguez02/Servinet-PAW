@@ -52,7 +52,7 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("minimalduration", minimalduration);
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
-        userData.put("imageid", imageId);
+        userData.put("imageid", imageId != 0 ? imageId : null);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
         return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageId);
     }
