@@ -7,6 +7,7 @@
     <title></title>
 </head>
 <c:url var="deleteUrl" value="/${service.id}/deleteservicio" />
+<c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">
         <h2><c:out value="${service.name}"/> (id: <c:out value="${service.id}"/>) </h2>
@@ -31,19 +32,13 @@
             </div>
         </div>
 
-        <label>
-            <input type="datetime-local"/>
-        </label>
-
         <div class="take-turn-container">
             <label>
                 <input type="datetime-local"/>
             </label>
-            <form>
-                <button class="take-turn-btn" type="submit" >Reservar turno
-                </button>
-            </form>
-
+            <a href="${contratarUrl}">
+                <button class="take-turn-btn" >Reservar turno</button>
+            </a>
         </div>
 
     </div>

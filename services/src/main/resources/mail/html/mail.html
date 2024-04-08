@@ -80,12 +80,12 @@
         turno
         <span th:text="'#'+${appointmentId}"></span>
         <span th:replace="html/mail.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
-        <div th:if="${isClient}">
+        <p>
             Para cancelarlo, haga click
             <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
                 <input value="aqui" type="submit">
             </form>
-        </div>
+        </p>
     </div>
 
     <div th:if="${type == 'DENIED' }">

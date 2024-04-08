@@ -14,7 +14,6 @@ body{
     display: flex;
 }
 
-
 .form {
     background-color: white;
     width: 700px;
@@ -66,16 +65,16 @@ select.input {
     transform: translateY(-2px);
 }
 
-.appointment-select{
+.form-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+select {
     height: 150%;
     position: relative;
     bottom: -8px;
     font-size: 16px;
-}
-
-.form-title {
-    text-align: center;
-    margin-bottom: 10px;
 }
 
 .options {

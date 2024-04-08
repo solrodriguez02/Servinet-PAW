@@ -36,7 +36,7 @@
             <label for="select">
              <div class="select">
                 <p class="label">Este servicio se realiza a domicilio, seleccione su barrio:</p>
-                <select id="select" class="appointment-select" name="barrios">
+                <select id="select" name="barrios">
                     <option value=""></option>
                     <option value="${service.location}">${service.location}</option>
                 </select>
