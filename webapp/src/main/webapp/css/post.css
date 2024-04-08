@@ -14,6 +14,7 @@ body{
     display: flex;
 }
 
+
 .form {
     background-color: white;
     width: 700px;
@@ -63,6 +64,13 @@ select.input {
 .submitBtn:hover {
     background-color: #6c6fff;
     transform: translateY(-2px);
+}
+
+.appointment-select{
+    height: 150%;
+    position: relative;
+    bottom: -8px;
+    font-size: 16px;
 }
 
 .form-title {
