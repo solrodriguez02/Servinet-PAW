@@ -70,7 +70,7 @@ select.input {
     margin-bottom: 10px;
 }
 
-select {
+.appointment-select {
     height: 150%;
     position: relative;
     bottom: -8px;
