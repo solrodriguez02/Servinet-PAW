@@ -30,6 +30,16 @@
                 <div class="info-text">
                     <p class="category-text"><c:out value="${service.category}"/></p>
                     <p class="text-with-icon"> <i class="material-icons icon">location_on</i><c:out value="${service.location}"/></p>
+                    <p class="text-with-icon"> <i class="material-icons icon">house</i>
+                        <c:choose>
+                            <c:when test="${service.homeService}">
+                                A domicilio
+                            </c:when>
+                            <c:otherwise>
+                                En el domicilio del profesional
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
                     <p class="text-with-icon"> <i class="material-icons icon">schedule</i>
                         <c:choose>
                             <c:when test="${service.duration < 60}">
@@ -43,11 +53,24 @@
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i><c:out value="${service.price}"/></p>
-                    <p class="text-description"><c:out value="${service.description}"/></p>
+                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i><c:out value="${service.price}"/>
+                        <label class="comment">${service.pricing}</label>
+                    </p>
+                    <c:if test="${service.additionalCharges}">
+                        <p class="text-with-icon"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
+                    </c:if>
+
+                    <div class="btn-container">
+                        <button class="btn">
+                            <a href="${pageContext.request.contextPath}/" class="none-decoration btn-text">Sacar turno</a>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <p class="text-description"><c:out value="${service.description}"/></p>
+
     </div>
 </body>
 </html>

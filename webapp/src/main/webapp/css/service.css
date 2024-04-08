@@ -41,3 +41,16 @@
     margin-top: 15px;
     color: #3d3d3d;
 }
+
+.comment {
+    color: gray;
+    font-style: italic;
+    margin-left: 15px;
+}
+
+.btn-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}

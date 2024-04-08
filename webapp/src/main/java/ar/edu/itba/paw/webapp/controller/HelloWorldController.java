@@ -36,14 +36,22 @@ public class HelloWorldController {
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
-
     @RequestMapping(method = RequestMethod.GET, path = "/")
-    public ModelAndView home(
+    public ModelAndView home() {
+        final ModelAndView mav = new ModelAndView("home");
+        mav.addObject("categories", categories);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        return mav;
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, path = "/servicios")
+    public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
             @RequestParam(name = "ubicacion", required = false) String location,
             @RequestParam(name = "pagina", required = false) Integer page
     ) {
-        final ModelAndView mav = new ModelAndView("home");
+        final ModelAndView mav = new ModelAndView("services");
         if(page == null) page=0;
         List<Service> serviceList = service.services(page, category, location);
         Boolean isMoreServices = service.isMoreServices(page, category, location);

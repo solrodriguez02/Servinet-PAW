@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS services (
     location VARCHAR(255) NOT NULL,
     category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
-    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'TBD')),
+    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
     additionalcharges BOOLEAN,
     imageurl VARCHAR(255)
