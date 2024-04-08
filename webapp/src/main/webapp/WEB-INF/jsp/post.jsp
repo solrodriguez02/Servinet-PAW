@@ -14,25 +14,36 @@
 
         <h3 class="form-title">Crea un nuevo servicio</h3>
         <label>
-            <p class="label">Nombre:</p>
+            Nombre:
             <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
         </label>
         <label>
-            <p class="label">Descripcion:</p>
+            Descripcion:
             <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
         </label>
-        <label>
-            <input type="checkbox" id="homeservice" name="homeserv" />
-            <label for="homeservice">Servicio a domicilio</label>
-        </label>
 
-        <label id="ubicacionLabel">
-               <p> Ubicacion:</p>
-                <input type="text" class="input" name="ubicacion" value="" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
+        <label id="label">
+                Ubicacion:
+            <label>
+                <input type="checkbox" id="homeservice" name="homeserv" />
+                <label for="homeservice">Servicio a domicilio</label>
+            </label>
+            <div class="service-div">
+                <select name="neighbourhood" class="input" >
+                    <c:forEach items="${neighbours}" var="item">
+                        <option value="${item}">${item.value}</option>
+                    </c:forEach>
+                </select>
+                <input type="text" class="input" name="ubicacion" value="" id="locationInput" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
+            </div>
         </label>
 
         <label  >
             <p class="label">Precio:
+            <label>
+                <input type="checkbox" id="additionalCharges" name="additionalCharges" />
+                <label for="additionalCharges">Puede incluir cargos addicionales</label>
+            </label>
                 <div class="service-div">
             <select name="pricingtype" class="input" id="priceType">
                 <c:forEach items="${pricingTypes}" var="item">
@@ -63,14 +74,13 @@
 </html>
 <script>
     const homeservice = document.getElementById('homeservice');
-
-    const ubicacionLabel = document.getElementById('ubicacionLabel');
+    const locationInput = document.getElementById('locationInput');
     homeservice.addEventListener('change', () => {
         if (homeservice.checked) {
-            ubicacionLabel.style.display = 'none';
-            ubicacionLabel.querySelector('input').value = '';
+            locationInput.style.display = 'none';
+            locationInput.querySelector('input').value = '';
         } else {
-            ubicacionLabel.style.display = 'block';
+            locationInput.style.display = 'block';
         }
     });
     const priceLabel = document.getElementById('priceType');

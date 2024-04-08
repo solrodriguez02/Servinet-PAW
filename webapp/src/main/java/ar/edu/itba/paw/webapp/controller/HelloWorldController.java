@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Categories;
+import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ServiceService;
@@ -27,12 +28,14 @@ public class HelloWorldController {
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
+    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
     @Autowired
     public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service) {
         this.us = us;
         this.service = service;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
+        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
 
@@ -56,20 +59,22 @@ public class HelloWorldController {
         mav.addObject("user","home page");
         mav.addObject("categories",categories);
         mav.addObject("pricingTypes",pricingTypes);
+        mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
     public ModelAndView createService(@RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
-                                      @RequestParam(value="homeserv",required = false,defaultValue = "false") final boolean homeserv,
-                                      @RequestParam(value="ubicacion",required = false,defaultValue = "") final String location,
+                                      @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
+                                      @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
                                       @RequestParam(value="categoria") final Categories category,
+                                      @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
                                       @RequestParam(value="pricingtype") final PricingTypes pricingtype,
                                       @RequestParam(value="precio") final String price,
-                                      @RequestParam(value="minimalduration") final int minimalduration,
+                                      @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
                                       @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
-        service.create(1,title,description,homeserv,location,category,minimalduration,pricingtype,price,additionalCharges);
+        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
         return new ModelAndView("redirect:/");
     }
 

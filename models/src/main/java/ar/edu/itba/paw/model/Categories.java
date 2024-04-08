@@ -8,7 +8,7 @@ public enum Categories {
     EXTERIORES("Exteriores"),
     EVENTOS_Y_CELEBRACIONES ("Eventos y Celebraciones"),
     TRANSPORTE ("Transporte"),
-    CONSULTORIA ("Consultoría"),
+    CONSULTORIA ("Consultoria"),
     PELUQUERIA ("Peluqueria"),
     SALUD ("Salud");
 
