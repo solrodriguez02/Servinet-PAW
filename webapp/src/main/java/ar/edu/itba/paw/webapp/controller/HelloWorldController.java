@@ -81,8 +81,8 @@ public class HelloWorldController {
                                       @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
                                       @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges) throws IOException {
 
-
-        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
+        long imageId = is.addImage(image.getBytes()).getImageId();
+        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
         return new ModelAndView("redirect:/");
     }
 
