@@ -21,8 +21,8 @@ public class ImageServiceImpl implements ImageService{
     }
 
     @Override
-    public ImageModel addImage(long serviceId, byte[] imageBytes) {
-        return imageDao.addImage(serviceId, imageBytes);
+    public ImageModel addImage( byte[] imageBytes) {
+        return imageDao.addImage( imageBytes);
     }
 
 }

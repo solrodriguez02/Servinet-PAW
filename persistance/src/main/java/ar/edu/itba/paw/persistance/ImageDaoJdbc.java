@@ -37,9 +37,8 @@ public class ImageDaoJdbc implements ImageDao {
     }
 
     @Override
-    public ImageModel addImage(long serviceid, byte[] image){
+    public ImageModel addImage( byte[] image){
         final Map<String, Object> userData = new HashMap<>();
-        userData.put("serviceId", serviceid);
         userData.put("imageId", image);
        final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
         return new ImageModel(generatedId.longValue(), image);
