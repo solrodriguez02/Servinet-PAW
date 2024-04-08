@@ -48,16 +48,11 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
         final ModelAndView mav = new ModelAndView("home");
-        List<Service> serviceList = new ArrayList<>();
-        if (category != null && !category.isEmpty()) {
-            // Se debería crear un metodo que devuelva los servicios de la categoria recibida por parametro
-            // IMPORTANTE para front: usar try catch de la excepción para mostrar la información en la vista creando un service hardcodeado que se agrega a la lista
-            // o bien popular la db local con los ids que se busquen
-            serviceList.add(service.findById(10).orElseThrow(ServiceNotFoundException::new));
-        } else {
-            for (int i = 1; i < 2; i++) {
-                serviceList.add(service.findById(i).orElseThrow(ServiceNotFoundException::new));
-            }
+        List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
+        List<Service> service = new ArrayList<>();
+        for(Service services : serviceList){
+            if(category == null || services.getCategory().equals(category))
+                service.add(services);
         }
         mav.addObject("services", service);
         mav.addObject("categories", categories);
