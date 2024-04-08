@@ -8,8 +8,11 @@ import org.thymeleaf.context.Context;
 public interface EmailService {
 
     // ! tuve q agregar dependencia javax.mail en pom
-    public void requestAppointment(Appointment appointment, String userMail) throws MessagingException ;
+    public void requestAppointment(Appointment appointment, String clientMail) throws MessagingException ;
 
-    // saque Locale
-    public void sendMail(final String recipientEmail, final String subject, final String template, final Context context) throws MessagingException;
+    public void confirmedAppointment(Appointment appointment) throws MessagingException;
+
+    public void cancelledAppointment(Appointment appointment) throws MessagingException;
+
+    public void deniedAppointment(Appointment appointment) throws MessagingException;
 }

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Business;
+import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,8 +13,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
-import ar.edu.itba.paw.model.Service;
-
 @org.springframework.stereotype.Service()
 public class EmailServiceImpl implements EmailService{
 
@@ -23,77 +20,99 @@ public class EmailServiceImpl implements EmailService{
     private final TemplateEngine templateEngine;
     //temp
     private final Locale LOCALE = Locale.forLanguageTag("es-419"); // Locale.of("es");
-    private final String APP_URL = "http://localhost:8080/webapp_war_exploded/";
+    private final String APP_URL = "http://localhost:8080/webapp_war_exploded/"; //! CAMBIAR EN DEPLOY
 
-    private final static Set<String> moreTemplatesSet = new HashSet<>();
-    private final static String FRAGMENTS_TEMPLATE = "mail/fragments.html";
+    private final static String TEMPLATE = "html/mail.html";
     private final ServiceService serviceService;
     private final BusinessService businessService;
+    private final UserService userService;
 
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine,final ServiceService serviceService,  final BusinessService businessService) {
+    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine,final ServiceService serviceService, final BusinessService businessService, final UserService userService) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
         this.serviceService =serviceService;
         this.businessService = businessService;
-        moreTemplatesSet.add(FRAGMENTS_TEMPLATE);
+        this.userService =  userService;
     }
 
     @Async // * funciona pues no invoque a un metodo dentro de la clase
     @Override
-    public void requestAppointment(Appointment appointment, String userMail) throws MessagingException {
+    public void requestAppointment(Appointment appointment, String clientMail) throws MessagingException {
 
         Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
 
-        final Context ctx = new Context(LOCALE);
-        ctx.setVariable("subject", "WAITING");
-        ctx.setVariable("serviceName",service.getName());
-        ctx.setVariable("serviceId",service.getId());
-        ctx.setVariable("url", APP_URL);
-        ctx.setVariable("startdate",appointment.getStartDate());
+        final Context ctx = getContext(appointment,service);
 
-        // para el profesional
-        requestConfirmationFromServiceProvider(appointment, service);
-
-        // para el user
-        ctx.setVariable("subject", "REQUEST");
-        sendMail(userMail,"Turno solicitado a la espera de confirmación","html/mail.html",ctx);
+        sendMailToBusiness(EmailTypes.REQUEST, service, ctx);
+        sendMailToClient(EmailTypes.WAITING,clientMail,ctx);
     }
 
     @Async
-    public void confirmedAppointment(Appointment appointment){
-        //para el prof
+    @Override
+    public void confirmedAppointment(Appointment appointment) throws MessagingException {
+        String clientMail = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new).getEmail();
+        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
 
+        final Context ctx = getContext(appointment,service);
+
+        sendMailToBusiness(EmailTypes.ACCEPTED, service, ctx);
+        sendMailToClient(EmailTypes.ACCEPTED,clientMail,ctx);
     }
 
-    private void requestConfirmationFromServiceProvider(Appointment appointment, Service service) throws MessagingException {
+
+    @Async
+    @Override
+    public void cancelledAppointment(Appointment appointment) throws MessagingException {
+        String clientMail = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new).getEmail();
+        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
+
+        final Context ctx = getContext(appointment,service);
+
+        sendMailToBusiness(EmailTypes.CANCELLED, service, ctx);
+        sendMailToClient(EmailTypes.CANCELLED,clientMail,ctx);
+    }
+
+    @Async
+    @Override
+    public void deniedAppointment(Appointment appointment) throws MessagingException {
+        String clientMail = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new).getEmail();
+        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
+
+        final Context ctx = getContext(appointment,service);
+
+        sendMailToBusiness(EmailTypes.DENIED, service, ctx);
+        sendMailToClient(EmailTypes.DENIED,clientMail,ctx);
+    }
+
+    private Context getContext(Appointment appointment, Service service){
+        final Context ctx = new Context(LOCALE);
+        ctx.setVariable("serviceName",service.getName());
+        ctx.setVariable("serviceId",service.getId());
+        ctx.setVariable("appointmentId",appointment.getId());
+        ctx.setVariable("url", APP_URL);
+        ctx.setVariable("startdate",appointment.getStartDate());
+        return ctx;
+    }
+
+    public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
+        ctx.setVariable("isClient",true);
+        ctx.setVariable("type", emailType.getType());
+        ctx.setVariable("subject", emailType.getSubject());
+        sendMail(userMail, emailType.getSubject(),ctx);
+    }
+
+    private void sendMailToBusiness( EmailTypes emailType, Service service, Context ctx) throws MessagingException {
 
         // service duration y ubi
         Business business = businessService.findById( service.getBusinessid() ).orElseThrow(NoSuchElementException::new);
-
-        String template = "html/mail.html";
-/*
-        final Context ctx = new Context(locale);
-        ctx.setVariable("subject", subject);
-        ctx.setVariable("service",1);   //!LE PUEDO PASAR SERVICE Y HAGO .id o lo q necesite
-*/
-
-        //   sendMail(business.getEmail(), "Waiting confirmation",template,null);
+        ctx.setVariable("isClient",false);
+        ctx.setVariable("type", emailType.getType());
+        ctx.setVariable("subject", emailType.getSubject());
+        sendMail(business.getEmail(), emailType.getSubject(),ctx);
     }
 
-    // ! CONSTRUIR OTRO THREAD
-
-    public void sendMail( final String recipientEmail, final String subject, final String template, final Context ctx) throws MessagingException {
-
-        // Prepare the evaluation context
-        /* no paso locale
-        final Context ctx = new Context(locale);
-        ctx.setVariable("subject", subject);
-        ctx.setVariable("service",1);   //!LE PUEDO PASAR SERVICE Y HAGO .id o lo q necesite
-        */
-        //ctx.setVariable("subscriptionDate", new Date ());
-
-        // ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
+    private void sendMail( final String recipientEmail, final String subject, final Context ctx) throws MessagingException {
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
@@ -105,12 +124,12 @@ public class EmailServiceImpl implements EmailService{
 
         // Create the HTML body using Thymeleaf
         //final String htmlContent = this.templateEngine.process(template, moreTemplatesSet, ctx );
-        final String htmlContent = this.templateEngine.process(template, ctx );
+        final String htmlContent = this.templateEngine.process(TEMPLATE, ctx );
         message.setText(htmlContent, true); // true = isHtml
 
 
-        // Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
-                /*
+        /* Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
+        ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
         final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
         message.addInline(imageResourceName, imageSource, imageContentType);
         */

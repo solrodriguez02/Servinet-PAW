@@ -14,10 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 @Controller
 public class EmailController {
@@ -45,22 +47,93 @@ public class EmailController {
         String username = userEmail.substring(0, index)+ LocalDateTime.now();
         // ! }
 
-        User user = userService.create(username,"juan","","juan",userEmail,"");
+        //User user = userService.create(username,"juan","","juan",userEmail,"");
         Service serv = serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         LocalDateTime startDate = LocalDateTime.now(); //! temp
-        Appointment createdAppointment = appointmentService.create(serviceId,user.getUserId(), startDate, startDate.plusMinutes(serv.getDuration()), "bahamas" );
+        Appointment createdAppointment = appointmentService.create(serviceId,1, startDate, startDate.plusMinutes(serv.getDuration()), "bahamas" );
 
         try {
+            //* si ya tiene el Service => ya lo paso x param
             emailService.requestAppointment(createdAppointment, userEmail);
 
         } catch (MessagingException e ){
             System.err.println(e.getMessage());
         }
-
-
         return new ModelAndView("redirect:/"+serviceId);
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
+    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId,
+                                    @RequestParam(value = "nombre") final String name,
+                                    @RequestParam(value = "apellido") final String surname,
+                                    @RequestParam(value = "lugar") final String location,
+                                    @RequestParam(value = "email") final String email,
+                                    @RequestParam(value = "telefono") final String telephone,
+                                    @RequestParam(value = "fecha") final String date
+    ) {
+        User newuser = userService.findByEmail(email).orElse(null);
+        if (newuser == null){
+            newuser = userService.create("default",name,"default",surname,email,telephone);
+            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+            userService.changeUsername(newuser.getUserId(),newUsername);
+        }
+        Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
 
+        LocalDateTime startDate = LocalDateTime.parse(date);
+        Appointment createdAppointment = appointmentService.create(serviceId, newuser.getUserId(),startDate, startDate.plusMinutes(service.getDuration()), location );
+
+        try {
+            //* si ya tiene el Service => ya lo paso x param
+            emailService.requestAppointment(createdAppointment, newuser.getEmail());
+
+        } catch (MessagingException e ){
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/turno/"+createdAppointment.getId());
+    }
+
+    @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
+    public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        appointmentService.cancelAppointment(appointmentId);
+        try {
+            emailService.deniedAppointment(appointment);
+
+        } catch (MessagingException e ){
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/turno/"+appointmentId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
+    public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        appointmentService.confirmAppointment(appointmentId);
+        try {
+            emailService.confirmedAppointment(appointment);
+
+        } catch (MessagingException e ){
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/turno/"+appointmentId);
+    }
+
+    @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
+    public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        appointmentService.cancelAppointment(appointmentId);
+        try {
+            emailService.cancelledAppointment(appointment);
+
+        } catch (MessagingException e ){
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/turno/"+appointmentId);
+    }
 }
 

@@ -128,7 +128,7 @@ public class HelloWorldController {
 
         return mav;
     }
-
+/*
     @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
     public ModelAndView appointment(@PathVariable("serviceId") final long serviceId,
                                     @RequestParam(value = "nombre") final String name,
@@ -149,9 +149,11 @@ public class HelloWorldController {
 
         LocalDateTime startDate = LocalDateTime.parse(date);
         Appointment app = appointment.create(serviceId, newuser.getUserId(),startDate, startDate.plusMinutes(service.getDuration()), location );
+
+
         return new ModelAndView("redirect:/turno/"+app.getId());
     }
-
+*/
     @RequestMapping(method = RequestMethod.GET, path = "/turno/{appointmentId:\\d+}")
     public ModelAndView appointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment app = appointment.findById(appointmentId).get();
@@ -164,14 +166,14 @@ public class HelloWorldController {
         mav.addObject("new", true);
         return mav;
     }
-
+/*
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment app = appointment.findById(appointmentId).get();
         appointment.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/");
     }
-
+*/
     @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");

@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" /> <!-- multipart/form-data-->
     <!--link th:href="@{css/style.css}" rel="stylesheet"-->
-    <title th:remove="all" >Confirmación de turno en progreso</title>
+    <title th:remove="all"  th:text="${subject}" ></title>
     <style>
         button {
             color: white;
@@ -38,43 +38,86 @@
 <p>
     Estimado,
 </p>
-<p th:if="${subject == 'WAITING' }">
-    Su turno
-    <span th:fragment="datetime">
-        para el servicio <span th:text="${serviceName}"/> el día
-        <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
-        <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
-        a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
-        <!--p th:if="${service.duration > 0 }">
-         con una duración de ..
-    </p-->
-    </span>
-    ha sido solicitado.
-    Más tarde será notificado si fue aceptado o no.
-</p>
-<p th:if="${subject == 'REQUEST'}">
-    Indique si desea aceptar una solitud de turno
-    <span th:replace="html/mail.html :: datetime"></span>
-    <p>
-        Por favor seleccione una opción,
-    </p>
-    <div class="container">
+<p>
+    <div th:if="${type == 'WAITING' }">
+        Su turno
+        <span th:fragment="datetime">
+            para el servicio <span th:text="${serviceName}"/> el día
+            <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
+            <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
+            a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
+            <!--span th:if="${service.duration > 0 }">
+             con una duración de ..
+            </span-->
+        </span>
+        ha sido solicitado.
+        Más tarde será notificado si fue aceptado o no.
+    </div>
+    <div th:if="${type == 'REQUEST'}">
+            Indique si desea aceptar una solitud de turno
+            <span th:replace="html/mail.html :: datetime"></span>
+            <p>Por favor seleccione una opción,</p>
 
-        <button class="confirm">
-        <a th:href="${url}+ ${serviceId}">Aceptar</a>
-        </button>
-        <button class="deny">
-        <a th:href="${url}+ ${serviceId}">Rechazar</a>
-        </button>
-
+            <div class="container">
+                <form th:action="${url}+'aceptar-turno/'+ ${appointmentId}" method="post">
+                    <button class="confirm" type="submit">
+                    Aceptar
+                    </button>
+                </form>
+                <form th:action="${url}+'rechazar-turno/'+${appointmentId}" method="post">
+                    <button class="deny" type="submit">
+                    Rechazar
+                    </button>
+                </form>
+            </div>
+            <p>
+                <em>Este mail dejará de ser válido luego de seleccionar una opción</em>
+            </p>
     </div>
 
-</p>
+    <div th:if="${type == 'ACCEPTED' }">
+        <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
+        turno
+        <span th:text="'#'+${appointmentId}"></span>
+        <span th:replace="html/mail.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
+        <div th:if="${isClient}">
+            Para cancelarlo, haga click
+            <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
+                <input value="aqui" type="submit">
+            </form>
+        </div>
+    </div>
 
-<p>
-    <!--img src="sample.png" th:src="|cid:${imageResourceName}|" /-->
-</p>
+    <div th:if="${type == 'DENIED' }">
+        <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
+        turno
+        <span th:text="'#'+${appointmentId}"></span>
+        <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad
+        <span th:text="${isClient}? 'a': 'o'"></span>.
+        <p th:if="${isClient}">
+            Si desea pedir otra solicitud, haga click
+            <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
+        </p>
+    </div>
 
+    <div th:if="${type == 'CANCELLED' }">
+        <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
+        turno
+        <span th:text="'#'+${appointmentId}"></span>
+        <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span>.
+        <div th:if="${isClient}">
+            Si desea pedir otra solicitud, haga click
+            <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
+        </div>
+    </div>
+<!--p>
+    <img src="sample.png" th:src="|cid:${imageResourceName}|" />
+</p-->
+
+<p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
+    Para mas detalles del turno haga click
+    <a th:href="${url}+'/turno/'+ ${appointmentId}">aqui</a>
+</p>
 <p>
      <br />
     <em>Servinet</em>
