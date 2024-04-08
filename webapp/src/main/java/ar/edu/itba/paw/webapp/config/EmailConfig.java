@@ -2,14 +2,11 @@ package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -20,6 +17,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Properties;
 
+@EnableAsync
 @PropertySource("classpath:mail/emailConfig.properties")
 public class EmailConfig {
     private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
@@ -79,6 +77,7 @@ public class EmailConfig {
     private ITemplateResolver TemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
+        //resolver.setApplicationContext(applicationContext);
         templateResolver.setOrder(1);
         templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".html");

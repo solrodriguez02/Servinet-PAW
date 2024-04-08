@@ -1,38 +1,84 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:remove="all">Template for HTML email with inline image</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> <!-- multipart/form-data-->
+    <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" /> <!-- multipart/form-data-->
+    <!--link th:href="@{css/style.css}" rel="stylesheet"-->
+    <title th:remove="all" >Confirmación de turno en progreso</title>
+    <style>
+        button {
+            color: white;
+            border-radius: 15px;
+            border: none;
+            padding: 10px;
+            /*opacity: 0.7;*/
+        }
+        button:hover {
+            opacity: 0.5;
+        }
+        a {
+            text-decoration:none;
+            color: white;
+        }
+        .container {
+            display: flex;
+            align-items: center;
+        }
+
+        .confirm {
+            background-color: #585bfa;
+        }
+
+        .deny {
+            background-color: #de2121;
+            margin-left: 20px;
+        }
+    </style>
 </head>
 <body>
-<p> <!--th:text="#{(${subject})}"-->
+<p>
     Estimado,
 </p>
-<p th:if="${subject.length() > 10}">
-    Wow! You've got a long name (more than 10 chars)!
+<p th:if="${subject == 'WAITING' }">
+    Su turno
+    <span th:fragment="datetime">
+        para el servicio <span th:text="${serviceName}"/> el día
+        <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
+        <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
+        a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
+        <!--p th:if="${service.duration > 0 }">
+         con una duración de ..
+    </p-->
+    </span>
+    ha sido solicitado.
+    Más tarde será notificado si fue aceptado o no.
 </p>
-<p>
-    You have been successfully subscribed to the <b>Fake newsletter</b> on
+<p th:if="${subject == 'REQUEST'}">
+    Indique si desea aceptar una solitud de turno
+    <span th:replace="html/mail.html :: datetime"></span>
+    <p>
+        Por favor seleccione una opción,
+    </p>
+    <div class="container">
+
+        <button class="confirm">
+        <a th:href="${url}+ ${serviceId}">Aceptar</a>
+        </button>
+        <button class="deny">
+        <a th:href="${url}+ ${serviceId}">Rechazar</a>
+        </button>
+
+    </div>
+
 </p>
-<p>Your hobbies are:</p>
-<ul th:remove="all-but-first">
-    <li>Writing</li>
-    <li>Bowling</li>
-</ul>
-<p>
-    You can find <b>your inlined image</b> just below this text.
-</p>
+
 <p>
     <!--img src="sample.png" th:src="|cid:${imageResourceName}|" /-->
 </p>
-<div>
-    <!--a th:href="@{/(serviceId=${service.id})}"-->
-    <button class="confirm"></button>
-    <!--</a-->
-</div>
+
 <p>
      <br />
     <em>Servinet</em>
 </p>
 </body>
+
 </html>
