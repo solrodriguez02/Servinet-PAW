@@ -15,7 +15,7 @@
             <a class="service-text" href="${pageContext.request.contextPath}/${item.id}">
                 <div class="service-data-container">
                     <div class="service-img-container">
-                        <img class="img service-img" src="https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg" alt="Imagen del servicio">
+                        <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="">
                     </div>
                     <div class="service-info">
                         <h3>${item.name} ID ${item.id}</h3>

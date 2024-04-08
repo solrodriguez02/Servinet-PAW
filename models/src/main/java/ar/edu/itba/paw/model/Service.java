@@ -60,6 +60,9 @@ public class Service {
     public String getLocation() {
         return location;
     }
+    public long getImageId() {
+        return imageId;
+    }
 
     public void setLocation(String location) {
         this.location = location;
