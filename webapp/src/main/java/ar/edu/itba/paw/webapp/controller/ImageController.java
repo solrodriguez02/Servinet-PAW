@@ -3,6 +3,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.ImageModel;
 import ar.edu.itba.paw.services.ImageService;
+import ar.edu.itba.paw.webapp.exception.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ public class ImageController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/images/{imageId:\\d+}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] images(@PathVariable("imageId") final int imageId) {
-        ImageModel img = is.getImageById(imageId).orElseThrow(IllegalArgumentException::new);
+        ImageModel img = is.getImageById(imageId).orElseThrow(ImageNotFoundException::new);
         return img.getImageBytes();
     }
 
