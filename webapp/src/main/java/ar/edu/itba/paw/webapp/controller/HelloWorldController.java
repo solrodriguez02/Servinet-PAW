@@ -34,6 +34,7 @@ public class HelloWorldController {
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
+
     @Autowired
     public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service, @Qualifier("appointmentServiceImpl") final AppointmentService appointment){
         this.us = us;

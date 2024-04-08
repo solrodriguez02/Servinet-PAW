@@ -17,8 +17,8 @@ import java.util.Optional;
 @Repository
 public class BusinessDaoJdbc implements BusinessDao {
     private static final RowMapper<Business> ROW_MAPPER = (rs, rowNum) -> new Business(rs.getLong("businessid"),
-            rs.getString("businessname"), rs.getLong("userid"), rs.getString("telephone"), rs.getString("email"),
-            rs.getString("location"));
+            rs.getString("businessname"), rs.getLong("userid"), rs.getString("businessTelephone"), rs.getString("businessEmail"),
+            rs.getString("businessLocation"));
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 

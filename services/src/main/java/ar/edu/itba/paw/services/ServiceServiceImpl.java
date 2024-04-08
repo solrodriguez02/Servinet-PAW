@@ -24,6 +24,10 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceDao.findById(id);
     }
 
+    /** TODO
+    @Override
+    public long getProviderId(long id){}
+    */
     @Override
     public Service create(long businessid, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges) {
         return serviceDao.create(businessid, name, description, homeservice, String.format("%s;%s",neighbourhood.getValue(),location), category,minimalduration ,pricing, price, additionalCharges);

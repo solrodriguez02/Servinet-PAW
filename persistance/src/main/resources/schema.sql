@@ -67,5 +67,15 @@ CREATE TABLE IF NOT EXISTS appointments (
 );
 
 
+
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);
 --insert into business (userid, businessname, businessTelephone, businessEmail, businessLocation) values (1, 'adminbusiness', '123456789','adminbusiness@mail.com','Almagro');
+
+
+
+-- HARDCODIE INSERTS, BORRARRRRRRR {
+--INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1000, 'username', 'password', 'name', 'surname', 'email', 'telephone');
+--INSERT INTO business VALUES (1, 1000, 'businessname', 'businessTelephone', 'peluqueria@gmail.com', 'businessLocation');
+--INSERT INTO services VALUES (1,1,'Peluqueria Ramon','Veni, peinate y divertite!',false,'Recoleta','Belleza',60,'Per Hour',5000,true);
+-- } NO OLVIDAR DE BORRAR
+

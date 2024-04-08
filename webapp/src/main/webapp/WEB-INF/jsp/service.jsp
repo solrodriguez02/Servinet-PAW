@@ -35,7 +35,23 @@
             <input type="datetime-local"/>
         </label>
 
+        <div class="take-turn-container">
+            <label>
+                <input type="datetime-local"/>
+            </label>
+            <form>
+                <button class="take-turn-btn" type="submit" >Reservar turno
+                </button>
+            </form>
+
+        </div>
+
     </div>
+
 </body>
 </html>
 
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/service.js"></script>
+<script>
+    console.log( document)
+</script>

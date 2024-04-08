@@ -26,6 +26,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
         // PARAMS deberian ser validados aca?
         // ejem: startData < EndDate o desde el front?
+                /*
+        Service service = serviceService.findById(serviceid).orElseThrow(NoSuchElementException::new);
+        if ( LocalDateTime.now().isAfter(startDate) || (!service.hasDuration && startDate > endDate) )
+                excep
+        */
+
         return appointmentDao.create(serviceid,userid,startDate,endDate, location);
     }
 
