@@ -1,8 +1,3 @@
-DROP TABLE IF EXISTS appointments;
-DROP TABLE IF EXISTS services;
-DROP TABLE IF EXISTS business;
-DROP TABLE IF EXISTS users;
-
 --DROP TYPE IF EXISTS serviceCategory;
 --DROP TYPE IF EXISTS pricingType;
 
@@ -36,9 +31,9 @@ CREATE TABLE IF NOT EXISTS services (
     servicedescription VARCHAR(255),
     homeservice BOOLEAN,
     location VARCHAR(255) NOT NULL,
-    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
+    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
-    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'TBD')),
+    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'To be determined')),
     price VARCHAR(255),
     additionalcharges BOOLEAN
     );
@@ -59,7 +54,7 @@ END;
 ' LANGUAGE plpgsql;
 
 
-CREATE TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
+CREATE or replace TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
 
 CREATE TABLE IF NOT EXISTS appointments (
     appointmentid SERIAL PRIMARY KEY,
@@ -71,3 +66,5 @@ CREATE TABLE IF NOT EXISTS appointments (
 );
 
 
+--insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);
+--insert into business (userid, businessname, businessTelephone, businessEmail, businessLocation) values (1, 'adminbusiness', '123456789','adminbusiness@mail.com','Almagro');

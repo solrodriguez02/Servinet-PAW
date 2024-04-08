@@ -6,6 +6,7 @@
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <title></title>
 </head>
+<c:url var="deleteUrl" value="/${service.id}/deleteservicio" />
 <body>
     <div class="page">
         <h2><c:out value="${service.name}"/> (id: <c:out value="${service.id}"/>) </h2>
@@ -23,6 +24,9 @@
                     <p class="category-text">${service.category}</p>
                     <p>${service.location}</p>
                     <p>${service.description}</p>
+                    <form action="${deleteUrl}" method="post">
+                        <input type="submit" value="Borrar servicio" class="deleteBtn"/>
+                    </form>
                 </div>
             </div>
         </div>
@@ -30,6 +34,7 @@
         <label>
             <input type="datetime-local"/>
         </label>
+
     </div>
 </body>
 </html>

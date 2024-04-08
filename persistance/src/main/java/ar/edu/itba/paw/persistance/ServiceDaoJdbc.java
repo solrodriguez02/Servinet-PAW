@@ -57,6 +57,13 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
+    public Optional<List<Service>> getAllServices(){
+        final List<Service> list = jdbcTemplate.query("SELECT * from services", ROW_MAPPER);
+        return Optional.of(list);
+
+    }
+
+    @Override
     public Service edit(long serviceid, String field, String newvalue) {
            jdbcTemplate.update(String.format("update services set  %s  = ? where id= ? ", field), newvalue, serviceid);
            return findById(serviceid).get();

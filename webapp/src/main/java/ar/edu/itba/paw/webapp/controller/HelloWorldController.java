@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.Categories;
+import ar.edu.itba.paw.model.Neighbourhoods;
+import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
@@ -25,30 +27,28 @@ public class HelloWorldController {
     private ServiceService service;
 
     List<Categories> categories = new ArrayList<>();
-
+    List<PricingTypes> pricingTypes = new ArrayList<>();
+    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
     @Autowired
     public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service) {
         this.us = us;
         this.service = service;
         categories.addAll(Arrays.asList(Categories.values()));
+        pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
+        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
         final ModelAndView mav = new ModelAndView("home");
-        List<Service> serviceList = new ArrayList<>();
-        if (category != null && !category.isEmpty()) {
-            // Se debería crear un metodo que devuelva los servicios de la categoria recibida por parametro
-            // IMPORTANTE para front: usar try catch de la excepción para mostrar la información en la vista creando un service hardcodeado que se agrega a la lista
-            // o bien popular la db local con los ids que se busquen
-            serviceList.add(service.findById(10).orElseThrow(ServiceNotFoundException::new));
-        } else {
-            for (int i = 1; i < 5; i++) {
-                serviceList.add(service.findById(i).orElseThrow(ServiceNotFoundException::new));
-            }
+        List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
+        List<Service> service = new ArrayList<>();
+        for(Service services : serviceList){
+            if(category == null || services.getCategory().equals(category))
+                service.add(services);
         }
-        mav.addObject("services", serviceList);
+        mav.addObject("services", service);
         mav.addObject("categories", categories);
         return mav;
     }
@@ -57,7 +57,31 @@ public class HelloWorldController {
     public ModelAndView postForm() {
         final ModelAndView mav = new ModelAndView("post");
         mav.addObject("user","home page");
+        mav.addObject("categories",categories);
+        mav.addObject("pricingTypes",pricingTypes);
+        mav.addObject("neighbours",neighbourhoods);
         return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
+    public ModelAndView createService(@RequestParam(value = "titulo") final String title,
+                                      @RequestParam(value="descripcion") final String description,
+                                      @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
+                                      @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
+                                      @RequestParam(value="categoria") final Categories category,
+                                      @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
+                                      @RequestParam(value="pricingtype") final PricingTypes pricingtype,
+                                      @RequestParam(value="precio") final String price,
+                                      @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
+                                      @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
+        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/deleteservicio")
+    public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
+        service.delete(serviceid);
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
@@ -85,7 +109,6 @@ public class HelloWorldController {
             @RequestParam(value = "apellido") final String apellido,
             @RequestParam(value = "email") final String email
     ) {
-        // Aca se debería crear el nuevo servicio
         return new ModelAndView("redirect:/misservicios");
     }
 
@@ -96,7 +119,7 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/micuenta")
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId}/micuenta")
     public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");
         mav.addObject("username", us);
