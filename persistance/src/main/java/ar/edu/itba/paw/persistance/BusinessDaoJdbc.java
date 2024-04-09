@@ -36,6 +36,12 @@ public class BusinessDaoJdbc implements BusinessDao {
     }
 
     @Override
+    public Optional<Business> findByBusinessName(String businessName) {
+        final List<Business> list = jdbcTemplate.query("SELECT * from business WHERE businessname= ?", new Object[] {businessName}, ROW_MAPPER);
+        return list.stream().findFirst();
+    }
+
+    @Override
     public void deleteBusiness(long businessid) {
         jdbcTemplate.update("delete from business where businessid = ?", businessid);
     }

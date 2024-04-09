@@ -27,6 +27,9 @@ public class Business {
         return location;
     }
 
+    public long getUserId() {
+        return userId;
+    }
 
 
     public Business(long businessid, String businessName, long userId,String telephone, String email, String location) {
