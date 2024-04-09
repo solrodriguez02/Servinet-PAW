@@ -6,18 +6,14 @@
     <title th:remove="all"  th:text="${subject}" ></title>
     <style>
         button {
-            color: white;
-            border-radius: 15px;
+            border-radius: 8px;
             border: none;
             padding: 10px;
             /*opacity: 0.7;*/
         }
+
         button:hover {
-            opacity: 0.5;
-        }
-        a {
-            text-decoration:none;
-            color: white;
+            opacity: 0.7;
         }
         .container {
             display: flex;
@@ -32,6 +28,9 @@
             background-color: #de2121;
             margin-left: 20px;
         }
+        .cancel {
+            background-color: #de2121;
+        }
     </style>
 </head>
 <body>
@@ -40,8 +39,9 @@
 </p>
 <p>
     <div th:if="${type == 'WAITING' }">
-        Su turno
+        Su
         <span th:fragment="datetime">
+            turno <!--span th:text="'#'+${appointmentId}"></span-->
             para el servicio <span th:text="${serviceName}"/> el día
             <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
             <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
@@ -54,7 +54,7 @@
         Más tarde será notificado si fue aceptado o no.
     </div>
     <div th:if="${type == 'REQUEST'}">
-            Indique si desea aceptar una solitud de turno
+            Indique si desea aceptar una solicitud de
             <span th:replace="html/mail.html :: datetime"></span>
             <p>Por favor seleccione una opción,</p>
 
@@ -77,21 +77,17 @@
 
     <div th:if="${type == 'ACCEPTED' }">
         <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
-        turno
-        <span th:text="'#'+${appointmentId}"></span>
         <span th:replace="html/mail.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
         <p>
-            Para cancelarlo, haga click
+            Si desea cancelarlo, haga click en:
             <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
-                <input value="aqui" type="submit">
+                <button class="cancel" type="submit">Cancelar turno</button>
             </form>
         </p>
     </div>
 
     <div th:if="${type == 'DENIED' }">
         <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
-        turno
-        <span th:text="'#'+${appointmentId}"></span>
         <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad
         <span th:text="${isClient}? 'a': 'o'"></span>.
         <p th:if="${isClient}">
@@ -101,10 +97,7 @@
     </div>
 
     <div th:if="${type == 'CANCELLED' }">
-        <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
-        turno
-        <span th:text="'#'+${appointmentId}"></span>
-        <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span>.
+        El <span th:replace="html/mail.html :: datetime"></span> ha sido cancelado.
         <div th:if="${isClient}">
             Si desea pedir otra solicitud, haga click
             <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
@@ -116,7 +109,7 @@
 
 <p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
     Para mas detalles del turno haga click
-    <a th:href="${url}+'/turno/'+ ${appointmentId}">aqui</a>
+    <a th:href="${url}+'turno/'+ ${appointmentId}">aqui</a>
 </p>
 <p>
      <br />

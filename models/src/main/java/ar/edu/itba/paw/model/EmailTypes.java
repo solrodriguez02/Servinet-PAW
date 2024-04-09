@@ -1,11 +1,11 @@
 package ar.edu.itba.paw.model;
 
 public enum EmailTypes {
-    WAITING("WAITING","Turno solicitado a la espera de confirmación"),
-    REQUEST("REQUEST", "Solicitud de turno"),
-    CANCELLED("CANCELLED","Turno cancelado"),
-    ACCEPTED("ACCEPTED", "Turno aceptado"),
-    DENIED("DENIED", "Turno rechazado");
+    WAITING("WAITING","Creación de solicitud del turno"),
+    REQUEST("REQUEST", "Solicitud del turno"),
+    CANCELLED("CANCELLED","Cancelación del turno"),
+    ACCEPTED("ACCEPTED", "Aceptación del turno"),
+    DENIED("DENIED", "Rechazo del turno");
 
     private final String name;
     private final String subject;

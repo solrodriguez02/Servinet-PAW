@@ -98,7 +98,7 @@ public class EmailServiceImpl implements EmailService{
     public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
         ctx.setVariable("isClient",true);
         ctx.setVariable("type", emailType.getType());
-        ctx.setVariable("subject", emailType.getSubject());
+        //ctx.setVariable("subject", emailType.getSubject());
         sendMail(userMail, emailType.getSubject(),ctx);
     }
 
@@ -108,11 +108,13 @@ public class EmailServiceImpl implements EmailService{
         Business business = businessService.findById( service.getBusinessid() ).orElseThrow(NoSuchElementException::new);
         ctx.setVariable("isClient",false);
         ctx.setVariable("type", emailType.getType());
-        ctx.setVariable("subject", emailType.getSubject());
         sendMail(business.getEmail(), emailType.getSubject(),ctx);
     }
 
-    private void sendMail( final String recipientEmail, final String subject, final Context ctx) throws MessagingException {
+    private void sendMail( final String recipientEmail, String subject, final Context ctx) throws MessagingException {
+
+        // Prepare subject
+        subject = subject + " #" + ctx.getVariable("appointmentId");
 
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
@@ -121,6 +123,8 @@ public class EmailServiceImpl implements EmailService{
         message.setSubject(subject);
         message.setFrom("servinet@gmail.com");
         message.setTo(recipientEmail);
+
+        ctx.setVariable("subject", subject);
 
         // Create the HTML body using Thymeleaf
         //final String htmlContent = this.templateEngine.process(template, moreTemplatesSet, ctx );
