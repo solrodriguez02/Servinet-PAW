@@ -9,10 +9,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StreamUtils;
 import sun.misc.IOUtils;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +39,14 @@ public class ImageDaoJdbc implements ImageDao {
         simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("images").usingGeneratedKeyColumns("imageid");
     }
     @Override
-    public Optional<ImageModel> getImageById(long id) throws IOException {
-        if(id == 0)
-            return Optional.of(new ImageModel(0, IOUtils.readAllBytes(defaultImage.getInputStream())));
+    public Optional<ImageModel> getImageById(long id)  {
+        if(id == 0) {
+            try {
+                return Optional.of(new ImageModel(0, IOUtils.readAllBytes(defaultImage.getInputStream())));
+            } catch (IOException e) {
+                throw new RuntimeException(e); //TODO: preguntar como manejar esto mejor
+            }
+        }
         final List<ImageModel> list = jdbcTemplate.query("SELECT * from Images WHERE imageId = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }

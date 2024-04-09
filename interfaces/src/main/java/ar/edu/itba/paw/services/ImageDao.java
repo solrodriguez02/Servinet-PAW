@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ImageDao {
     ImageModel addImage(byte[] imageBytes);
-    Optional<ImageModel> getImageById(long serviceId) throws IOException;
+    Optional<ImageModel> getImageById(long serviceId);
 
 }
