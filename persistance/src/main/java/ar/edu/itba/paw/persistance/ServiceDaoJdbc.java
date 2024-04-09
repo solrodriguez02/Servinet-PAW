@@ -97,21 +97,22 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Boolean isMoreServices(int page) {
-        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE id BETWEEN ? AND ?", Integer.class, page*10+11, page*10+20);
-        return count > 0;
-    }
-
-    @Override
-    public Boolean isMoreServicesFiltered(int page, String category, String location) {
+    public int getServiceCount(String category, String location) {
         int count = 0;
         if(category == null) {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
-        } else if(location == null) {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
+            if(location == null) {
+                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services", Integer.class);
+            } else {
+                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
+            }
         } else {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+            if (location == null) {
+                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
+            } else {
+                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+            }
         }
-        return count > page*10+10;
+        return count;
     }
+
 }

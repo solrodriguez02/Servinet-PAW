@@ -54,12 +54,16 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Boolean isMoreServices(int page, String category, String location) {
-        if(category != null || location != null) {
-            return serviceDao.isMoreServicesFiltered(page, category, location);
-        } else {
-            return serviceDao.isMoreServices(page);
-        }
+    public int getServiceCount(String category, String location) {
+        return serviceDao.getServiceCount(category, location);
+    }
+
+    @Override
+    public int getPageCount(String category, String location) {
+        int serviceCount = getServiceCount(category, location);
+        int pageCount = serviceCount / 10;
+        if(serviceCount % 10 != 0) pageCount++;
+        return pageCount;
     }
 
 }

@@ -63,15 +63,14 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("services");
         if(page == null) page=0;
         List<Service> serviceList = service.services(page, category, location);
-        Boolean isMoreServices = service.isMoreServices(page, category, location);
-        Boolean isServicesEmpty = serviceList.isEmpty();
         mav.addObject("services", serviceList);
-        mav.addObject("isMoreServices", isMoreServices);
         mav.addObject("page", page);
-        mav.addObject("isServicesEmpty", isServicesEmpty);
+        mav.addObject("isServicesEmpty", serviceList.isEmpty());
         mav.addObject("category", category);
         mav.addObject("neighbourhoods", neighbourhoods);
         mav.addObject("location", location);
+        mav.addObject("resultsAmount", service.getServiceCount(category, location));
+        mav.addObject("pageCount", service.getPageCount(category, location));
         return mav;
     }
 

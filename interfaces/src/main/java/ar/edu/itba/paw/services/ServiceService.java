@@ -15,5 +15,6 @@ public interface ServiceService {
     Service edit(long serviceid, String field, String newvalue);
     void delete(long serviceid);
     List<Service> services(int page, String category, String location);
-    Boolean isMoreServices(int page, String category, String location);
+    int getServiceCount(String category, String location);
+    int getPageCount(String category, String location);
 }
