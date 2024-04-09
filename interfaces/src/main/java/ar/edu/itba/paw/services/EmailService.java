@@ -6,6 +6,8 @@ import javax.mail.MessagingException;
 
 import ar.edu.itba.paw.model.Service;
 
+import java.util.List;
+
 public interface EmailService {
 
     // ! tuve q agregar dependencia javax.mail en pom
@@ -17,5 +19,7 @@ public interface EmailService {
 
     public void deniedAppointment(Appointment appointment) throws MessagingException;
 
-    public void deletedService(Service service) throws MessagingException;
+    public void deletedService(Service service, List<Appointment> appointmentList) throws MessagingException;
+
+    void createdService(Service service) throws MessagingException;
 }

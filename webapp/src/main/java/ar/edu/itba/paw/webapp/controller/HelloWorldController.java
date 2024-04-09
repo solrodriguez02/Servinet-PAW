@@ -7,6 +7,7 @@ import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.AppointmentService;
+import ar.edu.itba.paw.services.ManageServiceService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,19 @@ public class HelloWorldController {
     private UserService us;
     private ServiceService service;
     private AppointmentService appointment;
+    private final ManageServiceService manageServiceService;
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
-    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service, @Qualifier("appointmentServiceImpl") final AppointmentService appointment){
+    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service,
+                                @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
         this.us = us;
         this.service = service;
         this.appointment = appointment;
+        this.manageServiceService = manageServiceService;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
@@ -96,7 +100,7 @@ public class HelloWorldController {
                                       @RequestParam(value="precio") final String price,
                                       @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
                                       @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
-        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, "https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg");
+        manageServiceService.createService(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
         return new ModelAndView("redirect:/");
     }
 

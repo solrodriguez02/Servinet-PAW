@@ -2,7 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" /> <!-- multipart/form-data-->
-    <!--link th:href="@{css/style.css}" rel="stylesheet"-->
     <title th:remove="all"  th:text="${subject}" ></title>
     <style>
         button {
@@ -55,7 +54,7 @@
     </div>
     <div th:if="${type == 'REQUEST'}">
             Indique si desea aceptar una solicitud de
-            <span th:replace="html/mail.html :: datetime"></span>
+            <span th:replace="html/appointment.html :: datetime"></span>
             <p>Por favor seleccione una opción,</p>
 
             <div class="container">
@@ -77,7 +76,7 @@
 
     <div th:if="${type == 'ACCEPTED' }">
         <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
-        <span th:replace="html/mail.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
+        <span th:replace="html/appointment.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
         <p>
             Si desea cancelarlo, haga click en:
             <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
@@ -87,10 +86,8 @@
     </div>
 
     <div th:if="${type == 'DENIED' }">
-        <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
-        <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad
-        <span th:text="${isClient}? 'a': 'o'"></span>
-        <span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
+        <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
+        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span><span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
         <p th:if="${isClient}" th:fragment="newAppointment">
             <span th:if="!${isServiceDeleted}">
                 Si desea pedir otra solicitud, haga click
@@ -101,8 +98,8 @@
     </div>
 
     <div th:if="${type == 'CANCELLED' }">
-        El <span th:replace="html/mail.html :: datetime"></span> ha sido cancelado.
-        <p th:replace="html/mail.html :: newAppointment"></p>
+        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado.
+        <p th:replace="html/appointment.html :: newAppointment"></p>
     </div>
 <!--p>
     <img src="sample.png" th:src="|cid:${imageResourceName}|" />

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" /> <!-- multipart/form-data-->
+        <title th:remove="all"  th:text="${subject}" ></title>
+    </head>
+<body>
+<p>
+    Estimado,
+</p>
+<p>
+    El servicio <span th:text="${serviceName}"/> ha sido creado exitosamente.<!--ha sido incorporado a tu negocio-->
+    Ya se encuentra disponible en <a th:href="${url}+${serviceId}" th:text="${url}+${serviceId}"></a>.
+    <p>
+        Si desea eliminar el servicio y con ello todos los turnos solicitados desde nuestra página servinet, haga click en:
+        <form th:action="${url}+'borrar-servicio/'+ ${serviceId}" method="post">
+            <button class="cancel" type="submit">Eliminar servicio</button>
+        </form>
+        <em>Esta operación no se podrá deshacer</em>
+    </p>
+</p>
+</body>
+</html>
