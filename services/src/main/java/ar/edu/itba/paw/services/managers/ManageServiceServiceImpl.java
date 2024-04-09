@@ -34,7 +34,7 @@ public class ManageServiceServiceImpl implements ManageServiceService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
-        return service.getId()
+        return service.getId();
     }
 
     @Override

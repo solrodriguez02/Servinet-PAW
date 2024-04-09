@@ -131,5 +131,11 @@ public class EmailController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/trucho")
+    public ModelAndView trucho(){
+        final long serviceId = manageServiceService.createService(1,"title","description",true,Neighbourhoods.ALMAGRO,"location",Categories.BELLEZA,4,PricingTypes.PER_TOTAL,"40",true);
+        return new ModelAndView("redirect:/"+serviceId);
+    }
+
 }
 

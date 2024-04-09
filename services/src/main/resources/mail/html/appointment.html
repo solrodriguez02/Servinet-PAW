@@ -87,7 +87,7 @@
 
     <div th:if="${type == 'DENIED' }">
         <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
-        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span><span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
+        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span> <span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
         <p th:if="${isClient}" th:fragment="newAppointment">
             <span th:if="!${isServiceDeleted}">
                 Si desea pedir otra solicitud, haga click

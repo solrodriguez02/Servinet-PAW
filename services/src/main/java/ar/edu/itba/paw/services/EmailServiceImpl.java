@@ -90,7 +90,6 @@ public class EmailServiceImpl implements EmailService{
     @Async
     @Override
     public void createdService(Service service) throws MessagingException {
-        // TODO : template nueva para crear y elim servi solo para business
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
@@ -103,9 +102,14 @@ public class EmailServiceImpl implements EmailService{
     public void deletedService(Service service, List<Appointment> appointmentList) throws MessagingException {
         // prof
         // TODO: "SERVICIO ELIMINADO EXITOSAMENTE"
-        // if tenia upcoming turnos: "Todos los turnos agendados han sido cancelados"
+        Context ctx = new Context(LOCALE);
+        ctx.setVariable("serviceId",service.getId());
+        ctx.setVariable("serviceName",service.getName());
+        // TODO : paso businessname?
+        sendMailToBusiness(EmailTypes.DELETED_SERVICE, service,ctx);
 
         // users
+        // if tenia upcoming turnos: "Todos los turnos agendados han sido cancelados"
         EmailTypes emailType;
         for (Appointment appointment: appointmentList ) {
             emailType = appointment.getConfirmed()? EmailTypes.CANCELLED : EmailTypes.DENIED;
