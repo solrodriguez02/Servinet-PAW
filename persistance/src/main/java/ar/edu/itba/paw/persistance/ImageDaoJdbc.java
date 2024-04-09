@@ -10,11 +10,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StreamUtils;
-import sun.misc.IOUtils;
+
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.nio.file.Files;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ public class ImageDaoJdbc implements ImageDao {
     public Optional<ImageModel> getImageById(long id)  {
         if(id == 0) {
             try {
-                return Optional.of(new ImageModel(0, IOUtils.readAllBytes(defaultImage.getInputStream())));
+                return Optional.of(new ImageModel(0, StreamUtils.copyToByteArray(defaultImage.getInputStream())));
             } catch (IOException e) {
                 throw new RuntimeException(e); //TODO: preguntar como manejar esto mejor
             }
