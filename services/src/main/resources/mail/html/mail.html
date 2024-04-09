@@ -89,19 +89,20 @@
     <div th:if="${type == 'DENIED' }">
         <span th:text="${isClient}? 'Su solicitud': 'El'"></span>
         <span th:replace="html/mail.html :: datetime"></span> ha sido rechazad
-        <span th:text="${isClient}? 'a': 'o'"></span>.
-        <p th:if="${isClient}">
-            Si desea pedir otra solicitud, haga click
-            <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
+        <span th:text="${isClient}? 'a': 'o'"></span>
+        <span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
+        <p th:if="${isClient}" th:fragment="newAppointment">
+            <span th:if="!${isServiceDeleted}">
+                Si desea pedir otra solicitud, haga click
+                <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
+            </span>
+            Para ver otros servicios visite <a th:href="${url}" th:text="${url}"></a>.
         </p>
     </div>
 
     <div th:if="${type == 'CANCELLED' }">
         El <span th:replace="html/mail.html :: datetime"></span> ha sido cancelado.
-        <div th:if="${isClient}">
-            Si desea pedir otra solicitud, haga click
-            <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
-        </div>
+        <p th:replace="html/mail.html :: newAppointment"></p>
     </div>
 <!--p>
     <img src="sample.png" th:src="|cid:${imageResourceName}|" />

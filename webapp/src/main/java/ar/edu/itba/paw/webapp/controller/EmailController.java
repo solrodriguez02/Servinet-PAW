@@ -124,6 +124,7 @@ public class EmailController {
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
+
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
         appointmentService.cancelAppointment(appointmentId);
         try {

@@ -3,7 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.Appointment;
 
 import javax.mail.MessagingException;
-import org.thymeleaf.context.Context;
+
+import ar.edu.itba.paw.model.Service;
 
 public interface EmailService {
 
@@ -15,4 +16,6 @@ public interface EmailService {
     public void cancelledAppointment(Appointment appointment) throws MessagingException;
 
     public void deniedAppointment(Appointment appointment) throws MessagingException;
+
+    public void deletedService(Service service) throws MessagingException;
 }

@@ -35,6 +35,12 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
+    public Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid) {
+        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE serviceid = ? and startdate > ? ", new Object[] {serviceid, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
+        return Optional.of(list);
+    }
+
+    @Override
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
 
         // CLAVE USER, SERVICE y DATE => evito q vuelva a pedir = turno -> + comodo para el prof, pero no indispensable

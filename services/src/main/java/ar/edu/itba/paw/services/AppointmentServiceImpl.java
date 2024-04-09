@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service("appointmentServiceImpl")
@@ -20,6 +21,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public Optional<Appointment> findById(long id) {
         return appointmentDao.findById(id);
+    }
+
+    @Override
+    public Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid) {
+        return appointmentDao.getAllUpcomingServiceAppointments(serviceid);
     }
 
     @Override
