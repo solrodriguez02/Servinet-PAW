@@ -17,7 +17,12 @@
             Nombre:
             <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
         </label>
-        <input type="file" name="imageInput"/>
+      <div class="service-div">
+        <label>
+            Selecciona una imagen para tu servicio:
+            <input type="file" name="imageInput" accept=".png, .jpg, .jpeg" required/>
+        </label>
+        </div>
         <label>
             Descripcion:
             <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
