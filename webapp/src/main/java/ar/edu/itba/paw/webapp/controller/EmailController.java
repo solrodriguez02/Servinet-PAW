@@ -76,6 +76,11 @@ public class EmailController {
             newuser = userService.create("default",name,"default",surname,email,telephone);
             String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
             userService.changeUsername(newuser.getUserId(),newUsername);
+        }else {
+            if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
+                //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
+                return new ModelAndView("redirect:/contratar-servicio/"+serviceId);
+            }
         }
         Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
