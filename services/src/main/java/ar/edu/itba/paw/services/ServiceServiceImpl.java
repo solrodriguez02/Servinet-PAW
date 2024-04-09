@@ -43,4 +43,23 @@ public class ServiceServiceImpl implements ServiceService {
     public void delete(long serviceid) {
         serviceDao.delete(serviceid);
     }
+
+    @Override
+    public List<Service> services(int page, String category, String location) {
+        if(category != null || location != null) {
+            return serviceDao.getServicesFilteredBy(page, category, location);
+        } else {
+            return serviceDao.getServices(page);
+        }
+    }
+
+    @Override
+    public Boolean isMoreServices(int page, String category, String location) {
+        if(category != null || location != null) {
+            return serviceDao.isMoreServicesFiltered(page, category, location);
+        } else {
+            return serviceDao.isMoreServices(page);
+        }
+    }
+
 }

@@ -1,12 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Business;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -23,5 +20,6 @@ public class BusinessServiceImplTest {
     @Mock
     private BusinessDao businessDao;
 
-
+    @Test
+    public void test1(){};
 }

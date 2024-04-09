@@ -76,4 +76,41 @@ public class ServiceDaoJdbc implements ServiceDao {
     public void delete(long serviceid) {
             jdbcTemplate.update("delete from services where id= ? ", serviceid);
     }
+
+    @Override
+    public List<Service> getServices(int page) {
+        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE id BETWEEN ? AND ?", new Object[] {page*10+1, page*10+10}, ROW_MAPPER);
+        return list;
+    }
+
+    @Override
+    public List<Service> getServicesFilteredBy(int page, String category, String location) {
+        if(category == null) {
+            return jdbcTemplate.query( "SELECT * FROM services WHERE location = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {location, page*10}, ROW_MAPPER);
+        } else if(location == null) {
+            return jdbcTemplate.query( "SELECT * FROM services WHERE category = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, page*10}, ROW_MAPPER);
+        } else {
+            // Caso en el que el usuario filtro tanto por cateogria como por ubicacion
+            return jdbcTemplate.query( "SELECT * FROM services WHERE (category = ? AND location = ?) ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, location, page*10}, ROW_MAPPER);
+        }
+    }
+
+    @Override
+    public Boolean isMoreServices(int page) {
+        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE id BETWEEN ? AND ?", Integer.class, page*10+11, page*10+20);
+        return count > 0;
+    }
+
+    @Override
+    public Boolean isMoreServicesFiltered(int page, String category, String location) {
+        int count = 0;
+        if(category == null) {
+            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
+        } else if(location == null) {
+            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
+        } else {
+            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+        }
+        return count > page*10+10;
+    }
 }

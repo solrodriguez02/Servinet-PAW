@@ -1,15 +1,12 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.AppointmentDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -22,7 +19,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     private final SimpleJdbcInsert simpleJdbcInsert;
 
     private static final RowMapper<Appointment> ROW_MAPPER = (rs, rowNum) -> new Appointment(rs.getInt("appointmentid"), rs.getInt("serviceid"), rs.getInt("userid"),
-            rs.getTimestamp("startDate").toLocalDateTime(), rs.getTimestamp("endDate").toLocalDateTime(), rs.getBoolean("confirmed"));
+            rs.getTimestamp("startDate").toLocalDateTime(), rs.getTimestamp("endDate").toLocalDateTime(),rs.getString("location") ,rs.getBoolean("confirmed"));
 
     @Autowired
     public AppointmentDaoJdbc(final DataSource ds){
@@ -38,7 +35,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
-    public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate) {
+    public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
 
         // CLAVE USER, SERVICE y DATE => evito q vuelva a pedir = turno -> + comodo para el prof, pero no indispensable
         final Map<String, Object> appointmentData = new HashMap<>();
@@ -46,10 +43,11 @@ public class AppointmentDaoJdbc implements AppointmentDao {
         appointmentData.put("userid", userid);
         appointmentData.put("startdate", Timestamp.valueOf(startDate));
         appointmentData.put("enddate", Timestamp.valueOf(endDate) );
+        appointmentData.put("location", location);
         //appointmentData.put("confirmed", false); pues default es false
 
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(appointmentData);
-        return new Appointment(generatedId.longValue(), serviceid, userid, startDate, endDate, false);
+        return new Appointment(generatedId.longValue(), serviceid, userid, startDate, endDate, location, false);
     }
 
 

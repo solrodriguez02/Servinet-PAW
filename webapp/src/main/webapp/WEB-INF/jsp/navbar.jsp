@@ -17,12 +17,21 @@
             <div class="dropdown">
                 <p class="nav-item">Categorias</p>
                 <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/?categoria=Limpieza">Limpieza</a>
-                    <a href="${pageContext.request.contextPath}/?categoria=Belleza">Belleza</a>
-                    <a href="${pageContext.request.contextPath}/?categoria=Peluqueria">Peluqueria</a>
+                    <!--Esto claramente habria que cambiarlo por un for each que itere sobre las categorias del enum-->
+                    <!--A preguntar en clase, nose como hacerlo ya que navbar no se llama directamente desde el HelloWorldController -->
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Arreglos calificados">Arreglos calificados</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Belleza">Belleza</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Consultoria">Consultoria</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Eventos y Celebraciones">Eventos y Celebraciones</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Exteriores">Exteriores</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Limpieza">Limpieza</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Mascotas">Mascotas</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Salud">Salud</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Transporte">Transporte</a>
                 </div>
             </div>
             <a class="nav-item" href="${pageContext.request.contextPath}/publicar">Publicar</a>
+            <!--
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
@@ -31,6 +40,7 @@
                     <a href="${pageContext.request.contextPath}/misservicios">Mis servicios</a>
                 </div>
             </div>
+            -->
         </div>
     </div>
 </body>

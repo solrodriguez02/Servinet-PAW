@@ -1,10 +1,10 @@
 package ar.edu.itba.paw.model;
 
 public enum PricingTypes {
-    PER_HOUR ("Per Hour"),
-    PER_TOTAL ("Per Total"),
-    BUDGET ("Budget"),
-    TBD ("To be determined");
+    PER_HOUR ("Por hora"),
+    PER_TOTAL ("Total"),
+    BUDGET ("Producto"),
+    TBD ("A determinar");
     private final String value;
 
    PricingTypes(String value) {

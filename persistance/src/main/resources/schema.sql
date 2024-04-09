@@ -33,10 +33,10 @@ CREATE TABLE IF NOT EXISTS services (
     location VARCHAR(255) NOT NULL,
     category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
-    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Per Hour', 'Per Total', 'Budget', 'To be determined')),
+    pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
     additionalcharges BOOLEAN,
-    imageid INT REFERENCES Images(imageId)
+    imageurl VARCHAR(255)
     );
 
 CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '
@@ -63,12 +63,20 @@ CREATE TABLE IF NOT EXISTS appointments (
     userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
     startDate TIMESTAMP NOT NULL,
     endDate TIMESTAMP,
+    location VARCHAR(255),
     confirmed BOOLEAN DEFAULT FALSE
 );
 
-create table if not exists Images(
-imageId serial primary key,
-imageBytes bytea
-);
+
+
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);
 --insert into business (userid, businessname, businessTelephone, businessEmail, businessLocation) values (1, 'adminbusiness', '123456789','adminbusiness@mail.com','Almagro');
+
+
+
+-- HARDCODIE INSERTS, BORRARRRRRRR {
+--INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1000, 'username', 'password', 'name', 'surname', 'email', 'telephone');
+--INSERT INTO business VALUES (1, 1000, 'businessname', 'businessTelephone', 'peluqueria@gmail.com', 'businessLocation');
+--INSERT INTO services VALUES (1,1,'Peluqueria Ramon','Veni, peinate y divertite!',false,'Recoleta','Belleza',60,'Per Hour',5000,true);
+-- } NO OLVIDAR DE BORRAR
+

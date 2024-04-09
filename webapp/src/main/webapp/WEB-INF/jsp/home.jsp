@@ -8,25 +8,44 @@
 </head>
 <body>
 <div class="page">
+    <div class="header">
+        <h2 class="slogan">Slogan Servinet</h2>
+    </div>
 
-    <div class="services-container">
-        <c:forEach items="${services}" var="item">
-        <div class="service-box">
-            <a class="service-text" href="${pageContext.request.contextPath}/${item.id}">
-                <div class="service-data-container">
-                    <div class="service-img-container">
-                        <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="">
+    <h3>Busca por categorias</h3>
+    <div class="boxes-container">
+        <c:forEach items="${categories}" var="category" varStatus="loop">
+            <c:if test="${loop.index <= 5}">
+                <a class="none-decoration" href="${pageContext.request.contextPath}/servicios/?categoria=${category.value}">
+                    <div class="box">
+                        <h4 class="box-text"><c:out value="${category.value}"/></h4>
                     </div>
-                    <div class="service-info">
-                        <h3>${item.name} ID ${item.id}</h3>
-                        <p>${item.location}</p>
-                        <p>${item.description}</p>
-                    </div>
-                </div>
-            </a>
-        </div>
+                </a>
+            </c:if>
         </c:forEach>
+    </div>
+
+
+    <h3 class="container-text">Busca por cercania</h3>
+    <div class="boxes-container">
+        <c:forEach items="${neighbourhoods}" var="neighbourhood" varStatus="loop">
+            <c:if test="${loop.index <= 5}">
+                <a class="none-decoration" href="${pageContext.request.contextPath}/servicios/?ubicacion=${neighbourhood.value}">
+                    <div class="box">
+                        <h4 class="box-text"><c:out value="${neighbourhood.value}"/></h4>
+                    </div>
+                </a>
+            </c:if>
+        </c:forEach>
+    </div>
+
+    <div class="btn-container">
+        <button class="btn">
+            <a href="${pageContext.request.contextPath}/servicios" class="none-decoration btn-text">Ver todos los servicios</a>
+        </button>
     </div>
 </div>
 </body>
 </html>
+
+

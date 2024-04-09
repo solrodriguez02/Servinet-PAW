@@ -1,10 +1,13 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.ImageService;
+import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.UserService;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,33 +32,50 @@ public class HelloWorldController {
 
     private UserService us;
     private ServiceService service;
+    private AppointmentService appointment;
     private ImageService is;
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
     @Autowired
-    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("imageServiceImpl") final ImageService is,@Qualifier("serviceServiceImpl") final ServiceService service) {
+    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us,@Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService service, @Qualifier("appointmentServiceImpl") final AppointmentService appointment){
         this.us = us;
         this.service = service;
+        this.appointment = appointment;
         this.is=is;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
-
     @RequestMapping(method = RequestMethod.GET, path = "/")
-    public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
+    public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
-        List<Service> service = new ArrayList<>();
-        for(Service services : serviceList){
-            if(category == null || services.getCategory().equals(category))
-                service.add(services);
-        }
-        mav.addObject("services", service);
         mav.addObject("categories", categories);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        return mav;
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, path = "/servicios")
+    public ModelAndView services(
+            @RequestParam(name = "categoria", required = false) String category,
+            @RequestParam(name = "ubicacion", required = false) String location,
+            @RequestParam(name = "pagina", required = false) Integer page
+    ) {
+        final ModelAndView mav = new ModelAndView("services");
+        if(page == null) page=0;
+        List<Service> serviceList = service.services(page, category, location);
+        Boolean isMoreServices = service.isMoreServices(page, category, location);
+        Boolean isServicesEmpty = serviceList.isEmpty();
+        mav.addObject("services", serviceList);
+        mav.addObject("isMoreServices", isMoreServices);
+        mav.addObject("page", page);
+        mav.addObject("isServicesEmpty", isServicesEmpty);
+        mav.addObject("category", category);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("location", location);
         return mav;
     }
 
@@ -120,6 +141,61 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/misservicios");
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
+    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId){
+
+        final ModelAndView mav = new ModelAndView("postAppointment");
+        Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        mav.addObject("service",service);
+
+        return mav;
+    }
+/*
+    @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
+    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId,
+                                    @RequestParam(value = "nombre") final String name,
+                                    @RequestParam(value = "apellido") final String surname,
+                                    @RequestParam(value = "lugar") final String location,
+                                    @RequestParam(value = "email") final String email,
+                                    @RequestParam(value = "telefono") final String telephone,
+                                    @RequestParam(value = "fecha") final String date
+    ) {
+        User newuser = us.findByEmail(email).orElse(null);
+        if (newuser == null){
+            newuser = us.create("default",name,"default",surname,email,telephone);
+            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+            us.changeUsername(newuser.getUserId(),newUsername);
+        }
+        Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
+
+        LocalDateTime startDate = LocalDateTime.parse(date);
+        Appointment app = appointment.create(serviceId, newuser.getUserId(),startDate, startDate.plusMinutes(service.getDuration()), location );
+
+
+        return new ModelAndView("redirect:/turno/"+app.getId());
+    }
+*/
+    @RequestMapping(method = RequestMethod.GET, path = "/turno/{appointmentId:\\d+}")
+    public ModelAndView appointment(@PathVariable("appointmentId") final long appointmentId) {
+        Appointment app = appointment.findById(appointmentId).get();
+        User user = us.findById(app.getUserid()).get();
+        Service service = this.service.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        final ModelAndView mav = new ModelAndView("appointment");
+        mav.addObject("appointment", app);
+        mav.addObject("user", user);
+        mav.addObject("service", service);
+        mav.addObject("new", true);
+        return mav;
+    }
+/*
+    @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
+    public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        Appointment app = appointment.findById(appointmentId).get();
+        appointment.cancelAppointment(appointmentId);
+        return new ModelAndView("redirect:/");
+    }
+*/
     @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
