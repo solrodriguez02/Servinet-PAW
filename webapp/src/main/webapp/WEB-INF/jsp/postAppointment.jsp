@@ -32,19 +32,28 @@
             <p class="label">Telefono:</p>
             <input required type="text" class="input" name="telefono" placeholder="Ingresa su telefono"/>
         </label>
-        <c:if test="${service.homeService}">
-            <label for="select">
-             <div class="select">
-                <p class="label">Este servicio se realiza a domicilio, seleccione su barrio:</p>
-                <select id="select" class="appointment-select" name="barrios">
-                    <option value=""></option>
-                    <option value="${service.location}">${service.location}</option>
-                </select>
-               </div>
-                <p class="label">Direccion de residencia:</p>
-                <input required type="text" class="input" name="lugar" placeholder="Ingrese su direccion" value="${description}"/>
-            </label>
-        </c:if>
+        <c:choose>
+            <c:when test="${service.homeService}">
+                <label for="select">
+                    <div class="select">
+                        <p class="label">Este servicio se realiza a domicilio, seleccione su barrio:</p>
+                        <select id="select" class="appointment-select" name="barrios">
+                            <option value=""></option>
+                            <option value="${service.location}"><c:out value="${service.location}"/></option>
+                        </select>
+                    </div>
+                    <p class="label">Direccion de residencia:</p>
+                    <input required type="text" class="input" name="lugar" placeholder="Ingrese su direccion"/>
+                </label>
+            </c:when>
+            <c:otherwise>
+                <p class="label">Deberá presentarse en <c:out value="${service.location}"/></p>
+                <label class="transparent">
+                    <input required type="text" class="input" name="lugar" placeholder="Ingrese su direccion" value="-"/>
+                </label>
+            </c:otherwise>
+        </c:choose>
+
         <label>
             <p class="label">Fecha:</p>
             <input required type="datetime-local" class="input" name="fecha" value="${date}"/>

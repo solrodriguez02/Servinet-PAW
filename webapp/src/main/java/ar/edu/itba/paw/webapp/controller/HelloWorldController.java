@@ -45,18 +45,33 @@ public class HelloWorldController {
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
-
     @RequestMapping(method = RequestMethod.GET, path = "/")
-    public ModelAndView home(@RequestParam(name = "categoria", required = false) String category) {
+    public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        List<Service> serviceList = new ArrayList<>(service.getAllServices().orElseThrow(ServiceNotFoundException::new));
-        List<Service> service = new ArrayList<>();
-        for(Service services : serviceList){
-            if(category == null || services.getCategory().equals(category))
-                service.add(services);
-        }
-        mav.addObject("services", service);
         mav.addObject("categories", categories);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        return mav;
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, path = "/servicios")
+    public ModelAndView services(
+            @RequestParam(name = "categoria", required = false) String category,
+            @RequestParam(name = "ubicacion", required = false) String location,
+            @RequestParam(name = "pagina", required = false) Integer page
+    ) {
+        final ModelAndView mav = new ModelAndView("services");
+        if(page == null) page=0;
+        List<Service> serviceList = service.services(page, category, location);
+        Boolean isMoreServices = service.isMoreServices(page, category, location);
+        Boolean isServicesEmpty = serviceList.isEmpty();
+        mav.addObject("services", serviceList);
+        mav.addObject("isMoreServices", isMoreServices);
+        mav.addObject("page", page);
+        mav.addObject("isServicesEmpty", isServicesEmpty);
+        mav.addObject("category", category);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("location", location);
         return mav;
     }
 
@@ -81,7 +96,7 @@ public class HelloWorldController {
                                       @RequestParam(value="precio") final String price,
                                       @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
                                       @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
-        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
+        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, "https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg");
         return new ModelAndView("redirect:/");
     }
 

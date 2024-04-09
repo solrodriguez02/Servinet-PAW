@@ -47,8 +47,8 @@ public class EmailConfig {
 
         // Basic mail sender configuration, based on emailconfig.properties
         mailSender.setHost( env.getProperty("HOST"));
-        mailSender.setUsername(env.getProperty("USERNAME"));
-        mailSender.setPassword(env.getProperty("PASSWORD"));
+        mailSender.setUsername("servinet.servinet.servinet@gmail.com");
+        mailSender.setPassword("ozbm kwzh vpdk oied");
         mailSender.setPort(Integer.parseInt(env.getProperty("PORT")));
 
         Properties props = mailSender.getJavaMailProperties();

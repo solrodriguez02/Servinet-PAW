@@ -33,6 +33,8 @@ public class ServiceDaoJdbcTest {
     private static final Boolean ADDITIONALCHARGES = false;
     private static final PricingTypes PRICING = PricingTypes.PER_TOTAL;
 
+    private static final String IMAGEURL = "https://www.minutoneuquen.com/u/fotografias/m/2023/5/28/f1280x720-605218_736893_5050.jpg";
+
    @Autowired
    private ServiceDaoJdbc serviceDao;
    @Autowired
@@ -51,7 +53,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testCreate() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES, IMAGEURL);
 
        Assert.assertNotNull(service);
        Assert.assertEquals(BUSINESSID, service.getBusinessid());
@@ -69,7 +71,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testFindById() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES, IMAGEURL);
        Service service2 = serviceDao.findById(service.getId()).get();
 
        Assert.assertNotNull(service2);
@@ -88,7 +90,7 @@ public class ServiceDaoJdbcTest {
 
    @Test
     public void testEdit() {
-       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+       Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES, IMAGEURL);
        Service service2 = serviceDao.edit(service.getId(), "servicename", "newname");
 
        Assert.assertNotNull(service);
@@ -107,7 +109,7 @@ public class ServiceDaoJdbcTest {
    }
   @Test
    public void testDelete() {
-      Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES);
+      Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES, IMAGEURL);
        serviceDao.delete(service.getId());
 
        Assert.assertEquals(0, JdbcTestUtils.countRowsInTable(jdbcTemplate, "services"));

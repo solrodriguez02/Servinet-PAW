@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService{
     private final TemplateEngine templateEngine;
     //temp
     private final Locale LOCALE = Locale.forLanguageTag("es-419"); // Locale.of("es");
-    private final String APP_URL = "http://localhost:8080/webapp_war_exploded/"; //! CAMBIAR EN DEPLOY
+    private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
 
     private final static String TEMPLATE = "html/mail.html";
     private final ServiceService serviceService;
