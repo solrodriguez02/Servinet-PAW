@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,10 +110,26 @@ public class EmailController {
         return new ModelAndView("redirect:/turno/"+appointmentId);
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
+    public ModelAndView createService(@RequestParam(value = "titulo") final String title,
+                                      @RequestParam(value="descripcion") final String description,
+                                      @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
+                                      @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
+                                      @RequestParam(value="categoria") final Categories category,
+                                      @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
+                                      @RequestParam(value="pricingtype") final PricingTypes pricingtype,
+                                      @RequestParam(value="precio") final String price,
+                                      @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
+                                      @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
+        final long serviceId = manageServiceService.createService(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
+        return new ModelAndView("redirect:/"+serviceId);
+    }
+
     @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
         manageServiceService.deleteService(serviceId);
         return new ModelAndView("redirect:/");
     }
+
 }
 

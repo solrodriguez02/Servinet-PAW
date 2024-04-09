@@ -89,20 +89,7 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
-    public ModelAndView createService(@RequestParam(value = "titulo") final String title,
-                                      @RequestParam(value="descripcion") final String description,
-                                      @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
-                                      @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
-                                      @RequestParam(value="categoria") final Categories category,
-                                      @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
-                                      @RequestParam(value="pricingtype") final PricingTypes pricingtype,
-                                      @RequestParam(value="precio") final String price,
-                                      @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
-                                      @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
-        manageServiceService.createService(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges);
-        return new ModelAndView("redirect:/");
-    }
+
 
     @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/deleteservicio")
     public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
