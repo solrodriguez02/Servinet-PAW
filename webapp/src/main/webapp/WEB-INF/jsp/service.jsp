@@ -19,14 +19,7 @@
 
         <div class="info-container">
             <div class="img-container">
-                <c:choose>
-                    <c:when test="${service.imageurl == null}">
-                        <img class="service-img img" src="https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg" alt="Imagen del servicio">
-                    </c:when>
-                    <c:otherwise>
-                        <img class="service-img img" src="${service.imageurl}" alt="Imagen del servicio">
-                    </c:otherwise>
-                </c:choose>
+                <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
             </div>
             <div class="info-box">
                 <div class="info-text">

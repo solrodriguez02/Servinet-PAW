@@ -80,14 +80,7 @@
                         <a class="service-text" href="${pageContext.request.contextPath}/${item.id}">
                             <div class="service-data-container">
                                 <div class="service-img-container">
-                                    <c:choose>
-                                        <c:when test="${item.imageurl == null}">
-                                            <img class="img service-img" src="https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg" alt="Imagen del servicio">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img class="img service-img" src="${item.imageurl}" alt="Imagen del servicio">
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="Imagen del servicio">
                                 </div>
                                 <div class="service-info">
                                     <div class="service-header">
