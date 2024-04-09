@@ -6,7 +6,7 @@
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <title></title>
 </head>
-<c:url var="deleteUrl" value="/${service.id}/deleteservicio" />
+<c:url var="deleteUrl" value="/${service.id}/eliminar-servicio" />
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">

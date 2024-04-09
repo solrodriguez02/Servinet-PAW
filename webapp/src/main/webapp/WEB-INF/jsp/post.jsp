@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <jsp:include page="navbar.jsp" />
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
@@ -8,7 +9,7 @@
 
 </head>
 <body>
-<c:url value="/crearservicio" var="postUrl"/>
+<c:url value="/crear-servicio/${businessId}" var="postUrl"/>
 <div class="postForm page">
     <form action="${postUrl}" method="post" class="form">
 

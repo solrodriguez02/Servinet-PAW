@@ -22,7 +22,7 @@
                     <a href="${pageContext.request.contextPath}/?categoria=Peluqueria">Peluqueria</a>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/publicar">Publicar</a>
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
