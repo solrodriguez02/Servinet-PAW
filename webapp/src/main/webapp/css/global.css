@@ -64,6 +64,13 @@ body {
     padding: 0;
 }
 
+.align-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .icon {
     margin-right: 10px;
 }
@@ -95,8 +102,10 @@ body {
     padding: 15px 25px;
     font-size: 16px;
     box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
+    cursor: pointer;
 }
 
 .btn-text {
     color: white;
+    cursor: pointer;
 }

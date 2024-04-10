@@ -50,3 +50,15 @@
     justify-content: center;
     align-items: center;
 }
+
+.confirmed-icon {
+    color: green;
+    font-size: 40px !important;
+    margin-right: 20px;
+}
+
+.waiting-icon {
+    color: gray;
+    font-size: 40px !important;
+    margin-right: 20px;
+}
