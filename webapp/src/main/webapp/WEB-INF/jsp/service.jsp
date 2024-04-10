@@ -65,9 +65,9 @@
             </div>
         </div>
         <p class="text-description"><c:out value="${service.description}"/></p>
-        <form action="${deleteUrl}" method="post">
+        <!--form action="${deleteUrl}" method="post">
             <input type="submit" value="Borrar servicio" class="deleteBtn"/>
-        </form>
+        </form-->
     </div>
 </body>
 </html>

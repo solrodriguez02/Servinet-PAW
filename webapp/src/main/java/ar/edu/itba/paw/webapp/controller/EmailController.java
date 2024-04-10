@@ -16,10 +16,16 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class EmailController {
+
+    private static final String APPOINTMENT_ALREADY_CONFIRMED = "turnoyaconfirmado";
+    private static final String APPOINTMENT_NON_EXISTENT = "turnonoexiste";
+    private static final String SERVICET_NON_EXISTENT = "servicionoexiste";
+
     private final EmailService emailService;
     private final ServiceService serviceService;
     private final UserService userService;
@@ -80,7 +86,7 @@ public class EmailController {
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
-            return new ModelAndView("redirect:/");
+            return invalidOperation(APPOINTMENT_NON_EXISTENT);
         Appointment appointment = optionalAppointment.get();
         long serviceId = appointment.getServiceid();
         if (!appointment.getConfirmed()) {
@@ -91,24 +97,21 @@ public class EmailController {
             } catch (MessagingException e) {
                 System.err.println(e.getMessage());
             }
+            return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=rechazado");
         }
 
-        return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=rechazado");
+        return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
     }
 
-        /*
-    private ModelAndView appointmentNotFound(){
-        return new ModelAndView("redirect:/turno-no-encontrado");
-    }*/
-    private ModelAndView serviceNotFound(){
-        return new ModelAndView("redirect:/servicio-no-encontrado");
-    }
+    private ModelAndView invalidOperation(String argumento){
+        return new ModelAndView("redirect:/operacion-invalida/?argumento="+argumento);
+    };
 
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
-            return new ModelAndView("redirect:/");
+            return invalidOperation(APPOINTMENT_NON_EXISTENT);
         Appointment appointment = optionalAppointment.get();
         long serviceId = appointment.getServiceid();
         if (!appointment.getConfirmed()) {
@@ -119,15 +122,16 @@ public class EmailController {
             } catch (MessagingException e) {
                 System.err.println(e.getMessage());
             }
+            return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
         }
-        return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
+        return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
-            return new ModelAndView("redirect:/");
+            return invalidOperation(APPOINTMENT_NON_EXISTENT);
 
         Appointment appointment = optionalAppointment.get();
         long serviceId = appointment.getServiceid();
@@ -157,14 +161,32 @@ public class EmailController {
     IOException {
 
         long imageId = image.isEmpty()? 0 : is.addImage(image.getBytes()).getImageId();
-        final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
-        return new ModelAndView("redirect:/servicio/"+serviceId);
+        //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
+        Service service = serviceService.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
+        try {
+            emailService.createdService(service);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return new ModelAndView("redirect:/servicio/"+service.getId());
     }
 
         @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
-        manageServiceService.deleteService(serviceId);
-        return serviceNotFound();
+            Optional<Service> service = serviceService.findById(serviceId);
+            if ( !service.isPresent() )
+                return invalidOperation(SERVICET_NON_EXISTENT);
+            Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.get().getId());
+            appointmentList.ifPresent(appointments -> {
+                try {
+                    emailService.deletedService(service.get(), appointments);
+                } catch (MessagingException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+
+            serviceService.delete(serviceId);
+        return invalidOperation(SERVICET_NON_EXISTENT);
     }
 
     /*

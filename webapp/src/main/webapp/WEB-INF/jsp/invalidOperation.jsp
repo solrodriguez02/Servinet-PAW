@@ -9,9 +9,16 @@
 <body>
 <div class="page">
     <c:choose>
-        <c:when test="${argument == 'noexiste'}">
+        <c:when test="${argument == 'servicionoexiste'}">
             <h2 class="header-text">Este servicio ya no existe, lo sentimos.</h2>
         </c:when>
+        <c:when test="${argument == 'turnonoexiste'}">
+            <h2 class="header-text">Este turno ya no existe, lo sentimos.</h2>
+        </c:when>
+        <c:when test="${argument == 'turnoyaconfirmado'}">
+            <h2 class="header-text">Esta operacion ya no es valida pues el turno ya se ha confirmado anteriormente.</h2>
+        </c:when>
+
     </c:choose>
     <div class="align-center">
         <a class="none-decoration" href="${pageContext.request.contextPath}/">

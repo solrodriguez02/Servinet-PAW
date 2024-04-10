@@ -20,17 +20,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.UserService;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import java.util.*;
 
 
 @Controller
@@ -101,12 +97,13 @@ public class HelloWorldController {
         return mav;
     }
 
-
+    /*
     @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
     public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
         service.delete(serviceid);
         return new ModelAndView("redirect:/");
     }
+    */
 
     @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
     public ModelAndView personalForm(
@@ -153,8 +150,12 @@ public class HelloWorldController {
     public ModelAndView hireService(@PathVariable("serviceId") final long serviceId){
 
         final ModelAndView mav = new ModelAndView("postAppointment");
-        Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-        mav.addObject("service",service);
+        try {
+            Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+            mav.addObject("service",service);
+        } catch (ServiceNotFoundException ex) {
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+        }
 
         return mav;
     }
@@ -191,7 +192,7 @@ public class HelloWorldController {
 
         Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
         if(!optionalAppointment.isPresent()) {
-            if(service.findById(serviceId).isPresent()) {
+            if(service.findById(serviceId).isPresent() ) {
                 return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
             }
             else {
@@ -236,7 +237,7 @@ public class HelloWorldController {
         try {
             serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         } catch (ServiceNotFoundException e) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=noexiste");
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
         }
         mav.addObject("service",serv);
         return mav;
