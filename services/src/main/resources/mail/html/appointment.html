@@ -36,8 +36,8 @@
 <p>
     Estimado<span th:if="${isClient}" th:text="' '+${client.getName()}+' '+${client.getSurname()}"></span>,
 </p>
-<p>
-    <div th:if="${type == 'WAITING' }">
+<div th:switch="${type}">
+    <div th:case="'WAITING'">
         Su
         <span th:fragment="datetime">
             turno <!--span th:text="'#'+${appointmentId}"></span-->
@@ -52,7 +52,7 @@
         ha sido solicitado.
         Más tarde será notificado si fue aceptado o no.
     </div>
-    <div th:if="${type == 'REQUEST'}">
+    <div th:case="'REQUEST'">
             Indique si desea aceptar una solicitud de
             <span th:replace="html/appointment.html :: datetime"></span>
             <p>Por favor seleccione una opción,</p>
@@ -74,7 +74,7 @@
             </p>
     </div>
 
-    <div th:if="${type == 'ACCEPTED' }">
+    <div th:case="'ACCEPTED'">
         <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
         <span th:replace="html/appointment.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
         <p>
@@ -85,9 +85,9 @@
         </p>
     </div>
 
-    <div th:if="${type == 'DENIED' }">
+    <div th:case="'DENIED'">
         <span th:text="${isClient}? 'Su': 'La'"></span> solicitud de
-        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span> <span th:if="${isServiceDeleted}" th:fragment="serviceDeleted">
+        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span><span th:if="${isServiceDeleted}" th:fragment="serviceDeleted">
         pues el servicio ha sido eliminado</span>.
         <p th:if="${isClient}" th:fragment="newAppointment">
             <span th:if="!${isServiceDeleted}">
@@ -98,10 +98,11 @@
         </p>
     </div>
 
-    <div th:if="${type == 'CANCELLED' }">
-        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado <span th:replace="html/appointment.html :: serviceDeleted"></span>
+    <div th:case="'CANCELLED'">
+        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado<span th:replace="html/appointment.html :: serviceDeleted"></span>.
         <p th:replace="html/appointment.html :: newAppointment"></p>
     </div>
+</div>
 <!--p>
     <img src="sample.png" th:src="|cid:${imageResourceName}|" />
 </p-->
