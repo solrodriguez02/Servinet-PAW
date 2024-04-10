@@ -25,7 +25,7 @@ public class EmailController {
     private final UserService userService;
     private final AppointmentService appointmentService;
     private final ManageServiceService manageServiceService;
-    private ImageService is;
+    private final ImageService is;
     @Autowired
     public EmailController(
             @Qualifier("emailServiceImpl") final EmailService emailService, @Qualifier("userServiceImpl") final UserService userService,@Qualifier("imageServiceImpl") final ImageService is,
@@ -36,6 +36,7 @@ public class EmailController {
         this.userService = userService;
         this.appointmentService = appointmentService;
         this.manageServiceService = manageServiceService;
+        this.is = is;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
