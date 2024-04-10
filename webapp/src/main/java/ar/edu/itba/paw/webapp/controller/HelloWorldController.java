@@ -1,12 +1,8 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Categories;
-import ar.edu.itba.paw.model.Neighbourhoods;
-import ar.edu.itba.paw.model.PricingTypes;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.AppointmentService;
+import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +24,7 @@ import java.util.List;
 public class HelloWorldController {
 
     private UserService us;
+    private BusinessService bs;
     private ServiceService service;
     private AppointmentService appointment;
 
@@ -36,10 +33,11 @@ public class HelloWorldController {
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
-    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service, @Qualifier("appointmentServiceImpl") final AppointmentService appointment){
+    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service, @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs){
         this.us = us;
         this.service = service;
         this.appointment = appointment;
+        this.bs = bs;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
@@ -75,18 +73,18 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/publicar")
-    public ModelAndView postForm() {
+    @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
+    public ModelAndView postForm(@PathVariable("businessId") final long businessId){
         final ModelAndView mav = new ModelAndView("post");
-        mav.addObject("user","home page");
         mav.addObject("categories",categories);
         mav.addObject("pricingTypes",pricingTypes);
         mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crearservicio")
-    public ModelAndView createService(@RequestParam(value = "titulo") final String title,
+    @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
+    public ModelAndView createService(@PathVariable("businessId") final long businessId,
+                                      @RequestParam(value = "titulo") final String title,
                                       @RequestParam(value="descripcion") final String description,
                                       @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
                                       @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
@@ -96,42 +94,55 @@ public class HelloWorldController {
                                       @RequestParam(value="precio") final String price,
                                       @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
                                       @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges){
-        service.create(1,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, "https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg");
-        return new ModelAndView("redirect:/");
+        Service newservice = service.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, "" );
+        return new ModelAndView("redirect:/servicio/"+newservice.getId());
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/deleteservicio")
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
     public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
         service.delete(serviceid);
         return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
-    public ModelAndView dataForm(
-            @RequestParam(value = "titulo") final String title,
-            @RequestParam(value = "descripcion") final String description,
-            @RequestParam(value = "ubicacion") final String location,
-            @RequestParam(value = "categoria") final String category
+    @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
+    public ModelAndView personalForm(
     ) {
-        final ModelAndView mav = new ModelAndView("postPersonal");
-        mav.addObject("title", title);
-        mav.addObject("description", description);
-        mav.addObject("location", location);
-        mav.addObject("category", category);
-        return mav;
+        return new ModelAndView("postPersonal");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crear")
+    @RequestMapping(method = RequestMethod.POST, path = "/crear-perfiles")
     public ModelAndView post(
-            @RequestParam(value = "titulo") final String title,
-            @RequestParam(value = "descripcion") final String description,
-            @RequestParam(value = "ubicacion") final String location,
-            @RequestParam(value = "categoria") final String category,
             @RequestParam(value = "nombre") final String name,
-            @RequestParam(value = "apellido") final String apellido,
-            @RequestParam(value = "email") final String email
+            @RequestParam(value = "apellido") final String surname,
+            @RequestParam(value = "email") final String email,
+            @RequestParam(value = "telefono") final String telephone,
+            @RequestParam(value = "nombre-negocio") final String businessName,
+            @RequestParam(value = "email-negocio") final String businessEmail,
+            @RequestParam(value = "telefono-negocio") final String businessTelephone,
+            @RequestParam(value = "ubicacion-negocio") final String businessLocation
     ) {
-        return new ModelAndView("redirect:/misservicios");
+        User newuser = us.findByEmail(email).orElse(null);
+        if (newuser == null){
+            newuser = us.create("default",name,"default",surname,email,telephone);
+            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+            us.changeUsername(newuser.getUserId(),newUsername);
+        }else {
+            if (!newuser.getName().equals(name) || !newuser.getSurname().equals(surname)){
+                return new ModelAndView("redirect:/registrar-datos-personales");
+            }
+        }
+        Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
+        if (newBusiness == null) {
+            String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
+            String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
+            String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
+            newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
+        }else {
+            if (newBusiness.getUserId() != newuser.getUserId()){
+                return new ModelAndView("redirect:/registrar-datos-personales");
+            }
+        }
+        return new ModelAndView("redirect:/publicar-servicio/" + newBusiness.getBusinessid());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
@@ -189,7 +200,7 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/");
     }
 */
-    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
         mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));

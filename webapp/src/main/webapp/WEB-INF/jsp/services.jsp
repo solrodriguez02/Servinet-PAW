@@ -77,7 +77,7 @@
             <div class="services-container">
                 <c:forEach items="${services}" var="item">
                     <div class="service-box">
-                        <a class="service-text" href="${pageContext.request.contextPath}/${item.id}">
+                        <a class="service-text" href="${pageContext.request.contextPath}/servicio/${item.id}">
                             <div class="service-data-container">
                                 <div class="service-img-container">
                                     <c:choose>
