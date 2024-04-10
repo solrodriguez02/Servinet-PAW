@@ -63,7 +63,7 @@
             <p>Recuerde que para este servicio <span class="highlight-text">no hay una duracion definida por el proveedor del mismo</span></p>
         </c:if>
         <div class="options">
-            <a href="/webapp_war/"><input type="button" value="Cancelar" class="cancelBtn"></a>
+            <a href="${pageContext.request.contextPath}/"><input type="button" value="Cancelar" class="cancelBtn"></a>
             <input type="submit" value="Reservar turno" class="submitBtn">
         </div>
     </form>
