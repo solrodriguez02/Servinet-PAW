@@ -23,6 +23,10 @@ public class BusinessServiceImpl implements BusinessService{
         return businessDao.findById(id);
     }
     @Override
+    public Optional<Business> findByBusinessName(String businessName) {
+        return businessDao.findByBusinessName(businessName);
+    }
+        @Override
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }

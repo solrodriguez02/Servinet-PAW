@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <jsp:include page="navbar.jsp" />
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
@@ -8,15 +9,21 @@
 
 </head>
 <body>
-<c:url value="/crearservicio" var="postUrl"/>
+<c:url value="/crear-servicio/${businessId}" var="postUrl"/>
 <div class="postForm page">
-    <form action="${postUrl}" method="post" class="form">
+    <form action="${postUrl}" method="post" class="form" enctype="multipart/form-data">
 
         <h3 class="form-title">Crea un nuevo servicio</h3>
         <label>
             Nombre:
             <input type="text" class="input" name="titulo" placeholder="Elegi un nombre para tu servicio"/>
         </label>
+      <div class="service-div">
+        <label>
+            Selecciona una imagen para tu servicio:
+            <input type="file" class="input" name="imageInput" accept=".png, .jpg, .jpeg" required/>
+        </label>
+        </div>
         <label>
             Descripcion:
             <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>

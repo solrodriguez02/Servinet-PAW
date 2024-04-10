@@ -23,7 +23,7 @@ public class ServiceDaoJdbc implements ServiceDao {
             rs.getString("location"), Neighbourhoods.findByValue(rs.getString("location")) ,
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
-            rs.getBoolean("additionalcharges"), rs.getString("imageurl"));
+            rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -40,7 +40,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, String imageurl){
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);
@@ -52,10 +52,9 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("minimalduration", minimalduration);
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
-        userData.put("imageurl", imageurl);
-
+        userData.put("imageid", imageId != 0 ? imageId : null);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageurl);
+        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageId);
     }
 
     @Override
