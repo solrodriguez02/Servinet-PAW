@@ -26,7 +26,7 @@
 <div>
     El servicio <span th:text="${serviceName}"/> ha sido <div th:switch="${type}">
         <span th:case="'CREATED'">
-            creado exitosamente.
+            creado exitosamente. Su número de identificación es el #<span th:text="${serviceId}"></span>.
             Ya se encuentra disponible en <a th:href="${url}+${serviceId}" th:text="${url}+${serviceId}"></a>.
 
             Si desea eliminar el servicio y con ello todos los turnos solicitados desde nuestra página servinet, haga click en:
