@@ -150,7 +150,8 @@ public class EmailController {
         return serviceNotFound();
     }
 
-    // ! TESTING {
+    /*
+    ! TESTING {
     @RequestMapping(method = RequestMethod.GET, path = "/trucho")
     public ModelAndView trucho(){
         final long serviceId = manageServiceService.createService(1,"title","description",true,Neighbourhoods.ALMAGRO,"location",Categories.BELLEZA,4,PricingTypes.PER_TOTAL,"40",true);
@@ -162,6 +163,6 @@ public class EmailController {
         manageServiceService.deleteService(serviceId);
         return new ModelAndView("redirect:/borrar-servicio/"+ serviceId);
     }
-    // ! }
+    ! } */
 }
 
