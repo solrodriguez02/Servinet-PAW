@@ -232,9 +232,23 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
-        mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));
+        Service serv;
+        try {
+            serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        } catch (ServiceNotFoundException e) {
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=noexiste");
+        }
+        mav.addObject("service",serv);
         return mav;
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/operacion-invalida")
+    public ModelAndView invalidOperation(@RequestParam(value = "argumento") final String argument) {
+        final ModelAndView mav = new ModelAndView("invalidOperation");
+        mav.addObject("argument",argument);
+        return mav;
+    }
+
 
     @RequestMapping(method = RequestMethod.GET, path = "/{userId}/micuenta")
     public ModelAndView profile() {
