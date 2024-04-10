@@ -11,7 +11,6 @@
     <div class="header">
         <h2 class="slogan">Slogan Servinet</h2>
     </div>
-
     <h3>Busca por categorias</h3>
     <div class="boxes-container">
         <c:forEach items="${categories}" var="category" varStatus="loop">

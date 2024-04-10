@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
-<c:url var="deleteUrl" value="/${service.id}/deleteservicio" />
+<c:url var="deleteUrl" value="/${service.id}/eliminar-servicio" />
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">

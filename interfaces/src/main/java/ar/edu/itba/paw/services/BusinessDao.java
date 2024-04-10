@@ -7,6 +7,8 @@ import java.util.Optional;
 public interface BusinessDao {
      Optional<Business> findById(long id);
 
+     Optional<Business> findByBusinessName(String businessName);
+
      void changeBusinessEmail(long businessId, String value);
 
      void deleteBusiness(long businessid);
