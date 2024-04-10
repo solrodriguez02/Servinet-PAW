@@ -9,5 +9,5 @@ public interface ManageServiceService {
 
     void deleteService(long serviceid);
 
-    long createService(long businessid, String title, String description, boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricingtype, String price, boolean additionalCharges);
+    long createService(long businessid, String title, String description, boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricingtype, String price, boolean additionalCharges,  long imageId);
 }

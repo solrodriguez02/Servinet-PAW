@@ -23,7 +23,7 @@ public class ServiceDaoJdbc implements ServiceDao {
             rs.getString("location"), Neighbourhoods.findByValue(rs.getString("location")) ,
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
-            rs.getBoolean("additionalcharges"), rs.getString("imageurl"));
+            rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -40,7 +40,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, String imageurl){
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);
@@ -52,10 +52,9 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("minimalduration", minimalduration);
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
-        userData.put("imageurl", imageurl);
-
+        userData.put("imageid", imageId != 0 ? imageId : null);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageurl);
+        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageId);
     }
 
     @Override
@@ -97,21 +96,22 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Boolean isMoreServices(int page) {
-        int count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE id BETWEEN ? AND ?", Integer.class, page*10+11, page*10+20);
-        return count > 0;
-    }
-
-    @Override
-    public Boolean isMoreServicesFiltered(int page, String category, String location) {
+    public int getServiceCount(String category, String location) {
         int count = 0;
         if(category == null) {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
-        } else if(location == null) {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
+            if(location == null) {
+                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services", Integer.class);
+            } else {
+                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
+            }
         } else {
-            count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+            if (location == null) {
+                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
+            } else {
+                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+            }
         }
-        return count > page*10+10;
+        return count;
     }
+
 }

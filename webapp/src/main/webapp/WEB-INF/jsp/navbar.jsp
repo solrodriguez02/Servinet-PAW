@@ -19,7 +19,7 @@
                 <div class="dropdown-content">
                     <!--Esto claramente habria que cambiarlo por un for each que itere sobre las categorias del enum-->
                     <!--A preguntar en clase, nose como hacerlo ya que navbar no se llama directamente desde el HelloWorldController -->
-                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Arreglos calificados">Arreglos calificados</a>
+                    <a href="${pageContext.request.contextPath}/servicios/?categoria=Arreglos Calificados">Arreglos calificados</a>
                     <a href="${pageContext.request.contextPath}/servicios/?categoria=Belleza">Belleza</a>
                     <a href="${pageContext.request.contextPath}/servicios/?categoria=Consultoria">Consultoria</a>
                     <a href="${pageContext.request.contextPath}/servicios/?categoria=Eventos y Celebraciones">Eventos y Celebraciones</a>
@@ -30,8 +30,9 @@
                     <a href="${pageContext.request.contextPath}/servicios/?categoria=Transporte">Transporte</a>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/publicar">Publicar</a>
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
             <!--
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">

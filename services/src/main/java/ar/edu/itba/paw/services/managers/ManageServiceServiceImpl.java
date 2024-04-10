@@ -26,9 +26,8 @@ public class ManageServiceServiceImpl implements ManageServiceService {
     }
 
     @Override
-    public long createService(long businessid, String title, String description, boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricingtype, String price, boolean additionalCharges){
-        businessid = 1;     // ! HARDCODEADO
-        Service service = serviceService.create(businessid,title,description,homeservice,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, "https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg");
+    public long createService(long businessid, String title, String description, boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricingtype, String price, boolean additionalCharges, long imageId){
+        Service service = serviceService.create(businessid,title,description,homeservice,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
         try {
             emailService.createdService(service);
         } catch (MessagingException e) {

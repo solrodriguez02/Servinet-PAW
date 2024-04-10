@@ -20,6 +20,10 @@ CREATE TABLE IF NOT EXISTS business(
   businessEmail VARCHAR(255),
   businessLocation VARCHAR(255)
 );
+CREATE TABLE IF NOT EXISTS images(
+  imageid SERIAL PRIMARY KEY,
+  imageBytes BYTEA
+);
 
 --CREATE TYPE serviceCategory AS ENUM ('Limpieza', 'Belleza', 'Arreglos calificados', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud');
 --CREATE TYPE pricingType AS ENUM ('Per hour', 'Per total', 'Budget', 'TBD');
@@ -31,12 +35,12 @@ CREATE TABLE IF NOT EXISTS services (
     servicedescription VARCHAR(255),
     homeservice BOOLEAN,
     location VARCHAR(255) NOT NULL,
-    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
+    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos Calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
     additionalcharges BOOLEAN,
-    imageurl VARCHAR(255)
+    imageId INT references images(imageid)
     );
 
 CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '

@@ -49,7 +49,7 @@ public class TestConfig {
         final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
         populator.addScript(pgsqlSyntax);
         populator.addScript(schemaSql);
-        populator.addScript(appointmentsSql);
+//        populator.addScript(appointmentsSql);
         return populator;
     }
 }

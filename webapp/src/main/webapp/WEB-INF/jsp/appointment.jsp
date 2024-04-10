@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/appointment.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <title>Servinet - Detalle del Turno #${appointmentId}</title>
 </head>
@@ -13,7 +14,7 @@
 <c:url value="/cancelar-turno/${appointment.id}" var="cancelUrl" />
 <div class="top-bar">
     <div class="back-button">
-        <a href="/webapp_war/">
+        <a href="${pageContext.request.contextPath}/">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left arrow" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
         </svg>
@@ -33,13 +34,30 @@
     <c:if test="${appointment != null}">
         <div class="card border-success text-bg-sucess mb-3 fixed-card">
             <div class="card-header success-title">
-                <svg xmlns="http://www.w3.org/2000/svg" width="40px" height="40px" viewBox="0 0 16 16"><path fill="#4aa80b" d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093l3.473-4.425z"/></svg>
-                <h2>¡Todo listo ${user.name}!</h2>
+                <c:choose>
+                    <c:when test="${confirmed}">
+                        <i class="material-icons confirmed-icon">check</i>
+                        <h2>¡Todo listo ${user.name}!</h2>
+                    </c:when>
+                    <c:otherwise>
+                        <i class="material-icons waiting-icon">schedule</i>
+                        <h2>Esperando confirmacion</h2>
+                    </c:otherwise>
+                </c:choose>
             </div>
-            <div class="card-body">
-                <p class="card-text">Tu turno fue solicitado con éxito</p>
-                <p class="card-text">Se te enviará un mail con la decisión del proveedor del servicio</p>
-            </div>
+            <c:choose>
+                <c:when test="${confirmed}">
+                    <div class="card-body">
+                        <p class="card-text">Su turno fue confirmado</p>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="card-body">
+                        <p class="card-text">Su turno fue solicitado con éxito</p>
+                        <p class="card-text">Se le enviará un mail con la decisión del proveedor del servicio</p>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </c:if>
     <div class="card border-light mb-3 fixed-card">

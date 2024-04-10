@@ -5,8 +5,6 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servinet - Reserva tu turno</title>
 </head>
 <body>
@@ -65,7 +63,7 @@
             <p>Recuerde que para este servicio <span class="highlight-text">no hay una duracion definida por el proveedor del mismo</span></p>
         </c:if>
         <div class="options">
-            <a href="/webapp_war/"><input type="button" value="Cancelar" class="cancelBtn"></a>
+            <a href="${pageContext.request.contextPath}/"><input type="button" value="Cancelar" class="cancelBtn"></a>
             <input type="submit" value="Reservar turno" class="submitBtn">
         </div>
     </form>

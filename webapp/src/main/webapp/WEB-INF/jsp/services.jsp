@@ -56,15 +56,17 @@
             </div>
         </div>
 
-        <div class="filters-selected">
-            <c:if test="${location != null}">
-                <h5>Filtros seleccionados:</h5>
-                <button class="filter-container">
-                    <c:out value="${location}"/>
-                    <a href="${categoryPath}"><i class="material-icons close-filter-icon">close</i></a>
-                </button>
-            </c:if>
-        </div>
+        <c:if test="${location != null}">
+            <div class="filters-selected">
+                    <h5>Filtros seleccionados:</h5>
+                    <button class="filter-container">
+                        <c:out value="${location}"/>
+                        <a href="${categoryPath}"><i class="material-icons close-filter-icon">close</i></a>
+                    </button>
+            </div>
+        </c:if>
+
+        <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
     </div>
 
     <c:choose>
@@ -77,17 +79,10 @@
             <div class="services-container">
                 <c:forEach items="${services}" var="item">
                     <div class="service-box">
-                        <a class="service-text" href="${pageContext.request.contextPath}/${item.id}">
+                        <a class="service-text" href="${pageContext.request.contextPath}/servicio/${item.id}">
                             <div class="service-data-container">
                                 <div class="service-img-container">
-                                    <c:choose>
-                                        <c:when test="${item.imageurl == null}">
-                                            <img class="img service-img" src="https://goldbricksgroup.com/wp-content/uploads/2021/08/y9DpT-600x390.jpg" alt="Imagen del servicio">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img class="img service-img" src="${item.imageurl}" alt="Imagen del servicio">
-                                        </c:otherwise>
-                                    </c:choose>
+                                    <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="Imagen del servicio">
                                 </div>
                                 <div class="service-info">
                                     <div class="service-header">
@@ -104,39 +99,102 @@
             </div>
 
             <div class="page-manage-box">
+
                 <c:choose>
                     <c:when test="${page != 0}">
+                        <a class="page-text" href="${filtersPath}pagina=0"><< Primer pagina</a>
                         <a class="page-text" href="${filtersPath}pagina=${page-1}">< Anterior</a>
                     </c:when>
                     <c:otherwise>
+                        <label class="none-page-text">Primer pagina</label>
                         <label class="none-page-text">Anterior</label>
                     </c:otherwise>
                 </c:choose>
 
-                <c:url value="/servicios" var="getPage"/>
-                <form action="${getPage}" method="get">
-                    <label>
-                        <input class="page-input" type="text" name="pagina" placeholder="${page}"/>
-                    </label>
-                    <label class="transparent">
-                        <c:if test="${category!=null}">
-                                <input type="text" name="categoria" value="${category}"/>
-                        </c:if>
-                        <c:if test="${location!=null}">
-                            <input type="text" name="ubicacion" value="${location}"/>
-                        </c:if>
-                        <input type="submit">
-                    </label>
-                </form>
+
+                <div class="page-nums">
+                    <c:choose>
+                        <c:when test="${pageCount < 6}">
+                            <c:forEach var="i" begin="0" end="${pageCount-1}">
+                                <a class="none-decoration" href="${filtersPath}pagina=${i}">
+                                    <c:choose>
+                                        <c:when test="${i == page}">
+                                            <label class="page-num selected-page">${i}</label>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <label class="page-num none-selected-page">${i}</label>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </a>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${page < 3}">
+                                    <c:forEach var="i" begin="0" end="3">
+                                        <a class="none-decoration" href="${filtersPath}pagina=${i}">
+                                            <c:choose>
+                                                <c:when test="${i == page}">
+                                                    <label class="page-num selected-page">${i}</label>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <label class="page-num none-selected-page">${i}</label>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </c:forEach>
+                                    <label class="none-selected-page">...</label>
+                                    <a class="none-decoration" href="${filtersPath}pagina=${pageCount-1}"><label class="page-num none-selected-page"> <c:out value="${pageCount-1}"/> </label></a>
+                                </c:when>
+                                <c:when test="${page > pageCount-1-3}">
+                                    <a class="none-decoration" href="${filtersPath}pagina=0"><label class="page-num none-selected-page"> 0 </label></a>
+                                    <label class="none-selected-page">...</label>
+                                    <c:forEach var="i" begin="${pageCount-1-3}" end="${pageCount-1}">
+                                        <a class="none-decoration" href="${filtersPath}pagina=${i}">
+                                            <c:choose>
+                                                <c:when test="${i == page}">
+                                                    <label class="page-num selected-page">${i}</label>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <label class="page-num none-selected-page">${i}</label>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </a>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <a class="none-decoration" href="${filtersPath}pagina=0"><label class="page-num none-selected-page"> 0 </label></a>
+                                    <label class="page-num none-selected-page"> ... </label>
+                                    <a class="none-decoration" href="${filtersPath}pagina=${page-1}"><label class="page-num none-selected-page"> <c:out value="${page-1}"/> </label></a>
+                                    <a class="none-decoration" href="${filtersPath}pagina=${page}"><label class="page-num selected-page"> <c:out value="${page}"/> </label></a>
+                                    <a class="none-decoration" href="${filtersPath}pagina=${page+1}"><label class="page-num none-selected-page"> <c:out value="${page+1}"/> </label></a>
+                                    <label class="page-num none-selected-page"> ... </label>
+                                    <a class="none-decoration" href="${filtersPath}pagina=${pageCount-1}"><label class="page-num none-selected-page"> <c:out value="${pageCount-1}"/> </label></a>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
 
                 <c:choose>
-                    <c:when test="${isMoreServices}">
+                    <c:when test="${page < pageCount-1}">
                         <a class="page-text" href="${filtersPath}pagina=${page+1}">Siguiente ></a>
                     </c:when>
                     <c:otherwise>
                         <label class="none-page-text">Siguiente</label>
                     </c:otherwise>
                 </c:choose>
+
+                <c:choose>
+                    <c:when test="${page != pageCount-1}">
+                        <a class="page-text" href="${filtersPath}pagina=${pageCount-1}">Ultima pagina >></a>
+                    </c:when>
+                    <c:otherwise>
+                        <label class="none-page-text">Ultima pagina</label>
+                    </c:otherwise>
+                </c:choose>
+
             </div>
         </c:otherwise>
     </c:choose>

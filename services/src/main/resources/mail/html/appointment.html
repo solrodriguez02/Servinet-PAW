@@ -109,7 +109,7 @@
 
 <p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
     Para mas detalles del turno haga click
-    <a th:href="${url}+'turno/'+ ${appointmentId}">aqui</a>
+    <a th:href="${url}+'turno/'+${serviceId}+'/'+${appointmentId}">aqui</a>
 </p>
 <p>
      <br />

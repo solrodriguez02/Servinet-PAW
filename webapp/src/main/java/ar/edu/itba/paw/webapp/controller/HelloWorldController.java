@@ -5,9 +5,12 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.ManageServiceService;
+import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,34 +20,44 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.UserService;
 
-import java.time.LocalDateTime;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.*;
+
+
 @Controller
 public class HelloWorldController {
 
     private UserService us;
+    private BusinessService bs;
     private ServiceService service;
     private AppointmentService appointment;
     private final ManageServiceService manageServiceService;
+
+    private ImageService is;
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
-    public HelloWorldController(@Qualifier("userServiceImpl") final UserService us, @Qualifier("serviceServiceImpl") final ServiceService service,
-                                @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+    public HelloWorldController( @Qualifier("userServiceImpl") final UserService us,@Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService service,
+    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
         this.us = us;
         this.service = service;
         this.appointment = appointment;
         this.manageServiceService = manageServiceService;
+
+        this.is=is;
+        this.bs = bs;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
@@ -68,22 +81,20 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("services");
         if(page == null) page=0;
         List<Service> serviceList = service.services(page, category, location);
-        Boolean isMoreServices = service.isMoreServices(page, category, location);
-        Boolean isServicesEmpty = serviceList.isEmpty();
         mav.addObject("services", serviceList);
-        mav.addObject("isMoreServices", isMoreServices);
         mav.addObject("page", page);
-        mav.addObject("isServicesEmpty", isServicesEmpty);
+        mav.addObject("isServicesEmpty", serviceList.isEmpty());
         mav.addObject("category", category);
         mav.addObject("neighbourhoods", neighbourhoods);
         mav.addObject("location", location);
+        mav.addObject("resultsAmount", service.getServiceCount(category, location));
+        mav.addObject("pageCount", service.getPageCount(category, location));
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/publicar")
-    public ModelAndView postForm() {
+    @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
+    public ModelAndView postForm(@PathVariable("businessId") final long businessId){
         final ModelAndView mav = new ModelAndView("post");
-        mav.addObject("user","home page");
         mav.addObject("categories",categories);
         mav.addObject("pricingTypes",pricingTypes);
         mav.addObject("neighbours",neighbourhoods);
@@ -91,39 +102,51 @@ public class HelloWorldController {
     }
 
 
-
-    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/deleteservicio")
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
     public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
         service.delete(serviceid);
         return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/datospersonales")
-    public ModelAndView dataForm(
-            @RequestParam(value = "titulo") final String title,
-            @RequestParam(value = "descripcion") final String description,
-            @RequestParam(value = "ubicacion") final String location,
-            @RequestParam(value = "categoria") final String category
+    @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
+    public ModelAndView personalForm(
     ) {
-        final ModelAndView mav = new ModelAndView("postPersonal");
-        mav.addObject("title", title);
-        mav.addObject("description", description);
-        mav.addObject("location", location);
-        mav.addObject("category", category);
-        return mav;
+        return new ModelAndView("postPersonal");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crear")
+    @RequestMapping(method = RequestMethod.POST, path = "/crear-perfiles")
     public ModelAndView post(
-            @RequestParam(value = "titulo") final String title,
-            @RequestParam(value = "descripcion") final String description,
-            @RequestParam(value = "ubicacion") final String location,
-            @RequestParam(value = "categoria") final String category,
             @RequestParam(value = "nombre") final String name,
-            @RequestParam(value = "apellido") final String apellido,
-            @RequestParam(value = "email") final String email
+            @RequestParam(value = "apellido") final String surname,
+            @RequestParam(value = "email") final String email,
+            @RequestParam(value = "telefono") final String telephone,
+            @RequestParam(value = "nombre-negocio") final String businessName,
+            @RequestParam(value = "email-negocio") final String businessEmail,
+            @RequestParam(value = "telefono-negocio") final String businessTelephone,
+            @RequestParam(value = "ubicacion-negocio") final String businessLocation
     ) {
-        return new ModelAndView("redirect:/misservicios");
+        User newuser = us.findByEmail(email).orElse(null);
+        if (newuser == null){
+            newuser = us.create("default",name,"default",surname,email,telephone);
+            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+            us.changeUsername(newuser.getUserId(),newUsername);
+        }else {
+            if (!newuser.getName().equals(name) || !newuser.getSurname().equals(surname)){
+                return new ModelAndView("redirect:/registrar-datos-personales");
+            }
+        }
+        Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
+        if (newBusiness == null) {
+            String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
+            String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
+            String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
+            newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
+        }else {
+            if (newBusiness.getUserId() != newuser.getUserId()){
+                return new ModelAndView("redirect:/registrar-datos-personales");
+            }
+        }
+        return new ModelAndView("redirect:/publicar-servicio/" + newBusiness.getBusinessid());
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
@@ -161,12 +184,22 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/turno/"+app.getId());
     }
 */
-    @RequestMapping(method = RequestMethod.GET, path = "/turno/{appointmentId:\\d+}")
-    public ModelAndView appointment(@PathVariable("appointmentId") final long appointmentId) {
+    @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
+    public ModelAndView appointment(
+            @PathVariable("appointmentId") final long appointmentId,
+            @PathVariable("serviceId") final long serviceId) {
+
         Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
-        if ( !optionalAppointment.isPresent())
-            return new ModelAndView("no-existe");
-        final Appointment app = optionalAppointment.get();
+        if(!optionalAppointment.isPresent()) {
+            if(service.findById(serviceId).isPresent()) {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
+            }
+            else {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=noexiste");
+            }
+        }
+
+        Appointment app = appointment.findById(appointmentId).get();
         User user = us.findById(app.getUserid()).get();
         Service service = this.service.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final ModelAndView mav = new ModelAndView("appointment");
@@ -174,6 +207,18 @@ public class HelloWorldController {
         mav.addObject("user", user);
         mav.addObject("service", service);
         mav.addObject("new", true);
+        mav.addObject("confirmed", app.getConfirmed());
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/sinturno/{serviceId:\\d+}")
+    public ModelAndView noneAppointment(
+            @PathVariable("serviceId") final long serviceId,
+            @RequestParam(name = "argumento") String argument
+    ){
+        final ModelAndView mav = new ModelAndView("noneAppointment");
+        mav.addObject("argument", argument);
+        mav.addObject("serviceId", serviceId);
         return mav;
     }
 /*
@@ -184,7 +229,7 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/");
     }
 */
-    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
         mav.addObject("service",service.findById(serviceId).orElseThrow(ServiceNotFoundException::new));

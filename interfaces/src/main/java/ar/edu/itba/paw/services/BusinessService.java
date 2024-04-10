@@ -8,6 +8,8 @@ public interface BusinessService {
 
     Optional<Business> findById(long id);
 
+    Optional<Business> findByBusinessName(String businessName);
+
     void deleteBusiness(long businessid);
 
     void changeBusinessEmail(long businessId, String value);
