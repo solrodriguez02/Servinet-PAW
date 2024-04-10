@@ -190,6 +190,7 @@ public class HelloWorldController {
         mav.addObject("user", user);
         mav.addObject("service", service);
         mav.addObject("new", true);
+        mav.addObject("confirmed", app.getConfirmed());
         return mav;
     }
 
