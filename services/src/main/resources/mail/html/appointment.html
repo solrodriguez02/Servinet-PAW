@@ -86,8 +86,9 @@
     </div>
 
     <div th:if="${type == 'DENIED' }">
-        <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
-        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span> <span th:if="${isServiceDeleted}">pues el servicio ha sido eliminado</span>.
+        <span th:text="${isClient}? 'Su': 'La'"> solicitud de</span>
+        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span> <span th:if="${isServiceDeleted} " th:fragment="serviceDeleted">
+        pues el servicio ha sido eliminado</span>.
         <p th:if="${isClient}" th:fragment="newAppointment">
             <span th:if="!${isServiceDeleted}">
                 Si desea pedir otra solicitud, haga click
@@ -98,8 +99,8 @@
     </div>
 
     <div th:if="${type == 'CANCELLED' }">
-        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado.
-        <p th:replace="html/appointment.html :: newAppointment"></p>
+        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado <!--span th:replace="html/appoinment.html :: serviceDeleted"></span>
+        <p th:replace="html/appointment.html :: newAppointment"></p-->
     </div>
 <!--p>
     <img src="sample.png" th:src="|cid:${imageResourceName}|" />

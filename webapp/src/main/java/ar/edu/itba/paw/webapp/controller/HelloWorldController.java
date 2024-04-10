@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class HelloWorldController {
@@ -162,7 +163,10 @@ public class HelloWorldController {
 */
     @RequestMapping(method = RequestMethod.GET, path = "/turno/{appointmentId:\\d+}")
     public ModelAndView appointment(@PathVariable("appointmentId") final long appointmentId) {
-        Appointment app = appointment.findById(appointmentId).get();
+        Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
+        if ( !optionalAppointment.isPresent())
+            return new ModelAndView("no-existe");
+        final Appointment app = optionalAppointment.get();
         User user = us.findById(app.getUserid()).get();
         Service service = this.service.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final ModelAndView mav = new ModelAndView("appointment");

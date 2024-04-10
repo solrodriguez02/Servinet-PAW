@@ -73,7 +73,8 @@ public class EmailServiceImpl implements EmailService{
 
         final Context ctx = getContext(appointment,service,isServiceDeleted);
 
-        sendMailToBusiness(emailType, service, ctx);
+        if (!isServiceDeleted)
+            sendMailToBusiness(emailType, service, ctx);
         sendMailToClient(emailType,clientMail,ctx);
     }
 
@@ -165,7 +166,7 @@ public class EmailServiceImpl implements EmailService{
         }
         catch (MailException ex) {
             // simply log it and go on...
-            System.err.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
 
     }

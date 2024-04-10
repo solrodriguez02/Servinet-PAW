@@ -84,14 +84,16 @@ public class EmailController {
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
-        appointmentService.confirmAppointment(appointmentId);
-        try {
-            emailService.confirmedAppointment(appointment);
+        if (!appointment.getConfirmed()) {
 
-        } catch (MessagingException e ){
-            System.err.println(e.getMessage());
+            appointmentService.confirmAppointment(appointmentId);
+            try {
+                emailService.confirmedAppointment(appointment);
+
+            } catch (MessagingException e) {
+                System.err.println(e.getMessage());
+            }
         }
-
         return new ModelAndView("redirect:/turno/"+appointmentId);
     }
 
@@ -137,5 +139,10 @@ public class EmailController {
         return new ModelAndView("redirect:/"+serviceId);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/borrar/{serviceId:\\d+}")
+    public ModelAndView trucho2(@PathVariable("serviceId") final long serviceId){
+        manageServiceService.deleteService(serviceId);
+        return new ModelAndView("redirect:/borrar-servicio/"+ serviceId);
+    }
 }
 
