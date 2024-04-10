@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 public class EmailController {
@@ -69,23 +70,37 @@ public class EmailController {
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
-        appointmentService.cancelAppointment(appointmentId);
-        try {
-            emailService.deniedAppointment(appointment);
+        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
+        if (!optionalAppointment.isPresent())
+            return appointmentNotFound();
+        Appointment appointment = optionalAppointment.get();
 
-        } catch (MessagingException e ){
-            System.err.println(e.getMessage());
+        if (!appointment.getConfirmed()) {
+            appointmentService.cancelAppointment(appointmentId);
+            try {
+                emailService.deniedAppointment(appointment);
+
+            } catch (MessagingException e) {
+                System.err.println(e.getMessage());
+            }
         }
 
         return new ModelAndView("redirect:/turno/"+appointmentId);
     }
 
+    private ModelAndView appointmentNotFound(){
+        return new ModelAndView("redirect:/turno-no-encontrado");
+    }
+    private ModelAndView serviceNotFound(){
+        return new ModelAndView("redirect:/servicio-no-encontrado");
+    }
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
+        if (!optionalAppointment.isPresent())
+            return appointmentNotFound();
+        Appointment appointment = optionalAppointment.get();
         if (!appointment.getConfirmed()) {
-
             appointmentService.confirmAppointment(appointmentId);
             try {
                 emailService.confirmedAppointment(appointment);
@@ -99,8 +114,10 @@ public class EmailController {
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
-
-        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
+        if (!optionalAppointment.isPresent())
+            return appointmentNotFound();
+        Appointment appointment = optionalAppointment.get();
         appointmentService.cancelAppointment(appointmentId);
         try {
             emailService.cancelledAppointment(appointment);
@@ -130,9 +147,10 @@ public class EmailController {
     @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
         manageServiceService.deleteService(serviceId);
-        return new ModelAndView("redirect:/");
+        return serviceNotFound();
     }
 
+    // ! TESTING {
     @RequestMapping(method = RequestMethod.GET, path = "/trucho")
     public ModelAndView trucho(){
         final long serviceId = manageServiceService.createService(1,"title","description",true,Neighbourhoods.ALMAGRO,"location",Categories.BELLEZA,4,PricingTypes.PER_TOTAL,"40",true);
@@ -144,5 +162,6 @@ public class EmailController {
         manageServiceService.deleteService(serviceId);
         return new ModelAndView("redirect:/borrar-servicio/"+ serviceId);
     }
+    // ! }
 }
 
