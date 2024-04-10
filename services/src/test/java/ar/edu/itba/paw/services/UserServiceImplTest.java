@@ -62,8 +62,8 @@ public class UserServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones
-        Mockito.when(userDao.create(Mockito.eq(USERNAME),Mockito.eq(PASSWORD),
-                Mockito.eq(NAME),Mockito.eq(SURNAME), Mockito.eq(EMAIL),Mockito.eq(TELEPHONE),Mockito.eq(false))).thenReturn(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false));
+        Mockito.when(userDao.create(Mockito.eq(USERNAME),Mockito.eq(NAME),Mockito.eq(PASSWORD),
+                Mockito.eq(SURNAME), Mockito.eq(EMAIL),Mockito.eq(TELEPHONE),Mockito.eq(false))).thenReturn(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false));
 
         // 2. Ejecuta la class under test (una sola)
         User user = userService.create(USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE);
