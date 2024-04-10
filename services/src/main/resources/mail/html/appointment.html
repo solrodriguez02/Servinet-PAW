@@ -34,7 +34,7 @@
 </head>
 <body>
 <p>
-    Estimado,
+    Estimado<span th:if="${isClient}" th:text="' '+${client.getName()}+' '+${client.getSurname()}"></span>,
 </p>
 <p>
     <div th:if="${type == 'WAITING' }">
@@ -99,7 +99,7 @@
     </div>
 
     <div th:if="${type == 'CANCELLED' }">
-        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado <span th:replace="html/appointment.html :: serviceDeleted"></span>.
+        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado <span th:replace="html/appointment.html :: serviceDeleted"></span>
         <p th:replace="html/appointment.html :: newAppointment"></p>
     </div>
 <!--p>

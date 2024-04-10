@@ -59,7 +59,7 @@ public class EmailController {
 
         try {
             //* si ya tiene el Service => ya lo paso x param
-            emailService.requestAppointment(createdAppointment, newuser.getEmail());
+            emailService.requestAppointment(createdAppointment, newuser);
 
         } catch (MessagingException e ){
             System.err.println(e.getMessage());

@@ -37,14 +37,14 @@ public class EmailServiceImpl implements EmailService{
 
     @Async // * funciona pues no invoque a un metodo dentro de la clase
     @Override
-    public void requestAppointment(Appointment appointment, String clientMail) throws MessagingException {
+    public void requestAppointment(Appointment appointment, User client) throws MessagingException {
         // no llama a prepareAndSendMails() pues no necesita user (en sprint1)
         Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
 
-        final Context ctx = getContext(appointment,service,false);
+        final Context ctx = getContext(appointment,service,false, client);
 
         sendMailToBusiness(EmailTypes.REQUEST, service, ctx);
-        sendMailToClient(EmailTypes.WAITING,clientMail,ctx);
+        sendMailToClient(EmailTypes.WAITING,client.getEmail(),ctx);
     }
 
     @Async
@@ -69,17 +69,18 @@ public class EmailServiceImpl implements EmailService{
     }
 
     private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Boolean isServiceDeleted) throws MessagingException {
-        String clientMail = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new).getEmail();
+        User client = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new);
 
-        final Context ctx = getContext(appointment,service,isServiceDeleted);
+        final Context ctx = getContext(appointment,service,isServiceDeleted, client);
 
         if (!isServiceDeleted)
             sendMailToBusiness(emailType, service, ctx);
-        sendMailToClient(emailType,clientMail,ctx);
+        sendMailToClient(emailType,client.getEmail(),ctx);
     }
 
-    private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted){
+    private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client){
         final Context ctx = new Context(LOCALE);
+        ctx.setVariable("client", client);
         ctx.setVariable("serviceName",service.getName());
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("appointmentId",appointment.getId());
