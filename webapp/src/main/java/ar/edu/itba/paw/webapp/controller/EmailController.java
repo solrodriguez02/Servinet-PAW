@@ -91,12 +91,13 @@ public class EmailController {
             System.err.println(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/turno/"+createdAppointment.getId());
+        return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        long serviceId = appointment.getServiceid();
         appointmentService.cancelAppointment(appointmentId);
         try {
             emailService.deniedAppointment(appointment);
@@ -105,12 +106,13 @@ public class EmailController {
             System.err.println(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/turno/"+appointmentId);
+        return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=rechazado");
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        long serviceId = appointment.getServiceid();
         appointmentService.confirmAppointment(appointmentId);
         try {
             emailService.confirmedAppointment(appointment);
@@ -119,12 +121,13 @@ public class EmailController {
             System.err.println(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/turno/"+appointmentId);
+        return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(NoSuchElementException::new);
+        long serviceId = appointment.getServiceid();
         appointmentService.cancelAppointment(appointmentId);
         try {
             emailService.cancelledAppointment(appointment);
@@ -133,7 +136,7 @@ public class EmailController {
             System.err.println(e.getMessage());
         }
 
-        return new ModelAndView("redirect:/turno/"+appointmentId);
+        return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 }
 

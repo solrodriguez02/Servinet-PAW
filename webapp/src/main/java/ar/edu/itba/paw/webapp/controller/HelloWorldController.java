@@ -20,9 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.itba.paw.services.UserService;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class HelloWorldController {
@@ -168,8 +166,22 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/turno/"+app.getId());
     }
 */
-    @RequestMapping(method = RequestMethod.GET, path = "/turno/{appointmentId:\\d+}")
-    public ModelAndView appointment(@PathVariable("appointmentId") final long appointmentId) {
+    @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
+    public ModelAndView appointment(
+            @PathVariable("appointmentId") final long appointmentId,
+            @PathVariable("serviceId") final long serviceId
+    ) {
+
+        Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
+        if(!optionalAppointment.isPresent()) {
+            if(service.findById(serviceId).isPresent()) {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
+            }
+            else {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=noexiste");
+            }
+        }
+
         Appointment app = appointment.findById(appointmentId).get();
         User user = us.findById(app.getUserid()).get();
         Service service = this.service.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
@@ -178,6 +190,17 @@ public class HelloWorldController {
         mav.addObject("user", user);
         mav.addObject("service", service);
         mav.addObject("new", true);
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/sinturno/{serviceId:\\d+}")
+    public ModelAndView noneAppointment(
+            @PathVariable("serviceId") final long serviceId,
+            @RequestParam(name = "argumento") String argument
+    ){
+        final ModelAndView mav = new ModelAndView("noneAppointment");
+        mav.addObject("argument", argument);
+        mav.addObject("serviceId", serviceId);
         return mav;
     }
 /*
