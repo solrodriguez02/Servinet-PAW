@@ -21,7 +21,7 @@
       <div class="service-div">
         <label>
             Selecciona una imagen para tu servicio:
-            <input type="file" class="input" name="imageInput" accept=".png, .jpg, .jpeg" required/>
+            <input type="file" class="input" name="imageInput" accept=".png, .jpg, .jpeg"/>
         </label>
         </div>
         <label>

@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS services (
     servicedescription VARCHAR(255),
     homeservice BOOLEAN,
     location VARCHAR(255) NOT NULL,
-    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
+    category  VARCHAR(50) CHECK (category IN ('Limpieza', 'Belleza', 'Arreglos Calificados','Peluqueria', 'Mascotas', 'Exteriores', 'Eventos y Celebraciones', 'Transporte', 'Consultoria', 'Salud')),
     minimalduration INT,
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
