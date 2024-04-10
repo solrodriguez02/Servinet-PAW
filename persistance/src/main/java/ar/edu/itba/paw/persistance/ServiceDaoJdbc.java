@@ -79,7 +79,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public List<Service> getServices(int page) {
-        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE id BETWEEN ? AND ?", new Object[] {page*10+1, page*10+10}, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("SELECT * from services ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {page*10}, ROW_MAPPER);
         return list;
     }
 
