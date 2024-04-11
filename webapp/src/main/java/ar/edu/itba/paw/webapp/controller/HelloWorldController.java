@@ -91,7 +91,6 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
     public ModelAndView postForm(@PathVariable("businessId") final long businessId){
         final ModelAndView mav = new ModelAndView("post");
-        mav.addObject("categories",categories);
         mav.addObject("pricingTypes",pricingTypes);
         mav.addObject("neighbours",neighbourhoods);
         return mav;
