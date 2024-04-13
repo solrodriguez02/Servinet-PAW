@@ -85,31 +85,31 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public List<Service> getServicesFilteredBy(int page, String category, String location) {
+    public List<Service> getServicesFilteredBy(int page, String category, String neighbourhood) {
         if(category == null) {
-            return jdbcTemplate.query( "SELECT * FROM services WHERE location = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {location, page*10}, ROW_MAPPER);
-        } else if(location == null) {
+            return jdbcTemplate.query( "SELECT * FROM services WHERE neighbourhood = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {neighbourhood, page*10}, ROW_MAPPER);
+        } else if(neighbourhood == null) {
             return jdbcTemplate.query( "SELECT * FROM services WHERE category = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, page*10}, ROW_MAPPER);
         } else {
             // Caso en el que el usuario filtro tanto por cateogria como por ubicacion
-            return jdbcTemplate.query( "SELECT * FROM services WHERE (category = ? AND location = ?) ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, location, page*10}, ROW_MAPPER);
+            return jdbcTemplate.query( "SELECT * FROM services WHERE (category = ? AND neighbourhood = ?) ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, neighbourhood, page*10}, ROW_MAPPER);
         }
     }
 
     @Override
-    public int getServiceCount(String category, String location) {
+    public int getServiceCount(String category, String neighbourhood) {
         int count = 0;
         if(category == null) {
-            if(location == null) {
+            if(neighbourhood == null) {
                 count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services", Integer.class);
             } else {
-                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
+                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE neighbourhood = ?", Integer.class, neighbourhood);
             }
         } else {
-            if (location == null) {
+            if (neighbourhood == null) {
                 count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
             } else {
-                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
+                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND neighbourhood = ?)", Integer.class, category, neighbourhood);
             }
         }
         return count;

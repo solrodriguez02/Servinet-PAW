@@ -71,20 +71,20 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
-            @RequestParam(name = "ubicacion", required = false) String location,
+            @RequestParam(name = "ubicacion", required = false) String neighbourhood,
             @RequestParam(name = "pagina", required = false) Integer page
     ) {
         final ModelAndView mav = new ModelAndView("services");
         if(page == null) page=0;
-        List<Service> serviceList = service.services(page, category, location);
+        List<Service> serviceList = service.services(page, category, neighbourhood);
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
         mav.addObject("category", category);
         mav.addObject("neighbourhoods", neighbourhoods);
-        mav.addObject("location", location);
-        mav.addObject("resultsAmount", service.getServiceCount(category, location));
-        mav.addObject("pageCount", service.getPageCount(category, location));
+        mav.addObject("location", neighbourhood);
+        mav.addObject("resultsAmount", service.getServiceCount(category, neighbourhood));
+        mav.addObject("pageCount", service.getPageCount(category, neighbourhood));
         return mav;
     }
 
