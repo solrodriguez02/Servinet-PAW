@@ -89,7 +89,7 @@
                                         <h3> <c:out value="${item.name}"/></h3>
                                         <p class="align-right">$ <c:out value="${item.price}"/> </p>
                                     </div>
-                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location}"/> </p>
+                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location} ${item.neighbourhoodAvailable}"/> </p>
                                     <p class="item"> <c:out value="${item.description}"/></p>
                                 </div>
                             </div>
