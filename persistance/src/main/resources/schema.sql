@@ -40,7 +40,8 @@ CREATE TABLE IF NOT EXISTS services (
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
     additionalcharges BOOLEAN,
-    imageId INT references images(imageid)
+    imageId INT references images(imageid),
+    neighbourhood VARCHAR(255)
     );
 
 CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '
