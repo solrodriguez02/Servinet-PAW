@@ -71,6 +71,24 @@ CREATE TABLE IF NOT EXISTS appointments (
     confirmed BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE IF NOT EXISTS questions (
+    questionid SERIAL PRIMARY KEY,
+    serviceid INT REFERENCES services ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+    question VARCHAR(255) NOT NULL,
+    response VARCHAR(255),
+    date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE IF NOT EXISTS ratings (
+     ratingid SERIAL PRIMARY KEY,
+     serviceid INT REFERENCES services ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+     userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+     rating INTEGER CHECK (rating >= 1 AND rating <= 5) NOT NULL,
+     comment VARCHAR(255),
+     date DATE DEFAULT CURRENT_DATE
+);
+
 
 
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);
