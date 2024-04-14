@@ -22,24 +22,21 @@ public class EmailServiceImpl implements EmailService{
     private final Locale LOCALE = Locale.forLanguageTag("es-419"); // Locale.of("es");
     private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
 
-    private final ServiceService serviceService;
     private final BusinessService businessService;
     private final UserService userService;
 
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine,final ServiceService serviceService, final BusinessService businessService, final UserService userService) {
+    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine, final BusinessService businessService, final UserService userService) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
-        this.serviceService =serviceService;
         this.businessService = businessService;
         this.userService =  userService;
     }
 
     @Async // * funciona pues no invoque a un metodo dentro de la clase
     @Override
-    public void requestAppointment(Appointment appointment, User client) throws MessagingException {
+    public void requestAppointment(Appointment appointment, Service service, User client) throws MessagingException {
         // no llama a prepareAndSendMails() pues no necesita user (en sprint1)
-        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
 
         final Context ctx = getContext(appointment,service,false, client);
 
@@ -49,22 +46,19 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void confirmedAppointment(Appointment appointment) throws MessagingException {
-        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
+    public void confirmedAppointment(Appointment appointment, Service service) throws MessagingException {
         prepareAndSendAppointmentMails(appointment,EmailTypes.ACCEPTED, service, false);
     }
 
     @Async
     @Override
-    public void cancelledAppointment(Appointment appointment) throws MessagingException {
-        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
+    public void cancelledAppointment(Appointment appointment, Service service) throws MessagingException {
         prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, false);
     }
 
     @Async
     @Override
-    public void deniedAppointment(Appointment appointment) throws MessagingException {
-        Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
+    public void deniedAppointment(Appointment appointment, Service service) throws MessagingException {
         prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, false);
     }
 

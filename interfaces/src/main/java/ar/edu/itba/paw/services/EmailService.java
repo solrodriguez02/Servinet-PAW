@@ -11,16 +11,15 @@ import java.util.List;
 
 public interface EmailService {
 
-    // ! tuve q agregar dependencia javax.mail en pom
-    public void requestAppointment(Appointment appointment, User client) throws MessagingException ;
+    void requestAppointment(Appointment appointment, Service service, User client) throws MessagingException;
 
-    public void confirmedAppointment(Appointment appointment) throws MessagingException;
+    void confirmedAppointment(Appointment appointment, Service service) throws MessagingException;
 
-    public void cancelledAppointment(Appointment appointment) throws MessagingException;
+    void cancelledAppointment(Appointment appointment, Service service) throws MessagingException;
 
-    public void deniedAppointment(Appointment appointment) throws MessagingException;
+    void deletedService(Service service, List<Appointment> appointmentList) throws MessagingException;
 
-    public void deletedService(Service service, List<Appointment> appointmentList) throws MessagingException;
+    void deniedAppointment(Appointment appointment, Service service) throws MessagingException;
 
     void createdService(Service service) throws MessagingException;
 }

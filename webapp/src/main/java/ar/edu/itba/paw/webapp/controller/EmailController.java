@@ -26,7 +26,6 @@ public class EmailController {
     private static final String APPOINTMENT_NON_EXISTENT = "turnonoexiste";
     private static final String SERVICET_NON_EXISTENT = "servicionoexiste";
 
-    private final EmailService emailService;
     private final ServiceService serviceService;
     private final UserService userService;
     private final AppointmentService appointmentService;
@@ -34,10 +33,9 @@ public class EmailController {
     private final ImageService is;
     @Autowired
     public EmailController(
-            @Qualifier("emailServiceImpl") final EmailService emailService, @Qualifier("userServiceImpl") final UserService userService,@Qualifier("imageServiceImpl") final ImageService is,
+            @Qualifier("userServiceImpl") final UserService userService,@Qualifier("imageServiceImpl") final ImageService is,
             @Qualifier("serviceServiceImpl") final ServiceService serviceService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
             @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
-        this.emailService = emailService;
         this.serviceService = serviceService;
         this.userService = userService;
         this.appointmentService = appointmentService;
@@ -54,6 +52,7 @@ public class EmailController {
                                     @RequestParam(value = "telefono") final String telephone,
                                     @RequestParam(value = "fecha") final String date
     ) {
+        /*
         User newuser = userService.findByEmail(email).orElse(null);
         if (newuser == null){
             newuser = userService.create("default",name,"default",surname,email,telephone);
@@ -78,12 +77,18 @@ public class EmailController {
         } catch (MessagingException e ){
             System.err.println(e.getMessage());
         }
-
+        */
+        Appointment createdAppointment = serviceService.createAppointment(serviceId,name,surname,email,location,telephone,date);
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
+    }
+
+    private ModelAndView invalidOperation(String argumento){
+        return new ModelAndView("redirect:/operacion-invalida/?argumento="+argumento);
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        /*
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
             return invalidOperation(APPOINTMENT_NON_EXISTENT);
@@ -101,14 +106,14 @@ public class EmailController {
         }
 
         return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
+        */
+        final long serviceId = serviceService.denyAppointment(appointmentId);
+        return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
-
-    private ModelAndView invalidOperation(String argumento){
-        return new ModelAndView("redirect:/operacion-invalida/?argumento="+argumento);
-    };
 
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        /*
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
             return invalidOperation(APPOINTMENT_NON_EXISTENT);
@@ -125,10 +130,14 @@ public class EmailController {
             return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
         }
         return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
+        */
+        final long serviceId = serviceService.confirmAppointment(appointmentId);
+        return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        /*
         Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
         if (!optionalAppointment.isPresent())
             return invalidOperation(APPOINTMENT_NON_EXISTENT);
@@ -142,6 +151,9 @@ public class EmailController {
         } catch (MessagingException e) {
             System.err.println(e.getMessage());
         }
+
+         */
+        final long serviceId = serviceService.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
@@ -160,32 +172,14 @@ public class EmailController {
     @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges) throws
     IOException {
 
-        long imageId = image.isEmpty()? 0 : is.addImage(image.getBytes()).getImageId();
-        //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
-        Service service = serviceService.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
-        try {
-            emailService.createdService(service);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+        final long imageId = image.isEmpty()? 0 : is.addImage(image.getBytes()).getImageId();
+        final Service service = serviceService.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
         return new ModelAndView("redirect:/servicio/"+service.getId());
     }
 
         @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
-            Optional<Service> service = serviceService.findById(serviceId);
-            if ( !service.isPresent() )
-                return invalidOperation(SERVICET_NON_EXISTENT);
-            Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.get().getId());
-            appointmentList.ifPresent(appointments -> {
-                try {
-                    emailService.deletedService(service.get(), appointments);
-                } catch (MessagingException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-
-            serviceService.delete(serviceId);
+        serviceService.delete(serviceId);
         return invalidOperation(SERVICET_NON_EXISTENT);
     }
 

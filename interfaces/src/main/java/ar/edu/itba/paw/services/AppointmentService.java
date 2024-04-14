@@ -1,6 +1,8 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Appointment;
+import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,9 +14,11 @@ public interface AppointmentService {
 
     Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid);
 
-    Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location);
+    Appointment create(Service service, User user, String date, String location);
 
-    void confirmAppointment(long appointmentid);
+    void denyAppointment(Appointment appointment, Service service);
 
-    void cancelAppointment(long appointmentid);
+    void cancelAppointment(Appointment appointment, Service service);
+
+    void confirmAppointment(Appointment appointment, Service service);
 }
