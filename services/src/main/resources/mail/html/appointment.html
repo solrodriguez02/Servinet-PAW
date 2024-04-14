@@ -77,6 +77,16 @@
     <div th:case="'ACCEPTED'">
         <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
         <span th:replace="html/appointment.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
+        <p> Si desea comunicarse con
+            <span th:switch="${isClient}">
+                <span th:case="${true}">
+                    el proveedor del servicio, su correo es <span th:text="${business.getEmail()}"></span>.
+                </span>
+                <span th:case="*">
+                    quien solicitó el turno, su correo es <span th:text="${client.getEmail()}"></span>.
+                </span>
+            </span>
+        </p>
         <p>
             Si desea cancelarlo, haga click en:
             <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">

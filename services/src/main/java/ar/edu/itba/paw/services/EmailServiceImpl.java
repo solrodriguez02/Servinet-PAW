@@ -81,6 +81,7 @@ public class EmailServiceImpl implements EmailService{
     private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client){
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("client", client);
+        ctx.setVariable("business", client);    // ! PONER MAIL BUSINESS
         ctx.setVariable("serviceName",service.getName());
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("appointmentId",appointment.getId());
@@ -129,7 +130,7 @@ public class EmailServiceImpl implements EmailService{
         Business business = businessService.findById( service.getBusinessid() ).orElseThrow(NoSuchElementException::new);
         ctx.setVariable("isClient",false);
         ctx.setVariable("type", emailType.getType());
-        // Prepare subject and template
+        // Preparo subject
         String subject;
         if (emailType.isAboutAppointment())
             subject =  emailType.getSubject((Long) ctx.getVariable("appointmentId"),service.getName());
@@ -143,7 +144,7 @@ public class EmailServiceImpl implements EmailService{
         // Prepare message using a Spring helper
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
         final MimeMessageHelper message =
-                new MimeMessageHelper(mimeMessage, true, "UTF-8"); //! true = multipart
+                new MimeMessageHelper(mimeMessage, true, "UTF-8");
         message.setSubject(subject);
         message.setFrom("servinet@gmail.com");
         message.setTo(recipientEmail);
