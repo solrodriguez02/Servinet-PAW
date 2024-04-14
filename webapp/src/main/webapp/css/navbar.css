@@ -21,3 +21,7 @@
     height: 40px;
     width: 150px;
 }
+
+.navbar-btn {
+    padding: 10px 15px !important;
+}

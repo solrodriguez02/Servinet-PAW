@@ -22,7 +22,9 @@
                     </c:forEach>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">
+                <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
+            </a>
             <!--
             <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
             <div class="dropdown">
