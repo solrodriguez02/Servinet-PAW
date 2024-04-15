@@ -1,21 +1,24 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Business;
+import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
+
+import javax.mail.MessagingException;
 import java.util.Optional;
 
-@Service("BusinessServiceImpl")
+@org.springframework.stereotype.Service("BusinessServiceImpl")
 public class BusinessServiceImpl implements BusinessService{
 
     private final BusinessDao businessDao;
+    private final ServiceService serviceService;
 
 
     @Autowired
-    public BusinessServiceImpl(final BusinessDao businessDao){
+    public BusinessServiceImpl(final BusinessDao businessDao, final ServiceService serviceService){
         this.businessDao = businessDao;
+        this.serviceService = serviceService;
     }
 
     @Override
@@ -33,10 +36,31 @@ public class BusinessServiceImpl implements BusinessService{
 
     @Override
     public void deleteBusiness(long businessid){
+
+        final Business business = findById(businessid).get();
+        Optional<Service> servicesList = serviceService.getAllBusinessServices(businessid);
+        servicesList.ifPresent(service -> serviceService.delete(service, business ));
+
         businessDao.deleteBusiness(businessid);
     }
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         return businessDao.createBusiness(businessName,userId,telephone,email,location);
+    }
+
+    @Override
+    public Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId) {
+        Business business = findById( businessId).get();
+        return serviceService.create(business, name,description, homeservice, neighbourhood,location,category,minimalduration,pricing,price,additionalCharges,imageId);
+    }
+
+    @Override
+    public void deleteService(long serviceId) {
+        Optional<Service> optionalService = serviceService.findById(serviceId);
+        if ( !optionalService.isPresent() )
+            return;
+        final Service service = optionalService.get();
+        final Business business = findById( service.getBusinessid() ).get();
+        serviceService.delete(service, business);
     }
 }

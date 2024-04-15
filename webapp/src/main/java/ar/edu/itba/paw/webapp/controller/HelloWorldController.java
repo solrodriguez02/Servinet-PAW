@@ -36,7 +36,6 @@ public class HelloWorldController {
     private BusinessService bs;
     private ServiceService service;
     private AppointmentService appointment;
-    private final ManageServiceService manageServiceService;
 
     private ImageService is;
 
@@ -46,12 +45,10 @@ public class HelloWorldController {
 
     @Autowired
     public HelloWorldController( @Qualifier("userServiceImpl") final UserService us,@Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService service,
-    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs) {
         this.us = us;
         this.service = service;
         this.appointment = appointment;
-        this.manageServiceService = manageServiceService;
-
         this.is=is;
         this.bs = bs;
         categories.addAll(Arrays.asList(Categories.values()));

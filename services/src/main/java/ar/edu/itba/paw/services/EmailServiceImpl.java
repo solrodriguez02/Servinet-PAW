@@ -22,53 +22,46 @@ public class EmailServiceImpl implements EmailService{
     private final Locale LOCALE = Locale.forLanguageTag("es-419"); // Locale.of("es");
     private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
 
-    private final BusinessService businessService;
-    private final UserService userService;
-
     @Autowired
-    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine, final BusinessService businessService, final UserService userService) {
+    public EmailServiceImpl(JavaMailSender mailSender, TemplateEngine templateEngine) {
         this.mailSender = mailSender;
         this.templateEngine = templateEngine;
-        this.businessService = businessService;
-        this.userService =  userService;
     }
 
     @Async // * funciona pues no invoque a un metodo dentro de la clase
     @Override
-    public void requestAppointment(Appointment appointment, Service service, User client) throws MessagingException {
+    public void requestAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
         // no llama a prepareAndSendMails() pues no necesita user (en sprint1)
 
         final Context ctx = getContext(appointment,service,false, client);
 
-        sendMailToBusiness(EmailTypes.REQUEST, service, ctx);
+        sendMailToBusiness(EmailTypes.REQUEST, business.getEmail(), ctx);
         sendMailToClient(EmailTypes.WAITING,client.getEmail(),ctx);
     }
 
     @Async
     @Override
-    public void confirmedAppointment(Appointment appointment, Service service) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.ACCEPTED, service, false);
+    public void confirmedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
+        prepareAndSendAppointmentMails(appointment,EmailTypes.ACCEPTED, service, business, client, false);
     }
 
     @Async
     @Override
-    public void cancelledAppointment(Appointment appointment, Service service) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, false);
+    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
+        prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, false);
     }
 
     @Async
     @Override
-    public void deniedAppointment(Appointment appointment, Service service) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, false);
+    public void deniedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
+        prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, false);
     }
 
-    private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Boolean isServiceDeleted) throws MessagingException {
-        User client = userService.findById(appointment.getUserid()).orElseThrow(NoSuchElementException::new);
-
+    private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException {
         final Context ctx = getContext(appointment,service,isServiceDeleted, client);
 
         if (!isServiceDeleted)
-            sendMailToBusiness(emailType, service, ctx);
+            sendMailToBusiness(emailType, business.getEmail(), ctx);
         sendMailToClient(emailType,client.getEmail(),ctx);
     }
 
@@ -86,32 +79,23 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void createdService(Service service) throws MessagingException {
+    public void createdService(Service service, Business business) throws MessagingException {
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
         // TODO : paso businessname?
-        sendMailToBusiness(EmailTypes.CREATED_SERVICE, service,ctx);
+        sendMailToBusiness(EmailTypes.CREATED_SERVICE, business.getEmail(), ctx);
     }
 
     @Override
     @Async
-    public void deletedService(Service service, List<Appointment> appointmentList) throws MessagingException {
-        // prof
-        // TODO: "SERVICIO ELIMINADO EXITOSAMENTE"
+    public void deletedService(Service service, Business business ) throws MessagingException {
+
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
         // TODO : paso businessname?
-        sendMailToBusiness(EmailTypes.DELETED_SERVICE, service,ctx);
-
-        // users
-        // if tenia upcoming turnos: "Todos los turnos agendados han sido cancelados"
-        EmailTypes emailType;
-        for (Appointment appointment: appointmentList ) {
-            emailType = appointment.getConfirmed()? EmailTypes.CANCELLED : EmailTypes.DENIED;
-            prepareAndSendAppointmentMails(appointment,emailType, service, true);
-        }
+        sendMailToBusiness(EmailTypes.DELETED_SERVICE, business.getEmail(),ctx);
     }
 
     public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
@@ -120,17 +104,18 @@ public class EmailServiceImpl implements EmailService{
         sendMail(userMail, emailType.getSubject((Long) ctx.getVariable("appointmentId"), (String) ctx.getVariable("serviceName")),ctx, emailType.getAppointmentTemplate());
     }
 
-    private void sendMailToBusiness( EmailTypes emailType, Service service, Context ctx) throws MessagingException {
-        Business business = businessService.findById( service.getBusinessid() ).orElseThrow(NoSuchElementException::new);
+    private void sendMailToBusiness( EmailTypes emailType, String businessMail, Context ctx) throws MessagingException {
+
         ctx.setVariable("isClient",false);
         ctx.setVariable("type", emailType.getType());
         // Preparo subject
+        String serviceName = (String) ctx.getVariable("serviceName");
         String subject;
         if (emailType.isAboutAppointment())
-            subject =  emailType.getSubject((Long) ctx.getVariable("appointmentId"),service.getName());
+            subject =  emailType.getSubject((Long) ctx.getVariable("appointmentId"), serviceName );
         else
-            subject = emailType.getSubject(service.getName());
-        sendMail(business.getEmail(), subject,ctx, emailType.getTemplate());
+            subject = emailType.getSubject(serviceName);
+        sendMail(businessMail, subject,ctx, emailType.getTemplate());
     }
 
     private void sendMail( final String recipientEmail, String subject, final Context ctx, String template) throws MessagingException {

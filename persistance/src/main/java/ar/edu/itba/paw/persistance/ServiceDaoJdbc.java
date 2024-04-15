@@ -9,7 +9,8 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,12 @@ public class ServiceDaoJdbc implements ServiceDao {
         final List<Service> list = jdbcTemplate.query("SELECT * from services", ROW_MAPPER);
         return Optional.of(list);
 
+    }
+
+    @Override
+    public Optional<List<Service>> getAllBusinessServices(long businessId){
+        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE businessid = ? ", new Object[] {businessId, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
+        return Optional.of(list);
     }
 
     @Override

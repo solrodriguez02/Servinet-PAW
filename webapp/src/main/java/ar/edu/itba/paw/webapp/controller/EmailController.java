@@ -13,11 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.mail.MessagingException;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class EmailController {
@@ -27,20 +23,15 @@ public class EmailController {
     private static final String SERVICET_NON_EXISTENT = "servicionoexiste";
 
     private final ServiceService serviceService;
-    private final UserService userService;
-    private final AppointmentService appointmentService;
-    private final ManageServiceService manageServiceService;
     private final ImageService is;
+    private final BusinessService businessService;
     @Autowired
     public EmailController(
-            @Qualifier("userServiceImpl") final UserService userService,@Qualifier("imageServiceImpl") final ImageService is,
-            @Qualifier("serviceServiceImpl") final ServiceService serviceService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
-            @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+    @Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
+    @Qualifier("BusinessServiceImpl") final BusinessService businessService) {
         this.serviceService = serviceService;
-        this.userService = userService;
-        this.appointmentService = appointmentService;
-        this.manageServiceService = manageServiceService;
         this.is = is;
+        this.businessService = businessService;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
@@ -173,13 +164,14 @@ public class EmailController {
     IOException {
 
         final long imageId = image.isEmpty()? 0 : is.addImage(image.getBytes()).getImageId();
-        final Service service = serviceService.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
+        final Service service = businessService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
         return new ModelAndView("redirect:/servicio/"+service.getId());
     }
 
         @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
-        serviceService.delete(serviceId);
+
+        businessService.deleteService(serviceId);
         return invalidOperation(SERVICET_NON_EXISTENT);
     }
 

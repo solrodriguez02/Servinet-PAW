@@ -33,10 +33,10 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
-        Service service = serviceDao.create(businessid, name, description, homeservice, String.format("%s;%s",neighbourhood.getValue(),location), category,minimalduration ,pricing, price, additionalCharges,imageId);
+    public Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+        Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice, String.format("%s;%s",neighbourhood.getValue(),location), category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
-            emailService.createdService(service);
+            emailService.createdService(service, business);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
@@ -54,20 +54,29 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public void delete(long serviceid) {
-        Optional<Service> service = findById(serviceid);
-        if ( !service.isPresent() )
-            return;
-        Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.get().getId());
-        appointmentList.ifPresent(appointments -> {
-            try {
-                emailService.deletedService(service.get(), appointments);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
-            }
-        });
+    public void delete(Service service, Business business) {
 
-        serviceDao.delete(serviceid);
+        Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
+         if ( appointmentList.isPresent() ){
+             for ( Appointment appointment : appointmentList.get()){
+                 User client = userService.findById( appointment.getUserid()).get();
+
+                 try {
+                     if (appointment.getConfirmed())
+                         emailService.cancelledAppointment(appointment,service,business,client);
+                     else
+                         emailService.deniedAppointment(appointment,service,business,client);
+                 } catch (MessagingException e){
+                     throw new RuntimeException(e);
+                 }
+             }
+         }
+        serviceDao.delete(service.getId());
+        try {
+            emailService.deletedService(service,business);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -96,7 +105,9 @@ public class ServiceServiceImpl implements ServiceService {
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
         final Service service = findById(appointment.getServiceid()).get();
-        appointmentService.confirmAppointment(appointment, service);
+        final User client = userService.findById( appointment.getUserid()).get();
+
+        appointmentService.confirmAppointment(appointment, service, client);
         return service.getId();
     }
 
@@ -107,7 +118,9 @@ public class ServiceServiceImpl implements ServiceService {
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
         final Service service = findById(appointment.getServiceid()).get();
-        appointmentService.denyAppointment(appointment, service);
+        final User client = userService.findById( appointment.getUserid()).get();
+
+        appointmentService.denyAppointment(appointment, service, client );
         return service.getId();
     }
 
@@ -118,7 +131,9 @@ public class ServiceServiceImpl implements ServiceService {
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
         final Service service = findById(appointment.getServiceid()).get();
-        appointmentService.cancelAppointment(appointment, service);
+        final User client = userService.findById( appointment.getUserid()).get();
+
+        appointmentService.cancelAppointment(appointment, service, client);
         return service.getId();
     }
 
@@ -145,4 +160,8 @@ public class ServiceServiceImpl implements ServiceService {
         return pageCount;
     }
 
+    @Override
+    public Optional getAllBusinessServices(long businessid){
+        return serviceDao.getAllBusinessServices(businessid);
+    }
 }

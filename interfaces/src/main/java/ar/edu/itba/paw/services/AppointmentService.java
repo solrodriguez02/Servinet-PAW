@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Appointment;
+import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
 
@@ -16,9 +17,9 @@ public interface AppointmentService {
 
     Appointment create(Service service, User user, String date, String location);
 
-    void denyAppointment(Appointment appointment, Service service);
+    void denyAppointment(Appointment appointment, Service service, User client);
 
-    void cancelAppointment(Appointment appointment, Service service);
+    void cancelAppointment(Appointment appointment, Service service, User client);
 
-    void confirmAppointment(Appointment appointment, Service service);
+    void confirmAppointment(Appointment appointment, Service service, User client);
 }

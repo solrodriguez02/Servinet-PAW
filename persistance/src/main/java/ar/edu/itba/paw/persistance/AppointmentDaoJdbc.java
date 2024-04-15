@@ -43,7 +43,6 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     @Override
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
 
-        // CLAVE USER, SERVICE y DATE => evito q vuelva a pedir = turno -> + comodo para el prof, pero no indispensable
         final Map<String, Object> appointmentData = new HashMap<>();
         appointmentData.put("serviceid", serviceid);
         appointmentData.put("userid", userid);
@@ -67,7 +66,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
         }
         */
         jdbcTemplate.update("UPDATE appointments SET confirmed=TRUE WHERE appointmentid = ?", appointmentid);
-        // service deberia modif elem (modelo) a true
+
     }
 
     @Override
