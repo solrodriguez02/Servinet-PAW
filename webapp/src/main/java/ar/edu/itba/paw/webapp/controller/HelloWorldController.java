@@ -92,13 +92,6 @@ public class HelloWorldController {
         return mav;
     }
 
-    /*
-    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
-    public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
-        service.delete(serviceid);
-        return new ModelAndView("redirect:/");
-    }
-    */
 
     @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
     public ModelAndView personalForm(
@@ -192,14 +185,7 @@ public class HelloWorldController {
         mav.addObject("serviceId", serviceId);
         return mav;
     }
-/*
-    @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
-    public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        Appointment app = appointment.findById(appointmentId).get();
-        appointment.cancelAppointment(appointmentId);
-        return new ModelAndView("redirect:/");
-    }
-*/
+
     @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
     public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
         final ModelAndView mav = new ModelAndView("service");
