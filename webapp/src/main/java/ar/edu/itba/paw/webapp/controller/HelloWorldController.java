@@ -9,7 +9,6 @@ import ar.edu.itba.paw.services.ImageService;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.ManageServiceService;
 import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
@@ -155,32 +154,7 @@ public class HelloWorldController {
 
         return mav;
     }
-/*
-    @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
-    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId,
-                                    @RequestParam(value = "nombre") final String name,
-                                    @RequestParam(value = "apellido") final String surname,
-                                    @RequestParam(value = "lugar") final String location,
-                                    @RequestParam(value = "email") final String email,
-                                    @RequestParam(value = "telefono") final String telephone,
-                                    @RequestParam(value = "fecha") final String date
-    ) {
-        User newuser = us.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = us.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            us.changeUsername(newuser.getUserId(),newUsername);
-        }
-        Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-        //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
 
-        LocalDateTime startDate = LocalDateTime.parse(date);
-        Appointment app = appointment.create(serviceId, newuser.getUserId(),startDate, startDate.plusMinutes(service.getDuration()), location );
-
-
-        return new ModelAndView("redirect:/turno/"+app.getId());
-    }
-*/
     @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
     public ModelAndView appointment(
             @PathVariable("appointmentId") final long appointmentId,
@@ -238,14 +212,6 @@ public class HelloWorldController {
         mav.addObject("service",serv);
         return mav;
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/operacion-invalida")
-    public ModelAndView invalidOperation(@RequestParam(value = "argumento") final String argument) {
-        final ModelAndView mav = new ModelAndView("invalidOperation");
-        mav.addObject("argument",argument);
-        return mav;
-    }
-
 
     @RequestMapping(method = RequestMethod.GET, path = "/{userId}/micuenta")
     public ModelAndView profile() {

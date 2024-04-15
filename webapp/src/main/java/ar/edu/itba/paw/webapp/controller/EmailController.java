@@ -18,10 +18,6 @@ import java.io.IOException;
 @Controller
 public class EmailController {
 
-    private static final String APPOINTMENT_ALREADY_CONFIRMED = "turnoyaconfirmado";
-    private static final String APPOINTMENT_NON_EXISTENT = "turnonoexiste";
-    private static final String SERVICET_NON_EXISTENT = "servicionoexiste";
-
     private final ServiceService serviceService;
     private final ImageService is;
     private final BusinessService businessService;
@@ -76,9 +72,6 @@ public class EmailController {
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
-    private ModelAndView invalidOperation(String argumento){
-        return new ModelAndView("redirect:/operacion-invalida/?argumento="+argumento);
-    }
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
@@ -175,7 +168,7 @@ public class EmailController {
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
 
         businessService.deleteService(serviceId);
-        return invalidOperation(SERVICET_NON_EXISTENT);
+        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
 
     /*

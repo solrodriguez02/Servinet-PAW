@@ -4,10 +4,10 @@ import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.services.exception.AppointmentAlreadyConfirmed;
-import ar.edu.itba.paw.services.exception.AppointmentNonExistentException;
-import ar.edu.itba.paw.services.exception.EmailAlreadyUsedException;
-import ar.edu.itba.paw.services.exception.ServiceNotFoundException;
+import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
+import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
+import ar.edu.itba.paw.model.exceptions.EmailAlreadyUsedException;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;

@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.services.exception.AppointmentNonExistentException;
-import ar.edu.itba.paw.services.exception.EmailAlreadyUsedException;
-import ar.edu.itba.paw.services.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;

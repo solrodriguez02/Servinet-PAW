@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services.exception;
+package ar.edu.itba.paw.model.exceptions;
 
 public class EmailAlreadyUsedException extends RuntimeException{
 
