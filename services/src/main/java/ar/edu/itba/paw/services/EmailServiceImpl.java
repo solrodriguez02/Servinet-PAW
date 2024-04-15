@@ -13,7 +13,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
-@org.springframework.stereotype.Service()
+@org.springframework.stereotype.Service("")
 public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender mailSender;
@@ -33,7 +33,7 @@ public class EmailServiceImpl implements EmailService{
     public void requestAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
         // no llama a prepareAndSendMails() pues no necesita user (en sprint1)
 
-        final Context ctx = getContext(appointment,service,false, client);
+        final Context ctx = getContext(appointment,service,false, client, business);
 
         sendMailToBusiness(EmailTypes.REQUEST, business.getEmail(), ctx);
         sendMailToClient(EmailTypes.WAITING,client.getEmail(),ctx);
@@ -47,28 +47,28 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, false);
+    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException {
+        prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, isServiceDeleted);
     }
 
     @Async
     @Override
-    public void deniedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, false);
+    public void deniedAppointment(Appointment appointment, Service service, Business business, User client,Boolean isServiceDeleted) throws MessagingException {
+        prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, isServiceDeleted);
     }
 
     private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException {
-        final Context ctx = getContext(appointment,service,isServiceDeleted, client);
+        final Context ctx = getContext(appointment,service,isServiceDeleted, client, business);
 
         if (!isServiceDeleted)
             sendMailToBusiness(emailType, business.getEmail(), ctx);
         sendMailToClient(emailType,client.getEmail(),ctx);
     }
 
-    private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client){
+    private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client, Business business){
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("client", client);
-        ctx.setVariable("business", client);    // ! PONER MAIL BUSINESS
+        ctx.setVariable("business", business);    // ! PONER MAIL BUSINESS
         ctx.setVariable("serviceName",service.getName());
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("appointmentId",appointment.getId());

@@ -25,13 +25,16 @@ public class EmailController {
     private final ServiceService serviceService;
     private final ImageService is;
     private final BusinessService businessService;
+    private final AppointmentService appointmentService;
+
     @Autowired
     public EmailController(
     @Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-    @Qualifier("BusinessServiceImpl") final BusinessService businessService) {
+    @Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService) {
         this.serviceService = serviceService;
         this.is = is;
         this.businessService = businessService;
+        this.appointmentService = appointmentService;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
@@ -69,7 +72,7 @@ public class EmailController {
             System.err.println(e.getMessage());
         }
         */
-        Appointment createdAppointment = serviceService.createAppointment(serviceId,name,surname,email,location,telephone,date);
+        Appointment createdAppointment = appointmentService.create(serviceId,name,surname,email,location,telephone,date);
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
@@ -98,7 +101,7 @@ public class EmailController {
 
         return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
         */
-        final long serviceId = serviceService.denyAppointment(appointmentId);
+        final long serviceId = appointmentService.denyAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
@@ -122,7 +125,7 @@ public class EmailController {
         }
         return invalidOperation(APPOINTMENT_ALREADY_CONFIRMED);
         */
-        final long serviceId = serviceService.confirmAppointment(appointmentId);
+        final long serviceId = appointmentService.confirmAppointment(appointmentId);
         return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
 
@@ -144,7 +147,7 @@ public class EmailController {
         }
 
          */
-        final long serviceId = serviceService.cancelAppointment(appointmentId);
+        final long serviceId = appointmentService.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 

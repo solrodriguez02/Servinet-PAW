@@ -63,9 +63,9 @@ public class ServiceServiceImpl implements ServiceService {
 
                  try {
                      if (appointment.getConfirmed())
-                         emailService.cancelledAppointment(appointment,service,business,client);
+                         emailService.cancelledAppointment(appointment,service,business,client,true);
                      else
-                         emailService.deniedAppointment(appointment,service,business,client);
+                         emailService.deniedAppointment(appointment,service,business,client,true);
                  } catch (MessagingException e){
                      throw new RuntimeException(e);
                  }
@@ -79,66 +79,8 @@ public class ServiceServiceImpl implements ServiceService {
         }
     }
 
-    @Override
-    public Appointment createAppointment(long serviceid, String name, String surname, String email, String location, String telephone, String date){
-        Service service = findById(serviceid).orElseThrow(ServiceNotFoundException::new);
-        // ! TEMP {
-        User newuser = userService.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = userService.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            userService.changeUsername(newuser.getUserId(),newUsername);
-        }else {
-            if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
-                //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
-                throw new EmailAlreadyUsedException(email);
-            }
-        }
-        // ! }
-        return appointmentService.create(service, newuser , date, location );
-    }
 
     @Override
-    public long confirmAppointment(long appointmentid){
-        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
-        final Service service = findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
-
-        appointmentService.confirmAppointment(appointment, service, client);
-        return service.getId();
-    }
-
-    @Override
-    public long denyAppointment(long appointmentid){
-        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
-        final Service service = findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
-
-        appointmentService.denyAppointment(appointment, service, client );
-        return service.getId();
-    }
-
-    @Override
-    public long cancelAppointment(long appointmentid){
-        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
-        final Service service = findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
-
-        appointmentService.cancelAppointment(appointment, service, client);
-        return service.getId();
-    }
-
-
-        @Override
     public List<Service> services(int page, String category, String location) {
         if(category != null || location != null) {
             return serviceDao.getServicesFilteredBy(page, category, location);
@@ -161,7 +103,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Optional getAllBusinessServices(long businessid){
+    public Optional<List<Service>> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
     }
 }

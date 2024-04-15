@@ -12,17 +12,9 @@ public interface ServiceService {
     Service edit(long serviceid, String field, String newvalue);
     void delete(Service service, Business business);
 
-    Appointment createAppointment(long serviceid, String name, String surname, String email, String location, String telephone, String date);
-
-    long confirmAppointment(long appointmentid);
-
-    long cancelAppointment(long appointmentid);
-
-    long denyAppointment(long appointmentid);
-
     List<Service> services(int page, String category, String location);
     int getServiceCount(String category, String location);
     int getPageCount(String category, String location);
 
-    Optional<Service> getAllBusinessServices(long businessid);
+    Optional<List<Service>> getAllBusinessServices(long businessid);
 }

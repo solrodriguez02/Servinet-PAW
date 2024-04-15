@@ -5,6 +5,9 @@ import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.exception.AppointmentAlreadyConfirmed;
+import ar.edu.itba.paw.services.exception.AppointmentNonExistentException;
+import ar.edu.itba.paw.services.exception.EmailAlreadyUsedException;
+import ar.edu.itba.paw.services.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
@@ -17,13 +20,17 @@ public class AppointmentServiceImpl implements AppointmentService{
 
     private final AppointmentDao appointmentDao;
     private final EmailService emailService;
-    private final BusinessService businessService;
+    private final ServiceDao serviceDao;
+    private final BusinessDao businessDao;
+    private final UserService userService;
     @Autowired
     public AppointmentServiceImpl(final AppointmentDao appointmentDao, final EmailService emailService,
-                                    final BusinessService businessService) {
+                                    final BusinessDao businessDao, ServiceDao serviceDao, final UserService userService) {
         this.appointmentDao = appointmentDao;
         this.emailService = emailService;
-        this.businessService = businessService;
+        this.businessDao = businessDao;
+        this.serviceDao = serviceDao;
+        this.userService = userService;
     }
 
     @Override
@@ -37,20 +44,27 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public Appointment create(Service service, User user, String date, String location) {
-        // PARAMS deberian ser validados aca
-        // ejem: startData < EndDate o desde el front?
-                /*
-
-        if ( LocalDateTime.now().isAfter(startDate) || (!service.hasDuration && startDate > endDate) )
-                excep
-        */
+    public Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date){
+        Service service = serviceDao.findById(serviceid).orElseThrow(ServiceNotFoundException::new);
+        // ! TEMP {
+        User newuser = userService.findByEmail(email).orElse(null);
+        if (newuser == null){
+            newuser = userService.create("default",name,"default",surname,email,telephone);
+            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+            userService.changeUsername(newuser.getUserId(),newUsername);
+        }else {
+            if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
+                //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
+                throw new EmailAlreadyUsedException(email);
+            }
+        }
+        // ! }
         LocalDateTime startDate = LocalDateTime.parse(date);
-        Appointment appointment = appointmentDao.create(service.getId(), user.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
-        Business business = businessService.findById( service.getBusinessid()).get();
+        Appointment appointment = appointmentDao.create(service.getId(), newuser.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
+        Business business = businessDao.findById( service.getBusinessid()).get();
         try {
             //* si ya tiene el Service => ya lo paso x param
-            emailService.requestAppointment(appointment, service,business,user);
+            emailService.requestAppointment(appointment, service,business,newuser);
 
         } catch (MessagingException e ){
             System.err.println(e.getMessage());
@@ -59,11 +73,18 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public void confirmAppointment(Appointment appointment, Service service, User client) {
+    public long confirmAppointment(long appointmentid) {
+        Optional<Appointment> optionalAppointment = findById(appointmentid);
+        if (!optionalAppointment.isPresent())
+            throw new AppointmentNonExistentException();
+        Appointment appointment = optionalAppointment.get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).get();
+        final User client = userService.findById( appointment.getUserid()).get();
+
         if (appointment.getConfirmed())
             throw new AppointmentAlreadyConfirmed();
 
-        Business business = businessService.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById( service.getBusinessid()).get();
         appointmentDao.confirmAppointment(appointment.getId());
         try {
             emailService.confirmedAppointment(appointment, service, business, client);
@@ -71,31 +92,50 @@ public class AppointmentServiceImpl implements AppointmentService{
         } catch (MessagingException e) {
             System.err.println(e.getMessage());
         }
+        return service.getId();
     }
 
     @Override
-    public void denyAppointment(Appointment appointment, Service service, User client) {
+    public long denyAppointment(long appointmentid) {
+        Optional<Appointment> optionalAppointment = findById(appointmentid);
+        if (!optionalAppointment.isPresent())
+            throw new AppointmentNonExistentException();
+        Appointment appointment = optionalAppointment.get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).get();
+        final User client = userService.findById( appointment.getUserid()).get();
+
         if (appointment.getConfirmed())
             throw new AppointmentAlreadyConfirmed();
 
-        Business business = businessService.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById( service.getBusinessid()).get();
         appointmentDao.cancelAppointment(appointment.getId());
         try {
-            emailService.deniedAppointment(appointment, service, business, client);
+            emailService.deniedAppointment(appointment, service, business, client,false);
         } catch (MessagingException e) {
             System.err.println(e.getMessage());
         }
+
+        return service.getId();
     }
 
     @Override
-    public void cancelAppointment(Appointment appointment, Service service, User client) {
-        Business business = businessService.findById( service.getBusinessid()).get();
+    public long cancelAppointment(long appointmentid) {
+        Optional<Appointment> optionalAppointment = findById(appointmentid);
+        if (!optionalAppointment.isPresent())
+            throw new AppointmentNonExistentException();
+        Appointment appointment = optionalAppointment.get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).get();
+        final User client = userService.findById( appointment.getUserid()).get();
+
+        Business business = businessDao.findById( service.getBusinessid()).get();
         appointmentDao.cancelAppointment(appointment.getId());
         try {
-            emailService.cancelledAppointment(appointment, service,business, client);
+            emailService.cancelledAppointment(appointment, service,business, client,false);
 
         } catch (MessagingException e) {
             System.err.println(e.getMessage());
         }
+
+        return service.getId();
     }
 }

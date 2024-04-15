@@ -2,10 +2,8 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-
-import javax.mail.MessagingException;
+import java.util.List;
 import java.util.Optional;
 
 @org.springframework.stereotype.Service("BusinessServiceImpl")
@@ -38,8 +36,10 @@ public class BusinessServiceImpl implements BusinessService{
     public void deleteBusiness(long businessid){
 
         final Business business = findById(businessid).get();
-        Optional<Service> servicesList = serviceService.getAllBusinessServices(businessid);
-        servicesList.ifPresent(service -> serviceService.delete(service, business ));
+        Optional<List<Service>> servicesList = serviceService.getAllBusinessServices(businessid);
+        if ( servicesList.isPresent())
+            for ( Service service : servicesList.get() )
+                serviceService.delete(service, business );
 
         businessDao.deleteBusiness(businessid);
     }

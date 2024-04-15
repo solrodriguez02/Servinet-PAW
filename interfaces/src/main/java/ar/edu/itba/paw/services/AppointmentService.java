@@ -15,11 +15,12 @@ public interface AppointmentService {
 
     Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid);
 
-    Appointment create(Service service, User user, String date, String location);
+    Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date);
 
-    void denyAppointment(Appointment appointment, Service service, User client);
+    long confirmAppointment(long appointmentid);
 
-    void cancelAppointment(Appointment appointment, Service service, User client);
+    long cancelAppointment(long appointmentid);
 
-    void confirmAppointment(Appointment appointment, Service service, User client);
+    long denyAppointment(long appointmentid);
+
 }

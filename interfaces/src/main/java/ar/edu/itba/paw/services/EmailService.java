@@ -14,11 +14,11 @@ public interface EmailService {
 
     void confirmedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
 
-    void cancelledAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
+    void cancelledAppointment(Appointment appointment, Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException;
+
+    void deniedAppointment(Appointment appointment, Service service, Business business, User client,Boolean isServiceDeleted) throws MessagingException;
 
     void deletedService(Service service, Business business) throws MessagingException;
-
-    void deniedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
 
     void createdService(Service service, Business business) throws MessagingException;
 }
