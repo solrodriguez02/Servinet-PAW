@@ -36,7 +36,6 @@
 </c:choose>
 
 <div class="page">
-
     <div class="filters-info">
         <div class="header">
             <c:if test="${category!=null}">
@@ -46,6 +45,8 @@
             </c:if>
             <div class="align-right">
                 <div class="dropdown">
+                    <input type="text" class="input" placeholder="ingresar busqueda" name="query"/>
+                    <button type="submit"><i class="fa fa-search"></i></button>
                     <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
                     <div class="dropdown-content">
                         <c:forEach items="${neighbourhoods}" var="neighbourhood">

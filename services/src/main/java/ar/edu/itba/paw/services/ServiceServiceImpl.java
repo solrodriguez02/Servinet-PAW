@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
 
@@ -51,6 +52,13 @@ public class ServiceServiceImpl implements ServiceService {
         } else {
             return serviceDao.getServices(page);
         }
+    }
+
+    @Override
+    public List<Service> servicesSearch(int page, String category, String location, String query) {
+        if(query!=null && !query.isEmpty())
+            return  services(page,category,location).stream().filter(service-> service.getName().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList());
+        return  services(page,category,location);
     }
 
     @Override
