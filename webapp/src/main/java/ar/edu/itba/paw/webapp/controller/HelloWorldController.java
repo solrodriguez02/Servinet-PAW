@@ -76,7 +76,7 @@ public class HelloWorldController {
             @RequestParam(name="query",required=false) String query
     ) {
         final ModelAndView mav = new ModelAndView("services");
-        List<Service> serviceList = service.servicesSearch(page, category, location, query);
+        List<Service> serviceList = service.services(page, category, location, query);
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());

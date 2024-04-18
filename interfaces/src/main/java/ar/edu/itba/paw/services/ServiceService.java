@@ -13,9 +13,8 @@ public interface ServiceService {
     Optional<Service> findById(long id);
     Service create(long businessid, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId);
     Service edit(long serviceid, String field, String newvalue);
-    void delete(long serviceid);
-    List<Service> servicesSearch(int page, String category, String location,String query);
-    List<Service> services(int page,String category,String location);
+    void delete(long serviceid);;
+    List<Service> services(int page,String category,String location,String query);
     int getServiceCount(String category, String location);
     int getPageCount(String category, String location);
 }

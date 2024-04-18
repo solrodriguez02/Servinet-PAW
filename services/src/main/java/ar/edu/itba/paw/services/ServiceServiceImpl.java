@@ -46,19 +46,8 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<Service> services(int page, String category, String location) {
-        if(category != null || location != null) {
-            return serviceDao.getServicesFilteredBy(page, category, location);
-        } else {
-            return serviceDao.getServices(page);
-        }
-    }
-
-    @Override
-    public List<Service> servicesSearch(int page, String category, String location, String query) {
-        if(query!=null && !query.isEmpty())
-            return  services(page,category,location).stream().filter(service-> service.getName().toLowerCase().contains(query.toLowerCase())).collect(Collectors.toList());
-        return  services(page,category,location);
+    public List<Service> services(int page, String category, String location,String query) {
+            return serviceDao.getServicesFilteredBy(page, category, location,query);
     }
 
     @Override

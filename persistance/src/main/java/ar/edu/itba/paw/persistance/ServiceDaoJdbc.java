@@ -9,11 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import javax.xml.crypto.Data;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ServiceDaoJdbc implements ServiceDao {
@@ -84,16 +80,19 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public List<Service> getServicesFilteredBy(int page, String category, String location) {
-        if(category == null) {
-            return jdbcTemplate.query( "SELECT * FROM services WHERE location = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {location, page*10}, ROW_MAPPER);
-        } else if(location == null) {
-            return jdbcTemplate.query( "SELECT * FROM services WHERE category = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, page*10}, ROW_MAPPER);
-        } else {
-            // Caso en el que el usuario filtro tanto por cateogria como por ubicacion
-            return jdbcTemplate.query( "SELECT * FROM services WHERE (category = ? AND location = ?) ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, location, page*10}, ROW_MAPPER);
-        }
+    public List<Service> getServicesFilteredBy(int page, String category, String location,String searchQuery) {
+    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+    String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence() + " ORDER BY id ASC OFFSET ? LIMIT 10";
+    Object[] values = filterArgument.getValues().toArray();
+    values = Arrays.copyOf(values, values.length + 1);
+    values[values.length - 1] = page*10;
+    for(Object value : values){
+        System.out.println(value);
     }
+    return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
+
+   }
+
 
     @Override
     public int getServiceCount(String category, String location) {
@@ -114,4 +113,4 @@ public class ServiceDaoJdbc implements ServiceDao {
         return count;
     }
 
-}
+ }

@@ -14,7 +14,7 @@ public interface ServiceDao {
     Service edit(long serviceid, String field, String newvalue);
     void delete(long serviceid);
     List<Service> getServices(int page);
-    List<Service> getServicesFilteredBy(int page, String category, String location);
+    List<Service> getServicesFilteredBy(int page, String category, String location,String query);
     int getServiceCount(String category, String location);
 
 }

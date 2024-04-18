@@ -45,14 +45,19 @@
             </c:if>
             <div class="align-right">
                 <div class="dropdown">
+                    <label>
+                        <form action="${pageContext.request.contextPath}" method="GET">
                     <input type="text" class="input" placeholder="ingresar busqueda" name="query"/>
                     <button type="submit"><i class="fa fa-search"></i></button>
-                    <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
+                        </form>
+                        <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
+                    </label>
                     <div class="dropdown-content">
                         <c:forEach items="${neighbourhoods}" var="neighbourhood">
                             <a href="${categoryPath}ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
                         </c:forEach>
                     </div>
+
                 </div>
             </div>
         </div>
