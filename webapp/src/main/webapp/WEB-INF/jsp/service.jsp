@@ -26,8 +26,15 @@
             </div>
             <div class="info-box">
                 <div class="info-text">
-
-                    <p class="category-text"><c:out value="${service.category}"/></p>
+                    <div class="flex">
+                        <p class="category-text"><c:out value="${service.category}"/></p>
+                        <c:if test="${avgRating>0}">
+                            <div class="align-right service-rate">
+                                <p><c:out value="${avgRating}"/></p>
+                                <i class="material-icons yellow-star service-rate-star">star</i>
+                            </div>
+                        </c:if>
+                    </div>
                     <p class="text-with-icon"> <i class="material-icons icon">location_on</i><c:out value="${service.location}"/></p>
                     <p class="text-with-icon"> <i class="material-icons icon">house</i>
                         <c:choose>

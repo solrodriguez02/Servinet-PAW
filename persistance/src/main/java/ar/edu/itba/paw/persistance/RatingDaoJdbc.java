@@ -54,7 +54,7 @@ public class RatingDaoJdbc implements RatingDao {
     @Override
     public double getRatingsAvg(long serviceid) {
         final Double avg = jdbcTemplate.queryForObject("SELECT AVG(rating) FROM ratings WHERE serviceid = ?", Double.class, serviceid);
-        return avg;
+        return avg != null ? avg : 0.0;
     }
 
 }

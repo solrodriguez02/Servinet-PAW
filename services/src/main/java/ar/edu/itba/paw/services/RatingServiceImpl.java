@@ -38,6 +38,8 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public double getRatingsAvg(long serviceid) {
-        return getRatingsAvg(serviceid);
+        double avg = ratingDao.getRatingsAvg(serviceid);
+        avg = Math.round(avg * 10) / 10.0;
+        return avg;
     }
 }

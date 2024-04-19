@@ -187,3 +187,12 @@
     padding: 0;
     font-size: 14px;
 }
+
+.service-rate {
+    align-items: center;
+}
+
+.service-rate-star {
+    font-size: 25px !important;
+    margin: 0 10px;
+}

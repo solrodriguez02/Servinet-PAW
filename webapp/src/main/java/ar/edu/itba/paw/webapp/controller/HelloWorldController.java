@@ -249,6 +249,7 @@ public ModelAndView service(
         return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
     mav.addObject("option", option);
+    mav.addObject("avgRating", rating.getRatingsAvg(serviceId));
     mav.addObject("service",serv);
     mav.addObject("questions", question.getAllQuestions(serviceId));
     mav.addObject("reviews", rating.getAllRatings(serviceId));
