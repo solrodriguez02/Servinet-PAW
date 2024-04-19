@@ -26,7 +26,7 @@ public class FilterArgument {
 
     public FilterArgument addSearch(String search) {
         if(search!=null && !search.isEmpty()){
-            filters.put(FilterTypes.SEARCH,search.replace("%","\\%"));
+            filters.put(FilterTypes.SERVICE_SEARCH,search.replace("%","\\%"));
         }
         return this;
     }
@@ -46,7 +46,7 @@ public class FilterArgument {
         private enum FilterTypes {
             CATEGORY("category = ? "),
             LOCATION("location = ? "),
-            SEARCH("servicename like ? ");
+            SERVICE_SEARCH("servicename like concat('%',?,'%')");
 
             private final String value; //valores a ser filtrados/buscados en SQL
 
