@@ -120,3 +120,8 @@ body {
     display: flex;
     align-items: center;
 }
+
+.error {
+    color: #e75a46;
+    font-size: 14px;
+}

@@ -29,7 +29,7 @@ public class RatingDaoJdbc implements RatingDao {
 
     @Override
     public Optional<List<Rating>> getAllRatings(long serviceid) {
-        final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ?", new Object[] {serviceid}, ROW_MAPPER);
+        final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC", new Object[] {serviceid}, ROW_MAPPER);
         return Optional.of(list);
     }
 

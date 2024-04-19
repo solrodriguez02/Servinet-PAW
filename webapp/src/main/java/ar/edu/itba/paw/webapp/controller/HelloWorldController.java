@@ -9,13 +9,12 @@ import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
+import ar.edu.itba.paw.webapp.form.QuestionForm;
+import ar.edu.itba.paw.webapp.form.ReviewsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
@@ -25,6 +24,7 @@ import java.util.Optional;
 
 
 @Controller
+@Qualifier("HelloWorldController")
 public class HelloWorldController {
 
     private UserService us;
@@ -235,7 +235,12 @@ public class HelloWorldController {
     }
 */
 @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
-public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
+public ModelAndView service(
+        @PathVariable("serviceId") final long serviceId,
+        @ModelAttribute("questionForm") final QuestionForm questionForm,
+        @ModelAttribute("reviewForm") final ReviewsForm reviewForm,
+        @RequestParam(value = "opcion", required = false) final String option
+        ) {
     final ModelAndView mav = new ModelAndView("service");
     Service serv;
     try {
@@ -243,6 +248,7 @@ public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
     } catch (ServiceNotFoundException e) {
         return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
+    mav.addObject("option", option);
     mav.addObject("service",serv);
     mav.addObject("questions", question.getAllQuestions(serviceId));
     mav.addObject("reviews", rating.getAllRatings(serviceId));

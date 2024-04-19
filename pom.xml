@@ -22,6 +22,8 @@
     <javax.mail.version>1.6.2</javax.mail.version>
     <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
     <thymeleaf.extras.version>3.0.4.RELEASE</thymeleaf.extras.version>
+    <javax.validation-api.version>2.0.1.Final</javax.validation-api.version>
+    <org.hibernate.validator>6.2.4.Final</org.hibernate.validator>
   </properties>
 
   <dependencyManagement>
@@ -110,6 +112,16 @@
         <groupId>org.thymeleaf.extras</groupId>
         <artifactId>thymeleaf-extras-java8time</artifactId>
         <version>${thymeleaf.extras.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>${javax.validation-api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${org.hibernate.validator}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

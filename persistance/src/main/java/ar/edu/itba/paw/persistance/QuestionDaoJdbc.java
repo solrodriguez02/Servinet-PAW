@@ -29,7 +29,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override
     public Optional<List<Question>> getAllQuestions(long serviceid) {
-        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ?", new Object[] {serviceid}, ROW_MAPPER);
+        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC", new Object[] {serviceid}, ROW_MAPPER);
         return Optional.of(list);
     }
 

@@ -134,7 +134,7 @@
 }
 
 .question-box {
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .gray-star {
@@ -150,6 +150,11 @@
 .star {
     cursor: pointer;
     color: #b9b9b9;
+    margin-bottom: 20px;
+}
+
+.star:hover {
+    color: #9f9f9f;
 }
 
 .input {

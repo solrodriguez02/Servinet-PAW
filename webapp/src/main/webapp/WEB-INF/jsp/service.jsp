@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
@@ -11,6 +13,7 @@
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">
+        <c:if test="${option==null}">
         <h2><c:out value="${service.name}"/></h2>
 
         <!--tal vez para un primer sprint se puede seleccionar cualquier fecha y horario
@@ -65,31 +68,41 @@
             </div>
         </div>
         <p class="text-description"><c:out value="${service.description}"/></p>
+        </c:if>
+
         <!--form action="${deleteUrl}" method="post">
             <input type="submit" value="Borrar servicio" class="deleteBtn"/>
         </form-->
 
-        <div class="switch-btn-container align-center">
-            <div class="switch-btn">
-                <button class="btn-basic btn-left btn-selected" id="toggleQuestionsButton" onclick="toggleQuestions()">Preguntas</button>
-                <button class="btn-basic btn-right" id="toggleReviewsButton" onclick="toggleReviews()">Opiniones</button>
+        <c:if test="${option==null}">
+            <div class="switch-btn-container align-center">
+                <div class="switch-btn">
+                    <button class="btn-basic btn-left btn-selected" id="toggleQuestionsButton" onclick="toggleQuestions()">Preguntas</button>
+                    <button class="btn-basic btn-right" id="toggleReviewsButton" onclick="toggleReviews()">Opiniones</button>
+                </div>
             </div>
-        </div>
+        </c:if>
 
         <div class="rq-container">
+
+
+            <c:if test="${option!='rw'}">
             <div class="rq-info" id="questions">
                 <h3>Preguntas y respuestas</h3>
 
                 <h4>Pregunta lo que queres saber</h4>
                 <c:url value="/preguntar/${serviceId}" var="askUrl"/>
-                <form action="${askUrl}" method="post" class="flex">
-                    <input type="text" class="input" name="pregunta" placeholder="Escribi una pregunta"/>
+                <form:form action="${askUrl}" method="post" modelAttribute="questionForm">
+                    <div class="flex">
+                        <form:input path="question" type="text" class="input" placeholder="Escribi una pregunta"/>
 
-                    <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
+                        <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
 
-                    <input type="text" class="transparent" name="usuario" value="1"/>
-                    <input type="submit" value="Enviar" class="send-btn">
-                </form>
+                        <form:input path="userId" type="text" element="p" class="transparent" value="1"/>
+                        <input type="submit" value="Enviar" class="send-btn">
+                    </div>
+                    <form:errors path="question" element="p" cssClass="error"/>
+                </form:form>
 
                 <c:choose>
                     <c:when test="${questions == null}">
@@ -114,26 +127,33 @@
                     </c:otherwise>
                 </c:choose>
             </div>
+            </c:if>
 
-            <div class="rq-info transparent" id="reviews">
+            <c:if test="${option!='qst'}">
+                <c:choose>
+                    <c:when test="${option==null}"><div id="reviews" class="rq-info transparent"></c:when>
+                    <c:otherwise><div id="reviews" class="rq-info"></c:otherwise>
+                </c:choose>
+
                 <h3>Opiniones</h3>
                 <h4>Agrega tu opinion</h4>
                 <c:url value="/opinar/${serviceId}" var="rateUrl"/>
-                <form action="${rateUrl}" method="post">
+                <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
 
                     <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
 
-                    <input type="number" class="transparent" name="usuario" value="1"/>
+                    <form:input path="questionUserId" type="number" class="transparent" value="1"/>
 
                     <c:forEach begin="1" end="5" var="i">
                         <i class="material-icons star" onclick="selectRate(${i})">star</i>
                     </c:forEach>
-                    <input type="hidden" id="rating" name="estrellas" value="1">
+                    <form:input path="rating" type="hidden" id="rating" value="0"/>
                     <div class="flex">
-                        <input type="text" class="input" name="comentario" placeholder="Escribi una reseña"/>
+                        <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
                         <input type="submit" value="Enviar" class="send-btn">
                     </div>
-                </form>
+                    <form:errors path="rating" element="p" cssClass="error"/>
+                </form:form>
 
                 <c:choose>
                     <c:when test="${reviews == null}">
@@ -143,22 +163,26 @@
                         <h4>Ultimas realizadas</h4>
                         <c:forEach items="${reviews}" var="review">
                             <c:set value="${review.rating}" var="rate"/>
-                            <div class="flex">
-                                <div class="stars-container">
-                                    <c:forEach begin="1" end="${rate}" var="i">
-                                        <i class="material-icons yellow-star">star</i>
-                                    </c:forEach>
-                                    <c:forEach begin="${rate+1}" end="5" var="i">
-                                        <i class="material-icons gray-star">star</i>
-                                    </c:forEach>
+                            <div class="question-box">
+                                <div class="flex">
+                                    <div class="stars-container">
+                                        <c:forEach begin="1" end="${rate}" var="i">
+                                            <i class="material-icons yellow-star">star</i>
+                                        </c:forEach>
+                                        <c:forEach begin="${rate+1}" end="5" var="i">
+                                            <i class="material-icons gray-star">star</i>
+                                        </c:forEach>
+                                    </div>
+                                    <p class="date"><c:out value="${review.date}"/></p>
                                 </div>
+                                <p class="text"><c:out value="${review.comment}"/></p>
                             </div>
-                            <p class="text"><c:out value="${review.comment}"/></p>
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
 
             </div>
+            </c:if>
         </div>
 
     </div>
