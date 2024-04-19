@@ -84,17 +84,20 @@ public class ServiceDaoJdbc implements ServiceDao {
     FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
     String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
     Object[] values = filterArgument.getValues().toArray();
-    for(Object value : values){
-        System.out.println(value);
-    }
+
     return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
 
    }
     @Override
     public int getServiceCount(String category, String location,String searchQuery) {
         FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+        Object[] values = filterArgument.getValues().toArray();
+        if(values.length==0){
+            return jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);
+
+        }
         String sqlQuery= "SELECT count(id) from services " + filterArgument.formSqlSentence();
-        return jdbcTemplate.queryForObject(sqlQuery, filterArgument.getValues().toArray(), Integer.class);
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
     }
 
  }

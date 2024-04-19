@@ -16,6 +16,5 @@ public interface ServiceService {
     void delete(long serviceid);;
     List<Service> services(int page,String category,String location,String query);
     int getServiceCount(String category, String location,String searchQuery);
-    int getServiceCount(String category, String location);
-    int getPageCount(String category, String location);
+    int getPageCount(String category, String location,String searchQuery);
 }

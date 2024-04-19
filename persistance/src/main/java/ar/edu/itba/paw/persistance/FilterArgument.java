@@ -8,7 +8,7 @@ import java.util.Map;
 public class FilterArgument {
 
     private final Map<FilterTypes, Object> filters = new EnumMap<>(FilterTypes.class);//mapa <columna a filtrar,valor del "?">
-
+    private int page=-1;
     public FilterArgument addCategory(String category) {
         return addParameter(FilterTypes.CATEGORY,category);
 
@@ -17,6 +17,10 @@ public class FilterArgument {
         if(value!=null && !value.isEmpty()){
             filters.put(type,value);
         }
+        return this;
+    }
+    public FilterArgument addPage(int page){
+        this.page = page;
         return this;
     }
 
@@ -36,11 +40,18 @@ public class FilterArgument {
         for (Map.Entry<FilterTypes, Object> entries : filters.entrySet()) {
                 sql.append("and ").append(entries.getKey()).append(" ");
         }
+        if(page!=-1){
+            sql.append(" ORDER BY id ASC OFFSET ? LIMIT 10");
+        }
         return sql.toString();
     }
 
     public List<Object> getValues() {
-        return Arrays.asList(filters.values().toArray());
+        List<Object> values= Arrays.asList(filters.values().toArray());
+        if(page!=-1){
+            values.add(page*10);
+        }
+        return values;
     }
 
         private enum FilterTypes {

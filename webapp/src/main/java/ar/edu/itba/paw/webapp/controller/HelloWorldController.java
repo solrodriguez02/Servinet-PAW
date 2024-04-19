@@ -83,8 +83,8 @@ public class HelloWorldController {
         mav.addObject("category", category);
         mav.addObject("neighbourhoods", neighbourhoods);
         mav.addObject("location", location);
-        mav.addObject("resultsAmount", service.getServiceCount(category, location));
-        mav.addObject("pageCount", service.getPageCount(category, location));
+        mav.addObject("resultsAmount", service.getServiceCount(category, location,query));
+        mav.addObject("pageCount", service.getPageCount(category, location,query));
         return mav;
     }
 
