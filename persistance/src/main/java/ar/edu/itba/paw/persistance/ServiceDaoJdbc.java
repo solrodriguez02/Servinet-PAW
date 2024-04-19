@@ -82,35 +82,19 @@ public class ServiceDaoJdbc implements ServiceDao {
     @Override
     public List<Service> getServicesFilteredBy(int page, String category, String location,String searchQuery) {
     FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
-    String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence() + " ORDER BY id ASC OFFSET ? LIMIT 10";
+    String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
     Object[] values = filterArgument.getValues().toArray();
-    values = Arrays.copyOf(values, values.length + 1);
-    values[values.length - 1] = page*10;
     for(Object value : values){
         System.out.println(value);
     }
     return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
 
    }
-
-
     @Override
-    public int getServiceCount(String category, String location) {
-        int count = 0;
-        if(category == null) {
-            if(location == null) {
-                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services", Integer.class);
-            } else {
-                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
-            }
-        } else {
-            if (location == null) {
-                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
-            } else {
-                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
-            }
-        }
-        return count;
+    public int getServiceCount(String category, String location,String searchQuery) {
+        FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+        String sqlQuery= "SELECT count(id) from services " + filterArgument.formSqlSentence();
+        return jdbcTemplate.queryForObject(sqlQuery, filterArgument.getValues().toArray(), Integer.class);
     }
 
  }

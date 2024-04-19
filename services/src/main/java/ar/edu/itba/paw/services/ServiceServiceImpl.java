@@ -51,8 +51,12 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public int getServiceCount(String category, String location,String searchQuery) {
+        return serviceDao.getServiceCount(category, location,searchQuery);
+    }
+    @Override
     public int getServiceCount(String category, String location) {
-        return serviceDao.getServiceCount(category, location);
+        return serviceDao.getServiceCount(category, location,"");
     }
 
     @Override
