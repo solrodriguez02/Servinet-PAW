@@ -147,6 +147,11 @@
     font-size: 20px !important;
 }
 
+.star {
+    cursor: pointer;
+    color: #b9b9b9;
+}
+
 .input {
     background-color: #e3e3e3;
     padding: 10px 15px;
@@ -171,6 +176,9 @@
     background-color: #7c7cfd;
 }
 
-.post-question {
-    display: flex;
+.date {
+    color: gray;
+    margin: 0 30px;
+    padding: 0;
+    font-size: 14px;
 }

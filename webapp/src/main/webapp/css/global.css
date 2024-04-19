@@ -115,3 +115,8 @@ body {
     color: white;
     cursor: pointer;
 }
+
+.flex {
+    display: flex;
+    align-items: center;
+}

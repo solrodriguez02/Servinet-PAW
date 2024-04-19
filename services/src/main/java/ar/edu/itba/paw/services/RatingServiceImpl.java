@@ -1,10 +1,8 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Question;
 import ar.edu.itba.paw.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +17,13 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public Optional<List<Rating>> getAllRatings(long serviceid) {
-        return ratingDao.getAllRatings(serviceid);
+    public List<Rating> getAllRatings(long serviceid) {
+        List<Rating> ratings;
+        if(ratingDao.getAllRatings(serviceid).isPresent()) {
+            ratings = ratingDao.getAllRatings(serviceid).get();
+            if(ratings.isEmpty()) ratings = null;
+        } else ratings = null;
+        return ratings;
     }
 
     @Override

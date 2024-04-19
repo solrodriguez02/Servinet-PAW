@@ -5,13 +5,9 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.services.ImageService;
+import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.ManageServiceService;
-import ar.edu.itba.paw.services.BusinessService;
-import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import ar.edu.itba.paw.services.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +32,8 @@ public class HelloWorldController {
     private ServiceService service;
     private AppointmentService appointment;
     private final ManageServiceService manageServiceService;
-
+    private RatingService rating;
+    private QuestionService question;
     private ImageService is;
 
     List<Categories> categories = new ArrayList<>();
@@ -45,15 +41,24 @@ public class HelloWorldController {
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
-    public HelloWorldController( @Qualifier("userServiceImpl") final UserService us,@Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService service,
-    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+    public HelloWorldController(
+            @Qualifier("userServiceImpl") final UserService us,
+            @Qualifier("imageServiceImpl") final ImageService is,
+            @Qualifier("serviceServiceImpl") final ServiceService service,
+            @Qualifier("appointmentServiceImpl") final AppointmentService appointment,
+            @Qualifier("BusinessServiceImpl") final BusinessService bs,
+            @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService,
+            @Qualifier("QuestionServiceImpl") final QuestionService question,
+            @Qualifier("RatingServiceImpl") final RatingServiceImpl rating
+    ){
         this.us = us;
         this.service = service;
         this.appointment = appointment;
         this.manageServiceService = manageServiceService;
-
         this.is=is;
         this.bs = bs;
+        this.rating = rating;
+        this.question = question;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
@@ -229,18 +234,21 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/");
     }
 */
-    @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
-    public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
-        final ModelAndView mav = new ModelAndView("service");
-        Service serv;
-        try {
-            serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-        } catch (ServiceNotFoundException e) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-        mav.addObject("service",serv);
-        return mav;
+@RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
+public ModelAndView service(@PathVariable("serviceId") final long serviceId) {
+    final ModelAndView mav = new ModelAndView("service");
+    Service serv;
+    try {
+        serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+    } catch (ServiceNotFoundException e) {
+        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
+    mav.addObject("service",serv);
+    mav.addObject("questions", question.getAllQuestions(serviceId));
+    mav.addObject("reviews", rating.getAllRatings(serviceId));
+    return mav;
+}
+
 
     @RequestMapping(method = RequestMethod.GET, path = "/operacion-invalida")
     public ModelAndView invalidOperation(@RequestParam(value = "argumento") final String argument) {

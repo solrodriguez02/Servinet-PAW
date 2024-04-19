@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Question;
+import ar.edu.itba.paw.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,8 +19,13 @@ public class QuestionServiceImpl implements  QuestionService {
     }
 
     @Override
-    public Optional<List<Question>> getAllQuestions(long serviceid) {
-        return questionDao.getAllQuestions(serviceid);
+    public List<Question> getAllQuestions(long serviceid) {
+        List<Question> questions;
+        if(questionDao.getAllQuestions(serviceid).isPresent()) {
+            questions = questionDao.getAllQuestions(serviceid).get();
+            if(questions.isEmpty()) questions = null;
+        } else questions = null;
+        return questions;
     }
 
     @Override

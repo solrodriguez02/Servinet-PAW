@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class QuestionDaoJdbc implements QuestionDao {
@@ -49,6 +46,7 @@ public class QuestionDaoJdbc implements QuestionDao {
         questionData.put("userid", userid);
         questionData.put("question", question);
         questionData.put("response", null);
+        questionData.put("date", new Date());
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(questionData);
         return new Question(generatedId.longValue(), serviceid, userid, question, null, null);
     }

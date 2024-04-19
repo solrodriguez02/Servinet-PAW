@@ -8,10 +8,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class RatingDaoJdbc implements RatingDao {
@@ -49,6 +46,7 @@ public class RatingDaoJdbc implements RatingDao {
         ratingData.put("userid", userid);
         ratingData.put("rating", rating);
         ratingData.put("comment", comment);
+        ratingData.put("date", new Date());
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(ratingData);
         return new Rating(generatedId.longValue(), serviceid, userid, rating, comment, null);
     }
