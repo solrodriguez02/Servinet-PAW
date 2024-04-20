@@ -71,7 +71,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
-            @RequestParam(name = "ubicacion", required = false) String location,
+            @RequestParam(name = "ubicacion", required = false) String[] location,
             @RequestParam(name = "pagina", required = false ,defaultValue = "0") Integer page,
             @RequestParam(name="query",required=false) String query
     ) {

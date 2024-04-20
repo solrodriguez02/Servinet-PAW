@@ -19,12 +19,19 @@ public class FilterArgument {
         }
         return this;
     }
+    private FilterArgument addParameter(FilterTypes type,String[] value){
+        if(value!=null && value.length!=0){
+            filters.put(type,value);
+        }
+        return this;
+    }
+
     public FilterArgument addPage(int page){
         this.page = page;
         return this;
     }
 
-    public FilterArgument addLocation(String location) {
+    public FilterArgument addLocation(String[] location) {
         return addParameter(FilterTypes.LOCATION,location);
     }
 
@@ -56,7 +63,7 @@ public class FilterArgument {
 
         private enum FilterTypes {
             CATEGORY("category = ? "),
-            LOCATION("location = ? "),
+            LOCATION("neighbourhood = any (?) "),
             SERVICE_SEARCH("servicename like concat('%',?,'%')");
 
             private final String value; //valores a ser filtrados/buscados en SQL

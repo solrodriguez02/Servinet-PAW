@@ -9,6 +9,21 @@
     <title></title>
 </head>
 <body>
+<c:url var="Path" value="/servicios">
+    <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+    <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+    <c:if test="${not empty param.ubicacion}"><c:param name="ubicacion" value="${paramValues.ubicacion}"/></c:if>
+</c:url>
+
+<c:choose>
+    <c:when test="${not empty param}">
+        <c:set var="filtersPath" value="${Path}&"/>
+    </c:when>
+    <c:otherwise>
+        <c:set var="filtersPath" value="${Path}?"/>
+    </c:otherwise>
+</c:choose>
+
 
 <div class="page">
     <div class="filters-info">
@@ -38,7 +53,6 @@
                             <c:url value="/servicios" var="locationChange">
                                 <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
                                 <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
-                                <c:if test="${not empty param.page}"><c:param name="page" value="${param.page}" /></c:if>
                                 <c:param name="ubicacion" value="${neighbourhood.value}"/>
                             </c:url>
                             <a href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
@@ -52,10 +66,21 @@
         <c:if test="${location != null}">
             <div class="filters-selected">
                     <h5>Filtros seleccionados:</h5>
-                    <button class="filter-container">
+                <c:forEach items="${paramValues.ubicacion}" var="location">
+                <button class="filter-container">
                         <c:out value="${location}"/>
-                        <a href=""><i class="material-icons close-filter-icon">close</i></a>
+                    <c:url value="/servicios" var="locationRemove">
+                        <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                        <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                        <c:forEach items="${paramValues.ubicacion}" var="paramUb">
+                            <c:if test="${paramUb != location}">
+                                <c:param name="ubicacion" value="${paramUb}"/>
+                            </c:if>
+                        </c:forEach>
+                    </c:url>
+                        <a href="${locationRemove}"><i class="material-icons close-filter-icon">close</i></a>
                     </button>
+                </c:forEach>
             </div>
         </c:if>
 

@@ -80,7 +80,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public List<Service> getServicesFilteredBy(int page, String category, String location,String searchQuery) {
+    public List<Service> getServicesFilteredBy(int page, String category, String[] location,String searchQuery) {
     FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
     String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
     Object[] values = filterArgument.getValues().toArray();
@@ -89,7 +89,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
    }
     @Override
-    public int getServiceCount(String category, String location,String searchQuery) {
+    public int getServiceCount(String category, String[] location,String searchQuery) {
         FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
         Object[] values = filterArgument.getValues().toArray();
         if(values.length==0){
