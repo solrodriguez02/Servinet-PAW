@@ -30,7 +30,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override
     public Optional<List<Question>> getAllQuestions(long serviceid, int page) {
-        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page}, ROW_MAPPER);
+        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
         return Optional.of(list);
     }
 
