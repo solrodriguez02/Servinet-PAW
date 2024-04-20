@@ -12,15 +12,15 @@
 <c:url var="Path" value="/servicios">
     <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
     <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
-    <c:if test="${not empty param.ubicacion}"><c:param name="ubicacion" value="${paramValues.ubicacion}"/></c:if>
+    <c:if test="${not empty paramValues.ubicacion}"><c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/> </c:forEach></c:if>
 </c:url>
 
 <c:choose>
-    <c:when test="${not empty param}">
-        <c:set var="filtersPath" value="${Path}&"/>
+    <c:when test="${empty param or not empty param.pagina}">
+        <c:set var="filtersPath" value="${Path}?"/>
     </c:when>
     <c:otherwise>
-        <c:set var="filtersPath" value="${Path}?"/>
+        <c:set var="filtersPath" value="${Path}&"/>
     </c:otherwise>
 </c:choose>
 

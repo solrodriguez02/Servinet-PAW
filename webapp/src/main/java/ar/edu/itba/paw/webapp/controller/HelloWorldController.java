@@ -72,9 +72,10 @@ public class HelloWorldController {
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
             @RequestParam(name = "ubicacion", required = false) String[] location,
-            @RequestParam(name = "pagina", required = false ,defaultValue = "0") Integer page,
+            @RequestParam(name = "pagina", required = false) Integer page,
             @RequestParam(name="query",required=false) String query
     ) {
+        if(page == null) page = 0;
         final ModelAndView mav = new ModelAndView("services");
         List<Service> serviceList = service.services(page, category, location, query);
         mav.addObject("services", serviceList);

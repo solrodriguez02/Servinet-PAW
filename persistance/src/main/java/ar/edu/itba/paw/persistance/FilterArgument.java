@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.persistance;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class FilterArgument {
 
@@ -54,7 +51,7 @@ public class FilterArgument {
     }
 
     public List<Object> getValues() {
-        List<Object> values= Arrays.asList(filters.values().toArray());
+        List<Object> values= new ArrayList<>(filters.values());
         if(page!=-1){
             values.add(page*10);
         }

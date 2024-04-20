@@ -81,7 +81,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public List<Service> getServicesFilteredBy(int page, String category, String[] location,String searchQuery) {
-    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page);
     String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
     Object[] values = filterArgument.getValues().toArray();
 
