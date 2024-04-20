@@ -17,8 +17,14 @@
             <div class="dropdown">
                 <p class="nav-item">Categorias</p>
                 <div class="dropdown-content">
-                    <c:forEach var="categoria" items="${categories}">
-                        <a href="${pageContext.request.contextPath}/servicios/?categoria=${categoria.value}">${categoria.value}</a>
+                    <c:forEach var="category" items="${categories}">
+                        <c:url value="/servicios" var="categoryChange">
+                            <c:if test="${not empty param.ubicacion}"><c:param name="ubicacion" value="${param.ubicacion}" /></c:if>
+                            <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                            <c:if test="${not empty param.page}"><c:param name="page" value="${param.page}" /></c:if>
+                            <c:param name="categoria" value="${category.value}"/>
+                        </c:url>
+                        <a href="${categoryChange}">${category.value}</a>
                     </c:forEach>
                 </div>
             </div>

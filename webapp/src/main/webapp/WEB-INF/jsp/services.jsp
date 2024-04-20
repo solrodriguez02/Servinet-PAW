@@ -10,33 +10,18 @@
 </head>
 <body>
 
-<c:choose>
-    <c:when test="${category==null}">
-        <c:set var="categoryPath" value="${pageContext.request.contextPath}/servicios/?"/>
-        <c:choose>
-            <c:when test="${location==null}">
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?" />
-            </c:when>
-            <c:otherwise>
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?ubicacion=${location}&" />
-            </c:otherwise>
-        </c:choose>
-    </c:when>
-    <c:otherwise>
-        <c:set var="categoryPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&"/>
-        <c:choose>
-            <c:when test="${location==null}">
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&" />
-            </c:when>
-            <c:otherwise>
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&ubicacion=${location}&" />
-            </c:otherwise>
-        </c:choose>
-    </c:otherwise>
-</c:choose>
-
 <div class="page">
     <div class="filters-info">
+        <div>
+            <form action="${pageContext.request.contextPath}/servicios" method="GET">
+                <label>Ingresar Busqueda:
+                    <div>
+                <input type="text" class="input" placeholder="ingresar busqueda" name="query" value="<c:out value="${param.query}"/>"/>
+                <button type="submit" class="a"><i class="material-icon">Search</i></button>
+                    </div>
+                </label>
+            </form>
+        </div>
         <div class="header">
             <c:if test="${category!=null}">
                 <div class="category-header">
@@ -46,15 +31,17 @@
             <div class="align-right">
                 <div class="dropdown">
                     <label>
-                        <form action="${pageContext.request.contextPath}" method="GET">
-                    <input type="text" class="input" placeholder="ingresar busqueda" name="query"/>
-                    <button type="submit"><i class="fa fa-search"></i></button>
-                        </form>
                         <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
                     </label>
                     <div class="dropdown-content">
                         <c:forEach items="${neighbourhoods}" var="neighbourhood">
-                            <a href="${categoryPath}ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
+                            <c:url value="/servicios" var="locationChange">
+                                <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                                <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                                <c:if test="${not empty param.page}"><c:param name="page" value="${param.page}" /></c:if>
+                                <c:param name="ubicacion" value="${neighbourhood.value}"/>
+                            </c:url>
+                            <a href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
                         </c:forEach>
                     </div>
 
@@ -67,7 +54,7 @@
                     <h5>Filtros seleccionados:</h5>
                     <button class="filter-container">
                         <c:out value="${location}"/>
-                        <a href="${categoryPath}"><i class="material-icons close-filter-icon">close</i></a>
+                        <a href=""><i class="material-icons close-filter-icon">close</i></a>
                     </button>
             </div>
         </c:if>
