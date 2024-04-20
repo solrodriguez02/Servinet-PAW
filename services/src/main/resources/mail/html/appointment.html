@@ -4,17 +4,33 @@
     <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" /> <!-- multipart/form-data-->
     <title th:remove="all"  th:text="${subject}" ></title>
     <style>
+        .header {
+            color: #585bfa;
+            text-align: center;
+        }
+        .container{
+            margin: 0 auto;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 600px;
+            align-items: center;
+            background: white;
+            padding: 40px;
+        }
         button {
             border-radius: 8px;
             border: none;
             padding: 10px;
-            /*opacity: 0.7;*/
         }
-
+        .bg {
+            font-family: 'Poppins', sans-serif;
+            background: #585bfa;
+            padding: 50px;
+        }
         button:hover {
             opacity: 0.7;
         }
-        .container {
+        .btn-container {
             display: flex;
             align-items: center;
         }
@@ -32,99 +48,103 @@
         }
     </style>
 </head>
-<body>
-<p>
-    Estimado<span th:if="${isClient}" th:text="' '+${client.getName()}+' '+${client.getSurname()}"></span>,
-</p>
-<div th:switch="${type}">
-    <div th:case="'WAITING'">
-        Su
-        <span th:fragment="datetime">
-            turno <!--span th:text="'#'+${appointmentId}"></span-->
-            para el servicio <span th:text="${serviceName}"/> el día
-            <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
-            <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
-            a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
-            <!--span th:if="${service.duration > 0 }">
-             con una duración de ..
-            </span-->
-        </span>
-        ha sido solicitado.
-        Más tarde será notificado si fue aceptado o no.
+<body class="bg">
+<div class="container">
+    <div class="header">
+        <a th:href="${url}" style="text-decoration: none"><h1>servinet .</h1></a>
     </div>
-    <div th:case="'REQUEST'">
-            Indique si desea aceptar una solicitud de
-            <span th:replace="html/appointment.html :: datetime"></span>
-            <p>Por favor seleccione una opción,</p>
-
-            <div class="container">
-                <form th:action="${url}+'aceptar-turno/'+ ${appointmentId}" method="post">
-                    <button class="confirm" type="submit">
-                    Aceptar
-                    </button>
-                </form>
-                <form th:action="${url}+'rechazar-turno/'+${appointmentId}" method="post">
-                    <button class="deny" type="submit">
-                    Rechazar
-                    </button>
-                </form>
-            </div>
-            <p>
-                <em>Este mail dejará de ser válido luego de seleccionar una opción</em>
-            </p>
-    </div>
-
-    <div th:case="'ACCEPTED'">
-        <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
-        <span th:replace="html/appointment.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
-        <p> Si desea comunicarse con
-            <span th:switch="${isClient}">
-                <span th:case="${true}">
-                    el proveedor del servicio, su correo es <span th:text="${business.getEmail()}"></span>.
-                </span>
-                <span th:case="*">
-                    quien solicitó el turno, su correo es <span th:text="${client.getEmail()}"></span>.
-                </span>
-            </span>
-        </p>
+    <div>
         <p>
-            Si desea cancelarlo, haga click en:
-            <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
-                <button class="cancel" type="submit">Cancelar turno</button>
-            </form>
+            Estimado<span th:if="${isClient}" th:text="' '+${client.getName()}+' '+${client.getSurname()}"></span>,
         </p>
-    </div>
+        <div th:switch="${type}">
+            <div th:case="'WAITING'">
+                Su
+                <span th:fragment="datetime">
+                    turno <!--span th:text="'#'+${appointmentId}"></span-->
+                    para el servicio <span th:text="${serviceName}"/> el día
+                    <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
+                    <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
+                    a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
+                    <!--span th:if="${service.duration > 0 }">
+                     con una duración de ..
+                    </span-->
+                </span>
+                ha sido solicitado.
+                Más tarde será notificado si fue aceptado o no.
+            </div>
+            <div th:case="'REQUEST'">
+                    Indique si desea aceptar una solicitud de
+                    <span th:replace="html/appointment.html :: datetime"></span>
+                    <p>Por favor seleccione una opción,</p>
 
-    <div th:case="'DENIED'">
-        <span th:text="${isClient}? 'Su': 'La'"></span> solicitud de
-        <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span><span th:if="${isServiceDeleted}" th:fragment="serviceDeleted">
-        pues el servicio ha sido eliminado</span>.
-        <p th:if="${isClient}" th:fragment="newAppointment">
-            <span th:if="!${isServiceDeleted}">
-                Si desea pedir otra solicitud, haga click
-                <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
-            </span>
-            Para ver otros servicios visite <a th:href="${url}" th:text="${url}"></a>.
+                    <div class="btn-container">
+                        <form th:action="${url}+'aceptar-turno/'+ ${appointmentId}" method="post">
+                            <button class="confirm" type="submit">
+                            Aceptar
+                            </button>
+                        </form>
+                        <form th:action="${url}+'rechazar-turno/'+${appointmentId}" method="post">
+                            <button class="deny" type="submit">
+                            Rechazar
+                            </button>
+                        </form>
+                    </div>
+                    <p>
+                        <em>Este mail dejará de ser válido luego de seleccionar una opción</em>
+                    </p>
+            </div>
+
+            <div th:case="'ACCEPTED'">
+                <span th:text="${isClient}? 'Su solicitud de': 'El'"></span>
+                <span th:replace="html/appointment.html :: datetime"></span> ha sido aceptad<span th:text="${isClient}? 'a': 'o'"></span>.
+                <p> Si desea comunicarse con
+                    <span th:switch="${isClient}">
+                        <span th:case="${true}">
+                            el proveedor del servicio, su correo es <span th:text="${business.getEmail()}"></span>.
+                        </span>
+                        <span th:case="*">
+                            quien solicitó el turno, su correo es <span th:text="${client.getEmail()}"></span>.
+                        </span>
+                    </span>
+                </p>
+                <p>
+                    Si desea cancelarlo, haga click en:
+                    <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
+                        <button class="cancel" type="submit">Cancelar turno</button>
+                    </form>
+                </p>
+            </div>
+
+            <div th:case="'DENIED'">
+                <span th:text="${isClient}? 'Su': 'La'"></span> solicitud de
+                <span th:replace="html/appointment.html :: datetime"></span> ha sido rechazad<span th:text="${isClient}? 'a': 'o'"></span><span th:if="${isServiceDeleted}" th:fragment="serviceDeleted">
+                pues el servicio ha sido eliminado</span>.
+                <p th:if="${isClient}" th:fragment="newAppointment">
+                    <span th:if="!${isServiceDeleted}">
+                        Si desea pedir otra solicitud, haga click
+                        <a th:href="${url}+'contratar-servicio/'+ ${serviceId}">aqui</a>.
+                    </span>
+                    Para ver otros servicios visite <a th:href="${url}" th:text="${url}"></a>.
+                </p>
+            </div>
+
+            <div th:case="'CANCELLED'">
+                El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado<span th:replace="html/appointment.html :: serviceDeleted"></span>.
+                <p th:replace="html/appointment.html :: newAppointment"></p>
+            </div>
+        </div>
+        <!--p>
+            <img src="sample.png" th:src="|cid:${imageResourceName}|" />
+        </p-->
+
+        <p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
+            Para mas detalles del turno haga click
+            <a th:href="${url}+'turno/'+${serviceId}+'/'+${appointmentId}">aqui</a>
         </p>
-    </div>
-
-    <div th:case="'CANCELLED'">
-        El <span th:replace="html/appointment.html :: datetime"></span> ha sido cancelado<span th:replace="html/appointment.html :: serviceDeleted"></span>.
-        <p th:replace="html/appointment.html :: newAppointment"></p>
     </div>
 </div>
-<!--p>
-    <img src="sample.png" th:src="|cid:${imageResourceName}|" />
-</p-->
 
-<p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
-    Para mas detalles del turno haga click
-    <a th:href="${url}+'turno/'+${serviceId}+'/'+${appointmentId}">aqui</a>
-</p>
-<p>
-     <br />
-    <em>Servinet</em>
-</p>
 </body>
 
 </html>

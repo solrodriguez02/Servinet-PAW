@@ -13,7 +13,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
 
-@org.springframework.stereotype.Service("")
+@org.springframework.stereotype.Service()
 public class EmailServiceImpl implements EmailService{
 
     private final JavaMailSender mailSender;
@@ -94,7 +94,6 @@ public class EmailServiceImpl implements EmailService{
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
-        // TODO : paso businessname?
         sendMailToBusiness(EmailTypes.DELETED_SERVICE, business.getEmail(),ctx);
     }
 
@@ -120,33 +119,20 @@ public class EmailServiceImpl implements EmailService{
 
     private void sendMail( final String recipientEmail, String subject, final Context ctx, String template) throws MessagingException {
 
-        // Prepare message using a Spring helper
         final MimeMessage mimeMessage = this.mailSender.createMimeMessage();
-        final MimeMessageHelper message =
-                new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        final MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
         message.setSubject(subject);
-        message.setFrom("servinet@gmail.com");
         message.setTo(recipientEmail);
 
         ctx.setVariable("url", APP_URL);
 
-        // Create the HTML body using Thymeleaf
-        //final String htmlContent = this.templateEngine.process(template, moreTemplatesSet, ctx );
         final String htmlContent = this.templateEngine.process(template, ctx );
         message.setText(htmlContent, true); // true = isHtml
 
-
-        /* Add the inline image, referenced from the HTML code as "cid:${imageResourceName}"
-        ctx.setVariable("imageResourceName", imageResourceName); // so that we can reference it from HTML
-        final InputStreamSource imageSource = new ByteArrayResource(imageBytes);
-        message.addInline(imageResourceName, imageSource, imageContentType);
-        */
-        // Send mail
         try {
             this.mailSender.send(mimeMessage);
         }
         catch (MailException ex) {
-            // simply log it and go on...
             System.out.println(ex.getMessage());
         }
 
