@@ -16,11 +16,11 @@
 </c:url>
 
 <c:choose>
-    <c:when test="${empty param or not empty param.pagina}">
-        <c:set var="filtersPath" value="${Path}?"/>
+    <c:when test="${not empty param and empty param.pagina}">
+        <c:set var="filtersPath" value="${Path}&"/>
     </c:when>
     <c:otherwise>
-        <c:set var="filtersPath" value="${Path}&"/>
+        <c:set var="filtersPath" value="${Path}?"/>
     </c:otherwise>
 </c:choose>
 
