@@ -53,6 +53,7 @@
                             <c:url value="/servicios" var="locationChange">
                                 <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
                                 <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                                <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/> </c:forEach>
                                 <c:param name="ubicacion" value="${neighbourhood.value}"/>
                             </c:url>
                             <a href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
