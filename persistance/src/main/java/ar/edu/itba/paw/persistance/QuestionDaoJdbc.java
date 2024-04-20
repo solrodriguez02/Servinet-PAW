@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.Question;
+import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.QuestionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,5 +60,32 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Override
     public int getQuestionsCount(long serviceid) {
         return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM questions WHERE serviceId = ?", Integer.class, serviceid);
+    }
+
+    @Override
+    public Optional<Map<Question, String>> getQuestionsToRespond(long userid) {
+        final List<Question> questions = jdbcTemplate.query(
+                "SELECT q.*\n" +
+                "FROM questions q\n" +
+                "JOIN services s ON q.serviceid = s.id\n" +
+                "JOIN business b ON s.businessid = b.businessid\n" +
+                "WHERE b.userid = ?\n" +
+                "AND q.response IS NULL\n" +
+                "ORDER BY q.date DESC;",
+                new Object[] {userid}, ROW_MAPPER
+        );
+
+        Map<Question, String> questionServiceMap = new HashMap<>();
+
+        for (Question question : questions) {
+            String serviceName = getServiceNameForQuestion(question.getServiceid());
+            questionServiceMap.put(question, serviceName);
+        }
+        return Optional.of(questionServiceMap);
+    }
+
+    private String getServiceNameForQuestion(long serviceId) {
+        String serviceName = jdbcTemplate.queryForObject("SELECT servicename FROM services WHERE id = ?", new Object[]{serviceId}, String.class);
+        return serviceName;
     }
 }

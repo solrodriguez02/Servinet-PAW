@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service("QuestionServiceImpl")
@@ -46,6 +47,16 @@ public class QuestionServiceImpl implements  QuestionService {
     @Override
     public int getQuestionsCount(long serviceid) {
         return questionDao.getQuestionsCount(serviceid);
+    }
+
+    @Override
+    public Map<Question, String> getQuestionsToRespond(long userid) {
+        Map<Question, String> questions;
+        if(questionDao.getQuestionsToRespond(userid).isPresent()) {
+            questions = questionDao.getQuestionsToRespond(userid).get();
+            if(questions.isEmpty()) questions = null;
+        } else questions = null;
+        return questions;
     }
 
 }

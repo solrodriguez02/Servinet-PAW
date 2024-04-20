@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
+import ar.edu.itba.paw.webapp.form.ResponseForm;
 import ar.edu.itba.paw.webapp.form.ReviewsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,11 +44,14 @@ public class RatingsQuestionsController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/responder/{questionId:\\d+}")
     public ModelAndView addResponse(
-            @RequestParam(value = "respuesta") final String response,
+            @Valid @ModelAttribute("responseForm") ResponseForm form, final BindingResult errors,
             @PathVariable("questionId") final long questionId
     ){
-        question.addResponse(questionId, response);
-        return new ModelAndView("redirect:/");
+        if(errors.hasErrors()) {
+            return helloWorldController.userServices(form);
+        }
+        question.addResponse(questionId, form.getResponse());
+        return new ModelAndView("redirect:/misservicios");
     }
 
 

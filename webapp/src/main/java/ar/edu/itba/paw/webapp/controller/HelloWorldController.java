@@ -10,6 +10,7 @@ import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
+import ar.edu.itba.paw.webapp.form.ResponseForm;
 import ar.edu.itba.paw.webapp.form.ReviewsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -281,8 +282,10 @@ public ModelAndView service(
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/misservicios")
-    public ModelAndView userServices() {
+    public ModelAndView userServices(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userServices");
+        // USER ID HARDCODEADO
+        mav.addObject("pendingQst", question.getQuestionsToRespond(1));
         return mav;
     }
 
