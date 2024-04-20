@@ -17,10 +17,10 @@ public class RatingServiceImpl implements RatingService {
     }
 
     @Override
-    public List<Rating> getAllRatings(long serviceid) {
+    public List<Rating> getAllRatings(long serviceid, int page) {
         List<Rating> ratings;
-        if(ratingDao.getAllRatings(serviceid).isPresent()) {
-            ratings = ratingDao.getAllRatings(serviceid).get();
+        if(ratingDao.getAllRatings(serviceid, page).isPresent()) {
+            ratings = ratingDao.getAllRatings(serviceid, page).get();
             if(ratings.isEmpty()) ratings = null;
         } else ratings = null;
         return ratings;
@@ -42,4 +42,10 @@ public class RatingServiceImpl implements RatingService {
         avg = Math.round(avg * 10) / 10.0;
         return avg;
     }
+
+    @Override
+    public int getRatingsCount(long serviceid) {
+        return ratingDao.getRatingsCount(serviceid);
+    }
+
 }

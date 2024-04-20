@@ -239,10 +239,14 @@ public ModelAndView service(
         @PathVariable("serviceId") final long serviceId,
         @ModelAttribute("questionForm") final QuestionForm questionForm,
         @ModelAttribute("reviewForm") final ReviewsForm reviewForm,
-        @RequestParam(value = "opcion", required = false) final String option
+        @RequestParam(value = "opcion", required = false) final String option,
+        @RequestParam(value = "qstPag", required = false) Integer questionPage,
+        @RequestParam(value = "rwPag", required = false) Integer reviewPage
         ) {
     final ModelAndView mav = new ModelAndView("service");
     Service serv;
+    if(questionPage == null) questionPage = 0;
+    if(reviewPage == null) reviewPage = 0;
     try {
         serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
     } catch (ServiceNotFoundException e) {
@@ -251,8 +255,12 @@ public ModelAndView service(
     mav.addObject("option", option);
     mav.addObject("avgRating", rating.getRatingsAvg(serviceId));
     mav.addObject("service",serv);
-    mav.addObject("questions", question.getAllQuestions(serviceId));
-    mav.addObject("reviews", rating.getAllRatings(serviceId));
+    mav.addObject("questions", question.getAllQuestions(serviceId, questionPage));
+    mav.addObject("reviews", rating.getAllRatings(serviceId, reviewPage));
+    mav.addObject("questionsCount", question.getQuestionsCount(serviceId));
+    mav.addObject("reviewsCount", rating.getRatingsCount(serviceId));
+    mav.addObject("questionPage", questionPage);
+    mav.addObject("reviewPage", reviewPage);
     return mav;
 }
 

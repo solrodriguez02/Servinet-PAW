@@ -34,7 +34,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return helloWorldController.service(serviceId, form, null, "qst");
+            return helloWorldController.service(serviceId, form, null, "qst", 0, 0);
         }
         question.create(serviceId, form.getUserId(), form.getQuestion());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=qst");
@@ -57,7 +57,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return helloWorldController.service(serviceId, null, form, "rw");
+            return helloWorldController.service(serviceId, null, form, "rw", 0, 0);
         }
         rating.create(serviceId, form.getQuestionUserId(), form.getRating(), form.getComment());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");

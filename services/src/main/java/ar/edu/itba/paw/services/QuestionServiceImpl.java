@@ -19,10 +19,10 @@ public class QuestionServiceImpl implements  QuestionService {
     }
 
     @Override
-    public List<Question> getAllQuestions(long serviceid) {
+    public List<Question> getAllQuestions(long serviceid, int page) {
         List<Question> questions;
-        if(questionDao.getAllQuestions(serviceid).isPresent()) {
-            questions = questionDao.getAllQuestions(serviceid).get();
+        if(questionDao.getAllQuestions(serviceid, page).isPresent()) {
+            questions = questionDao.getAllQuestions(serviceid, page).get();
             if(questions.isEmpty()) questions = null;
         } else questions = null;
         return questions;
@@ -41,6 +41,11 @@ public class QuestionServiceImpl implements  QuestionService {
     @Override
     public void addResponse(long id, String response) {
         questionDao.addResponse(id, response);
+    }
+
+    @Override
+    public int getQuestionsCount(long serviceid) {
+        return questionDao.getQuestionsCount(serviceid);
     }
 
 }

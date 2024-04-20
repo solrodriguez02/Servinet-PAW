@@ -28,8 +28,8 @@ public class QuestionDaoJdbc implements QuestionDao {
     }
 
     @Override
-    public Optional<List<Question>> getAllQuestions(long serviceid) {
-        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC", new Object[] {serviceid}, ROW_MAPPER);
+    public Optional<List<Question>> getAllQuestions(long serviceid, int page) {
+        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page}, ROW_MAPPER);
         return Optional.of(list);
     }
 
@@ -56,4 +56,8 @@ public class QuestionDaoJdbc implements QuestionDao {
         jdbcTemplate.update("UPDATE questions SET response = ? WHERE questionid = ?", response, id);
     }
 
+    @Override
+    public int getQuestionsCount(long serviceid) {
+        return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM questions WHERE serviceId = ?", Integer.class, serviceid);
+    }
 }

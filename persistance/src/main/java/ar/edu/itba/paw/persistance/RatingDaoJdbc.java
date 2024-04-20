@@ -28,8 +28,8 @@ public class RatingDaoJdbc implements RatingDao {
     }
 
     @Override
-    public Optional<List<Rating>> getAllRatings(long serviceid) {
-        final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC", new Object[] {serviceid}, ROW_MAPPER);
+    public Optional<List<Rating>> getAllRatings(long serviceid, int page) {
+        final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page}, ROW_MAPPER);
         return Optional.of(list);
     }
 
@@ -55,6 +55,11 @@ public class RatingDaoJdbc implements RatingDao {
     public double getRatingsAvg(long serviceid) {
         final Double avg = jdbcTemplate.queryForObject("SELECT AVG(rating) FROM ratings WHERE serviceid = ?", Double.class, serviceid);
         return avg != null ? avg : 0.0;
+    }
+
+    @Override
+    public int getRatingsCount(long serviceid) {
+        return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM ratings WHERE serviceId = ?", Integer.class, serviceid);
     }
 
 }

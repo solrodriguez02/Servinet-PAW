@@ -92,7 +92,6 @@
 
         <div class="rq-container">
 
-
             <c:if test="${option!='rw'}">
             <div class="rq-info" id="questions">
                 <h3>Preguntas y respuestas</h3>
@@ -133,6 +132,40 @@
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
+
+                <div class="align-center">
+                    <c:choose>
+                        <c:when test="${option==null}">
+                            <c:if test="${questionsCount > questionPage*10+10}">
+                            <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst">
+                                <p class="page-text">Mostrar mas</p>
+                            </a>
+                            </c:if>
+                        </c:when>
+                        <c:otherwise>
+                            <c:choose>
+                                <c:when test="${questionPage > 0}">
+                                    <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage-1}">
+                                        <p class="page-text">< Anterior</p>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <p class="none-page-text">< Anterior</p>
+                                </c:otherwise>
+                            </c:choose>
+                            <c:choose>
+                                <c:when test="${questionsCount > questionPage*10+10}">
+                                    <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage+1}">
+                                        <p class="page-text">Siguiente ></p>
+                                    </a>
+                                </c:when>
+                                <c:otherwise>
+                                    <p class="none-page-text">Siguiente ></p>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
             </c:if>
 
@@ -188,6 +221,39 @@
                     </c:otherwise>
                 </c:choose>
 
+                <div class="align-center">
+                <c:choose>
+                    <c:when test="${option==null}">
+                        <c:if test="${reviewsCount > reviewPage*10+10}">
+                        <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw">
+                            <p class="page-text">Mostrar mas</p>
+                        </a>
+                        </c:if>
+                    </c:when>
+                    <c:otherwise>
+                        <c:choose>
+                            <c:when test="${reviewPage > 0}">
+                                <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage-1}">
+                                    <p class="page-text">< Anterior</p>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="none-page-text">< Anterior</p>
+                            </c:otherwise>
+                        </c:choose>
+                        <c:choose>
+                            <c:when test="${reviewsCount > reviewPage*10+10}">
+                                <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage+1}">
+                                    <p class="page-text">Siguiente ></p>
+                                </a>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="none-page-text">Siguiente ></p>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:otherwise>
+                </c:choose>
+                </div>
             </div>
             </c:if>
         </div>
