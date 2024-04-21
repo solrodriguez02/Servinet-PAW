@@ -9,35 +9,35 @@
     <title></title>
 </head>
 <body>
+<c:set var="numParameters" value="0"/>
+<c:url var="Path" value="/servicios">
+    <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /> <c:set var="numParameters" value="${numParameters+1}"/></c:if>
+    <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /><c:set var="numParameters" value="${numParameters+1}"/></c:if>
+    <c:if test="${not empty paramValues.ubicacion}"><c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/> <c:set var="numParameters" value="${numParameters+1}"/></c:forEach></c:if>
+</c:url>
 
 <c:choose>
-    <c:when test="${category==null}">
-        <c:set var="categoryPath" value="${pageContext.request.contextPath}/servicios/?"/>
-        <c:choose>
-            <c:when test="${location==null}">
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?" />
-            </c:when>
-            <c:otherwise>
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?ubicacion=${location}&" />
-            </c:otherwise>
-        </c:choose>
+    <c:when test="${empty param or (numParameters == 0 and not empty param.pagina)}">
+        <c:set var="filtersPath" value="${Path}?"/>
     </c:when>
     <c:otherwise>
-        <c:set var="categoryPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&"/>
-        <c:choose>
-            <c:when test="${location==null}">
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&" />
-            </c:when>
-            <c:otherwise>
-                <c:set var="filtersPath" value="${pageContext.request.contextPath}/servicios/?categoria=${category}&ubicacion=${location}&" />
-            </c:otherwise>
-        </c:choose>
+        <c:set var="filtersPath" value="${Path}&"/>
     </c:otherwise>
 </c:choose>
 
-<div class="page">
 
+<div class="page">
     <div class="filters-info">
+        <div>
+            <form action="${pageContext.request.contextPath}/servicios" method="GET">
+                <label>Ingresar Busqueda:
+                    <div>
+                <input type="text" class="input" placeholder="ingresar busqueda" name="query" value="<c:out value="${param.query}"/>"/>
+                <button type="submit" class="a"><i class="material-icon">Search</i></button>
+                    </div>
+                </label>
+            </form>
+        </div>
         <div class="header">
             <c:if test="${category!=null}">
                 <div class="category-header">
@@ -46,25 +46,43 @@
             </c:if>
             <div class="align-right">
                 <div class="dropdown">
-                    <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
+                    <label>
+                        <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
+                    </label>
                     <div class="dropdown-content">
                         <c:forEach items="${neighbourhoods}" var="neighbourhood">
-                            <a href="${categoryPath}ubicacion=${neighbourhood.value}"><c:out value="${neighbourhood.value}"/></a>
+                            <c:url value="/servicios" var="locationChange">
+                                <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                                <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                                <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:if test="${ubicaciones != neighbourhood.value}"><c:param name="ubicacion" value="${ubicaciones}"/></c:if> </c:forEach>
+                                <c:param name="ubicacion" value="${neighbourhood.value}"/>
+                            </c:url>
+                            <a href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
                         </c:forEach>
                     </div>
+
                 </div>
             </div>
         </div>
 
-        <c:if test="${location != null}">
             <div class="filters-selected">
                     <h5>Filtros seleccionados:</h5>
-                    <button class="filter-container">
+                <c:forEach items="${paramValues.ubicacion}" var="location">
+                <button class="filter-container">
                         <c:out value="${location}"/>
-                        <a href="${categoryPath}"><i class="material-icons close-filter-icon">close</i></a>
+                    <c:url value="/servicios" var="locationRemove">
+                        <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                        <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                        <c:forEach items="${paramValues.ubicacion}" var="paramUb">
+                            <c:if test="${paramUb != location}">
+                                <c:param name="ubicacion" value="${paramUb}"/>
+                            </c:if>
+                        </c:forEach>
+                    </c:url>
+                        <a href="${locationRemove}"><i class="material-icons close-filter-icon">close</i></a>
                     </button>
+                </c:forEach>
             </div>
-        </c:if>
 
         <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
     </div>
@@ -89,7 +107,7 @@
                                         <h3> <c:out value="${item.name}"/></h3>
                                         <p class="align-right">$ <c:out value="${item.price}"/> </p>
                                     </div>
-                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location}"/> </p>
+                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location} ${item.neighbourhoodAvailable}"/> </p>
                                     <p class="item"> <c:out value="${item.description}"/></p>
                                 </div>
                             </div>

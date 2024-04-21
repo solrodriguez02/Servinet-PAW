@@ -37,7 +37,7 @@
                         <p class="label">Este servicio se realiza a domicilio, seleccione su barrio:</p>
                         <select id="select" class="appointment-select" name="barrios">
                             <option value=""></option>
-                            <option value="${service.location}"><c:out value="${service.location}"/></option>
+                            <option value="${service.neighbourhoodAvailable}"><c:out value="${service.neighbourhoodAvailable}"/></option>
                         </select>
                     </div>
                     <p class="label">Direccion de residencia:</p>

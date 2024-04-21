@@ -12,9 +12,8 @@ public interface ServiceService {
     Service edit(long serviceid, String field, String newvalue);
     void delete(Service service, Business business);
 
-    List<Service> services(int page, String category, String location);
-    int getServiceCount(String category, String location);
-    int getPageCount(String category, String location);
-
+    List<Service> services(int page,String category,String[] location,String query);
+    int getServiceCount(String category, String[] location,String searchQuery);
+    int getPageCount(String category, String[] location,String searchQuery);
     Optional<List<Service>> getAllBusinessServices(long businessid);
 }

@@ -25,7 +25,7 @@
                 <div class="info-text">
 
                     <p class="category-text"><c:out value="${service.category}"/></p>
-                    <p class="text-with-icon"> <i class="material-icons icon">location_on</i><c:out value="${service.location}"/></p>
+                    <p class="text-with-icon"> <i class="material-icons icon">location_on</i><c:out value="${service.location} Barrio:${service.neighbourhoodAvailable}"/></p>
                     <p class="text-with-icon"> <i class="material-icons icon">house</i>
                         <c:choose>
                             <c:when test="${service.homeService}">

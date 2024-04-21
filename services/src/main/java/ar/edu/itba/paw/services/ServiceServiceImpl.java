@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
 
@@ -31,7 +32,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
-        Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice, String.format("%s;%s",neighbourhood.getValue(),location), category,minimalduration ,pricing, price, additionalCharges,imageId);
+        Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
             emailService.createdService(service, business);
         } catch (MessagingException e) {
@@ -78,22 +79,18 @@ public class ServiceServiceImpl implements ServiceService {
 
 
     @Override
-    public List<Service> services(int page, String category, String location) {
-        if(category != null || location != null) {
-            return serviceDao.getServicesFilteredBy(page, category, location);
-        } else {
-            return serviceDao.getServices(page);
-        }
+    public List<Service> services(int page, String category, String[] location,String query) {
+            return serviceDao.getServicesFilteredBy(page, category, location,query);
     }
 
     @Override
-    public int getServiceCount(String category, String location) {
-        return serviceDao.getServiceCount(category, location);
+    public int getServiceCount(String category, String[] location,String searchQuery) {
+        return serviceDao.getServiceCount(category, location,searchQuery);
     }
 
     @Override
-    public int getPageCount(String category, String location) {
-        int serviceCount = getServiceCount(category, location);
+    public int getPageCount(String category, String[] location,String searchQuery) {
+        int serviceCount = getServiceCount(category, location,searchQuery);
         int pageCount = serviceCount / 10;
         if(serviceCount % 10 != 0) pageCount++;
         return pageCount;

@@ -21,7 +21,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     private static final RowMapper<Service> ROW_MAPPER = (rs, rowNum) -> new Service(rs.getLong("id"),
             rs.getLong("businessid"), rs.getString("servicename"),
             rs.getString("servicedescription"), rs.getBoolean("homeservice"),
-            rs.getString("location"), Neighbourhoods.findByValue(rs.getString("location")) ,
+            rs.getString("location"),Neighbourhoods.findByValue(rs.getString("neighbourhood")),
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
             rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
@@ -41,7 +41,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods neighbourhood, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);
@@ -54,8 +54,9 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
         userData.put("imageid", imageId != 0 ? imageId : null);
+        userData.put("neighbourhood", neighbourhood.getValue());
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Neighbourhoods.findByValue(location), category, minimalduration, pricing, price, additionalCharges, imageId);
+        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location,neighbourhood, category, minimalduration, pricing, price, additionalCharges, imageId);
     }
 
     @Override
@@ -91,34 +92,24 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public List<Service> getServicesFilteredBy(int page, String category, String location) {
-        if(category == null) {
-            return jdbcTemplate.query( "SELECT * FROM services WHERE location = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {location, page*10}, ROW_MAPPER);
-        } else if(location == null) {
-            return jdbcTemplate.query( "SELECT * FROM services WHERE category = ? ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, page*10}, ROW_MAPPER);
-        } else {
-            // Caso en el que el usuario filtro tanto por cateogria como por ubicacion
-            return jdbcTemplate.query( "SELECT * FROM services WHERE (category = ? AND location = ?) ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {category, location, page*10}, ROW_MAPPER);
-        }
-    }
+    public List<Service> getServicesFilteredBy(int page, String category, String[] location,String searchQuery) {
+    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page);
+    String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
+    Object[] values = filterArgument.getValues().toArray();
 
+    return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
+
+   }
     @Override
-    public int getServiceCount(String category, String location) {
-        int count = 0;
-        if(category == null) {
-            if(location == null) {
-                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services", Integer.class);
-            } else {
-                count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM services WHERE location = ?", Integer.class, location);
-            }
-        } else {
-            if (location == null) {
-                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE category = ?", Integer.class, category);
-            } else {
-                count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM services WHERE (category = ? AND location = ?)", Integer.class, category, location);
-            }
+    public int getServiceCount(String category, String[] location,String searchQuery) {
+        FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+        Object[] values = filterArgument.getValues().toArray();
+        if(values.length==0){
+            return jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);
+
         }
-        return count;
+        String sqlQuery= "SELECT count(id) from services " + filterArgument.formSqlSentence();
+        return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
     }
 
-}
+ }
