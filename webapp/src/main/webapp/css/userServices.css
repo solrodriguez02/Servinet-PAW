@@ -59,3 +59,12 @@
     align-items: center;
     margin-bottom: 10px;
 }
+
+.notification-icon {
+    margin-right: 10px;
+}
+
+.notification-header {
+    display: flex;
+    align-items: center;
+}

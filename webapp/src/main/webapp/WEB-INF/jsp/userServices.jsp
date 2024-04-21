@@ -6,15 +6,16 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/userServices.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
 <body>
 <div class="page">
     <h2>Mis servicios</h2>
 
-    <h4>Tienes preguntas sin responder:</h4>
     <c:choose>
         <c:when test="${pendingQst!=null}">
+            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_active</i>Tienes preguntas sin responder:</h4>
             <c:forEach items="${pendingQst}" var="qst">
                 <div class="question-box">
                     <c:url value="/servicio/${qst.key.serviceid}" var="serviceUrl"/>
@@ -34,11 +35,10 @@
                         <form:errors path="response" element="p" cssClass="error"/>
                     </form:form>
                 </div>
-
             </c:forEach>
         </c:when>
         <c:otherwise>
-            <p>Nada por aqui</p>
+            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_off</i>No tienes preguntas para contestar</h4>
         </c:otherwise>
     </c:choose>
 </div>
