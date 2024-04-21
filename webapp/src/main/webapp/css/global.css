@@ -100,12 +100,39 @@ body {
     border-radius: 25px;
     background-color: #585bfa;
     padding: 15px 25px;
-    font-size: 16px;
+    font-size: 15px;
     box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
     cursor: pointer;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn:hover {
+    background-color: #7475ff;
 }
 
 .btn-text {
     color: white;
     cursor: pointer;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
+}
+
+.error {
+    color: #e75a46;
+    font-size: 14px;
+}
+
+.none-page-text {
+    color: gray;
+    margin: 0 15px;
+}
+
+.page-text {
+    text-decoration: none;
+    color: #585bfa;
+    margin: 0 15px;
 }

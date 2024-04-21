@@ -68,17 +68,6 @@ p {
     justify-content: center;
 }
 
-.none-page-text {
-    color: gray;
-    margin: 0 15px;
-}
-
-.page-text {
-    text-decoration: none;
-    color: #585bfa;
-    margin: 0 15px;
-}
-
 .page-input {
     width: 30px;
     text-align: center;
