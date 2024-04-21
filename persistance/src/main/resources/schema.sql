@@ -40,26 +40,15 @@ CREATE TABLE IF NOT EXISTS services (
     pricingtype  VARCHAR(50) CHECK (pricingtype IN ('Por hora', 'Total', 'Producto', 'A determinar')),
     price VARCHAR(255),
     additionalcharges BOOLEAN,
-    imageId INT references images(imageid)
+    imageId INT references images(imageid),
+    neighbourhood VARCHAR(255)
     );
-
-CREATE OR REPLACE FUNCTION set_defaults() RETURNS trigger AS '
-BEGIN
-    IF NEW.businessname IS NULL THEN
-        NEW.businessname := (SELECT username FROM users WHERE userid = NEW.userid);
-    END IF;
-    IF NEW.businessTelephone IS NULL THEN
-        NEW.businessTelephone := (SELECT telephone FROM users WHERE userid = NEW.userid);
-    END IF;
-    IF NEW.businessEmail IS NULL THEN
-        NEW.businessEmail := (SELECT email FROM users WHERE userid = NEW.userid);
-    END IF;
-    RETURN NEW;
-END;
-' LANGUAGE plpgsql;
-
-
-CREATE or replace TRIGGER set_defaults BEFORE INSERT ON business FOR EACH ROW EXECUTE FUNCTION set_defaults();
+--script para generar la nueva columna neighbourhood
+--begin transaction;
+--alter table services add neighbourhood varchar(255);
+--update services set neighbourhood = split_part(location,';',1);
+--update services set location = split_part(location,';',2);
+--commit;
 
 CREATE TABLE IF NOT EXISTS appointments (
     appointmentid SERIAL PRIMARY KEY,

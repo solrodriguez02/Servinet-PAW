@@ -65,7 +65,6 @@
             </div>
         </div>
 
-        <c:if test="${location != null}">
             <div class="filters-selected">
                     <h5>Filtros seleccionados:</h5>
                 <c:forEach items="${paramValues.ubicacion}" var="location">
@@ -84,7 +83,6 @@
                     </button>
                 </c:forEach>
             </div>
-        </c:if>
 
         <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
     </div>
@@ -109,7 +107,7 @@
                                         <h3> <c:out value="${item.name}"/></h3>
                                         <p class="align-right">$ <c:out value="${item.price}"/> </p>
                                     </div>
-                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location}"/> </p>
+                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location} ${item.neighbourhoodAvailable}"/> </p>
                                     <p class="item"> <c:out value="${item.description}"/></p>
                                 </div>
                             </div>
