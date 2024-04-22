@@ -16,10 +16,6 @@
         <c:if test="${option==null}">
         <h2><c:out value="${service.name}"/></h2>
 
-        <!--tal vez para un primer sprint se puede seleccionar cualquier fecha y horario
-        (no se muestran los turnos que ya estan tomados) y una vez hecho el input se
-         muestra un mensaje de error si es que esa fecha y hora ya fue tomada. -->
-
         <div class="info-container">
             <div class="img-container">
                 <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
@@ -79,7 +75,10 @@
                 </div>
             </div>
         </div>
-        <p class="text-description"><c:out value="${service.description}"/></p>
+
+        <div class="description-box">
+            <p class="text-description"><c:out value="${service.description}"/></p>
+        </div>
         </c:if>
 
         <!--form action="${deleteUrl}" method="post">
