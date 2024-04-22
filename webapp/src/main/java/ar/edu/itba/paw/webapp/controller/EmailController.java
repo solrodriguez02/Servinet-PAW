@@ -46,6 +46,7 @@ public class EmailController {
     }
 
 
+
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
         final long serviceId = appointmentService.denyAppointment(appointmentId);

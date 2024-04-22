@@ -22,6 +22,7 @@
     <javax.mail.version>1.6.2</javax.mail.version>
     <thymeleaf.version>3.1.2.RELEASE</thymeleaf.version>
     <thymeleaf.extras.version>3.0.4.RELEASE</thymeleaf.extras.version>
+    <jackson.version>2.16.1</jackson.version>
   </properties>
 
   <dependencyManagement>
@@ -111,7 +112,18 @@
         <artifactId>thymeleaf-extras-java8time</artifactId>
         <version>${thymeleaf.extras.version}</version>
       </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
     </dependencies>
+
   </dependencyManagement>
   <modules>
     <module>webapp</module>
