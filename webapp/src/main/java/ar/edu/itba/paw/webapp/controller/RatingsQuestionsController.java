@@ -14,9 +14,9 @@ import javax.validation.Valid;
 
 @Controller
 public class RatingsQuestionsController {
-    private RatingService rating;
-    private QuestionService question;
-    private HelloWorldController helloWorldController;
+    private final  RatingService rating;
+    private final  QuestionService question;
+    private final HelloWorldController helloWorldController;
 
     @Autowired
     public RatingsQuestionsController(

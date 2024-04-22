@@ -31,13 +31,13 @@ import java.util.Optional;
 @Qualifier("HelloWorldController")
 public class HelloWorldController {
 
-    private UserService us;
-    private BusinessService bs;
-    private ServiceService service;
-    private AppointmentService appointment;
-    private RatingService rating;
-    private QuestionService question;
-    private ImageService is;
+    private final UserService us;
+    private final BusinessService bs;
+    private final ServiceService service;
+    private final AppointmentService appointment;
+    private final RatingService rating;
+    private final QuestionService question;
+    private final ImageService is;
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
