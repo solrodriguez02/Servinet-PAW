@@ -28,28 +28,26 @@
 
 <div class="page">
     <div class="filters-info">
-        <div>
-            <form action="${pageContext.request.contextPath}/servicios" method="GET">
-                <label>Ingresar Busqueda:
-                    <div>
-                        <input type="text" class="input" placeholder="ingresar busqueda" name="query" value="<c:out value="${param.query}"/>"/>
-                        <button type="submit" class="a"><i class="material-icon">Search</i></button>
-                    </div>
-                </label>
-            </form>
-        </div>
-        <div class="header">
-            <c:if test="${category!=null}">
-                <div class="category-header">
-                    <h2><c:out value="${category}"/></h2>
+        <div class="flex">
+            <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Que estas buscando?" name="query" value="<c:out value="${param.query}"/>"/>
+                    <button type="submit" class="search-button"><i class="material-icons">search</i></button>
                 </div>
-            </c:if>
+            </form>
             <div class="align-right">
                 <label>
-                    <p class="filters-text" onclick="toggleFilters()" id="toggleFiltersButton">Filtrar por<i class="material-icons" id="filtersIcon">expand_more</i></p>
+                    <p class="filters-text" onclick="toggleFilters()" id="toggleFiltersButton"><i class="material-icons">filter_alt</i>Filtrar por<i class="material-icons" id="filtersIcon">expand_more</i></p>
                 </label>
             </div>
         </div>
+
+        <c:if test="${category!=null}">
+            <div class="category-header">
+                <h2><c:out value="${category}"/></h2>
+            </div>
+        </c:if>
+
         <div class="align-right">
             <div class="filters-box transparent" id="filters">
                 <h3>Calificacion</h3>
@@ -60,7 +58,7 @@
                         <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/></c:forEach>
                         <c:param name="calificacion" value="${rate.name}"/>
                     </c:url>
-                    <p class="filter-text"><a class="none-decoration" href="${ratingChange}">
+                    <a class="none-decoration filter-text" href="${ratingChange}">
                         <c:out value="${rate.name}"/>:
                         <c:forEach begin="1" end="${rate.minValue}">
                             <i class="material-icons stars">star</i>
@@ -68,7 +66,7 @@
                         <c:if test="${rate.minValue != 5}">
                             o mas
                         </c:if>
-                    </a></p>
+                    </a>
                 </c:forEach>
                 <h3>Ubicacion</h3>
                 <c:forEach items="${neighbourhoods}" var="neighbourhood">
@@ -79,13 +77,14 @@
                         <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:if test="${ubicaciones != neighbourhood.value}"><c:param name="ubicacion" value="${ubicaciones}"/></c:if> </c:forEach>
                         <c:param name="ubicacion" value="${neighbourhood.value}"/>
                     </c:url>
-                    <p class="filter-text"><a class="none-decoration" href="${locationChange}"><c:out value="${neighbourhood.value}"/></a></p>
+                    <a class="none-decoration filter-text" href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
                 </c:forEach>
             </div>
         </div>
 
+        <c:if test="${not empty paramValues.ubicacion or not empty paramValues.calificacion}">
             <div class="filters-selected">
-                    <h5>Filtros seleccionados:</h5>
+                <h4>Filtros seleccionados:</h4>
                 <c:forEach items="${paramValues.ubicacion}" var="location">
                 <button class="filter-container">
                         <c:out value="${location}"/>
@@ -114,6 +113,7 @@
                     </button>
                 </c:if>
             </div>
+        </c:if>
 
         <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
     </div>

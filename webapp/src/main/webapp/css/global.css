@@ -136,3 +136,32 @@ body {
     color: #585bfa;
     margin: 0 15px;
 }
+
+.search-box {
+    width: 100%;
+    border-radius: 20px 0 0 20px;
+    padding: 10px 20px;
+    background-color: #e0e0e0;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    height: 45px;
+}
+
+.search-button {
+    background-color: #585bfa;
+    border-radius: 0 20px 20px 0;
+    border: none;
+    color: white;
+    height: 45px;
+    padding: 0 15px;
+}
+
+.search-button:hover {
+    background-color: #7c7cfd;
+}
+
+.search-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}

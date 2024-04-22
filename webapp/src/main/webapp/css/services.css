@@ -15,6 +15,10 @@
     box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
 }
 
+.service-box:hover {
+    background-color: #ececec;
+}
+
 .service-data-container {
     display: flex;
     width: 100%;
@@ -98,15 +102,16 @@ p {
 .filters-text {
     display: flex;
     align-items: center;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.filters-text:hover {
+    color: #5b5b5b;
 }
 
 .filters-info {
     margin: 0 40px 30px 40px;
-}
-
-.header {
-    display: flex;
-    align-items: center;
 }
 
 .filter-container {
@@ -140,7 +145,7 @@ p {
     border-radius: 20px;
     width: 30%;
     position: absolute;
-    top: 75%;
+    top: 78%;
     right: 100px;
     transform: translateY(-50%);
     z-index: 9999;
@@ -155,4 +160,18 @@ p {
 .stars {
     font-size: 16px !important;
     color: #f8ae00 !important;
+}
+
+.form-box {
+    width: 85%
+}
+
+.filter-text {
+    margin-bottom: 8px;
+    align-items: center;
+    display: flex;
+}
+
+.filter-text:hover {
+    color: #585bfa !important;
 }

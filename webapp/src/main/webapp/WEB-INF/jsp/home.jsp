@@ -11,6 +11,14 @@
 <div class="page">
     <div class="header">
         <h2 class="slogan">Conectando servicios, creando soluciones</h2>
+        <div class="align-center">
+            <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Que estas buscando?" name="query" value="<c:out value="${param.query}"/>"/>
+                    <button type="submit" class="search-button"><i class="material-icons">search</i></button>
+                </div>
+            </form>
+        </div>
     </div>
     <h3>Busca por categorias</h3>
     <div class="boxes-container" id="someCategories">
