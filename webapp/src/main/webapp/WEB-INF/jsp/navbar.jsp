@@ -29,7 +29,6 @@
                     </c:forEach>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
