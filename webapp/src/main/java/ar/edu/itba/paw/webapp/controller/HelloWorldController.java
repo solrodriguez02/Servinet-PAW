@@ -42,6 +42,7 @@ public class HelloWorldController {
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
+    List<Ratings> ratings = new ArrayList<>();
 
     @Autowired
     public HelloWorldController(
@@ -63,6 +64,7 @@ public class HelloWorldController {
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+        ratings.addAll(Arrays.asList(Ratings.values()));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
@@ -78,12 +80,13 @@ public class HelloWorldController {
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
             @RequestParam(name = "ubicacion", required = false) String[] neighbourhoodFilters,
+            @RequestParam(name = "calificacion", required = false) String ratingFilters,
             @RequestParam(name = "pagina", required = false) Integer page,
             @RequestParam(name="query",required=false) String query
     ) {
         if(page == null) page = 0;
         final ModelAndView mav = new ModelAndView("services");
-        List<Service> serviceList = service.services(page, category, neighbourhoodFilters, query);
+        List<Service> serviceList = service.services(page, category, neighbourhoodFilters, ratingFilters, query);
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
@@ -92,6 +95,7 @@ public class HelloWorldController {
         mav.addObject("location", neighbourhoodFilters);
         mav.addObject("resultsAmount", service.getServiceCount(category, neighbourhoodFilters,query));
         mav.addObject("pageCount", service.getPageCount(category, neighbourhoodFilters,query));
+        mav.addObject("ratings", ratings);
         return mav;
     }
 

@@ -10,6 +10,11 @@ public class FilterArgument {
         return addParameter(FilterTypes.CATEGORY,category);
 
     }
+
+    public FilterArgument addRating(int rating) {
+        return addParameter(FilterTypes.RATING, rating);
+    }
+
     private FilterArgument addParameter(FilterTypes type,String value){
         if(value!=null && !value.isEmpty()){
             filters.put(type,value);
@@ -18,6 +23,13 @@ public class FilterArgument {
     }
     private FilterArgument addParameter(FilterTypes type,String[] value){
         if(value!=null && value.length!=0){
+            filters.put(type,value);
+        }
+        return this;
+    }
+
+    private FilterArgument addParameter(FilterTypes type, int value){
+        if(value>0 && value<=5){
             filters.put(type,value);
         }
         return this;
@@ -60,6 +72,7 @@ public class FilterArgument {
 
         private enum FilterTypes {
             CATEGORY("category = ? "),
+            RATING("s.id IN (SELECT serviceid FROM ratings GROUP BY serviceid HAVING AVG(rating) >= ?)"),
             LOCATION("neighbourhood = any (?) "),
             SERVICE_SEARCH("lower(servicename) like concat('%',lower(?),'%')");
 
