@@ -22,7 +22,7 @@ public class RatingsQuestionsController {
     public RatingsQuestionsController(
             @Qualifier("HelloWorldController") HelloWorldController helloWorldController,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
-            @Qualifier("RatingServiceImpl") final RatingServiceImpl rating
+            @Qualifier("RatingServiceImpl") final RatingService rating
     ){
         this.helloWorldController = helloWorldController;
         this.rating = rating;

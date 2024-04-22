@@ -51,7 +51,7 @@ public class HelloWorldController {
             @Qualifier("appointmentServiceImpl") final AppointmentService appointment,
             @Qualifier("BusinessServiceImpl") final BusinessService bs,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
-            @Qualifier("RatingServiceImpl") final RatingServiceImpl rating
+            @Qualifier("RatingServiceImpl") final RatingService rating
     ){
         this.us = us;
         this.service = service;
