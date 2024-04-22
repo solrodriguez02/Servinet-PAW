@@ -1,3 +1,11 @@
+.business-header {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .service-box {
     height: 25px;
     border-radius: 15px;
@@ -49,9 +57,17 @@
     flex-direction: column;
     width: 100%;
 }
+
+.appointments-container{
+    padding-bottom: 100px;
+}
+
 .appointment-field {
     padding-left: 30px;
     text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .day{
@@ -62,10 +78,8 @@
     text-decoration: none;
     color: #6c6fff;
     width: 160px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 }
+
 
 .time {
     width: 165px;
@@ -76,6 +90,9 @@
 .id{
     width: 40px;
     color: #969696;
+    text-overflow: fade;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 i {
@@ -135,6 +152,10 @@ body {
     rotate: 45deg;
 }
 
+.cancel-icon {
+    color: #E24646;
+}
+
 .correct-btn {
     margin-top: -10px;
 }
@@ -142,10 +163,11 @@ body {
 .accordion-container {
     background-color: #DADCE0;
     color: #3d3d3d;
-    height: 50px;
+    max-height: 70px;
     display: none;
     padding-top: 40px;
     margin-top: -20px;
+    padding-bottom: 10px;
     border-radius: 0 0 16px 16px;
     position: relative;
     z-index: -1;
@@ -165,7 +187,15 @@ body {
     display: flex;
 }
 
-.location {
+.accordion-field {
     display: flex;
     justify-content: center;
+    padding-bottom: 10px;
+}
+
+.contact-container{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: 450px;
 }

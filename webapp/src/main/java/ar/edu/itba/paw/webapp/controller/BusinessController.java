@@ -3,11 +3,13 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
+import ar.edu.itba.paw.services.UserService;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,15 +30,18 @@ public class BusinessController {
     private final BusinessService businessService;
     private final ServiceService serviceService;
     private final AppointmentService appointmentService;
+    private final UserService userService;
 
     //todo: autenticar q es el dueño del service
 
     @Autowired
     public BusinessController(@Qualifier("BusinessServiceImpl") final BusinessService businessService,  @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-                              @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService) {
+                              @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
+                              @Qualifier("userServiceImpl") final UserService userService) {
         this.businessService = businessService;
         this.serviceService = serviceService;
         this.appointmentService = appointmentService;
+        this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/misnegocios")
@@ -45,23 +50,23 @@ public class BusinessController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}")
+        @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/solicitados")
     public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
 
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
-        Optional<List<Appointment>> appointmentsRequested = Optional.of(new ArrayList<>());
+        List<Appointment> appointmentList = new ArrayList<>();
 
         Map<Long,Service> serviceMap = new HashMap<>();
         if ( services.isPresent()){
             services.get().forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentsRequested = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), false);
+            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), false).orElse(new ArrayList<>());
         }
         mav.addObject("business",business);
         mav.addObject("serviceMap", serviceMap );
-        mav.addObject("requestedAppointments", appointmentsRequested.orElse(new ArrayList<>()));
-
+        mav.addObject("appointmentList", appointmentList);
+        mav.addObject("confirmed",false);
         return mav;
     }
 
@@ -80,7 +85,7 @@ public class BusinessController {
 
 
     @RequestMapping(method = RequestMethod.POST, path = "negocio/{businessId:\\d+}/solicitud-turno/{appoinmentId:\\d+}")
-    public void acceptedOrDeniedAppointment(@PathVariable(value = "businessId") final long businessId,
+    public void acceptOrDenyAppointment(@PathVariable(value = "businessId") final long businessId,
                                             @PathVariable(value = "appoinmentId") final long appoinmentId,
                                             @RequestParam(value = "accepted") final boolean accepted,
                                             HttpServletResponse response) throws IOException{
@@ -90,14 +95,36 @@ public class BusinessController {
             try {
                 appointmentService.confirmAppointment(appoinmentId);
             } catch (AppointmentNonExistentException e) {
-                //TODO: http response 422: Unprocessable Entity
                 response.setStatus(HttpServletResponse.SC_CONFLICT);
-                response.getWriter().println("EL turno ya no existe");
+                response.getWriter().println("El turno ya no existe");
             }
         else
             appointmentService.denyAppointment(appoinmentId);
-
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/proximos")
+    public ModelAndView getConfirmedAppointments(@PathVariable("businessId") final long businessId) {
+
+        final ModelAndView mav = new ModelAndView("business");
+        Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
+        Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
+        List<Appointment> appointmentList = new ArrayList<>();
+
+        Map<Long,Service> serviceMap = new HashMap<>();
+        if ( services.isPresent()){
+            services.get().forEach(service -> serviceMap.put(service.getId(), service) );
+            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(),true).orElse(new ArrayList<>());
+        }
+        Map<Long, User> userMap = new HashMap<>();
+        appointmentList.forEach(a -> userMap.put(a.getUserid(),userService.findById(a.getUserid()).get()));
+
+        mav.addObject("business",business);
+        mav.addObject("serviceMap", serviceMap );
+        mav.addObject("userMap", userMap );
+        mav.addObject("appointmentList", appointmentList);
+        mav.addObject("confirmed",true);
+
+        return mav;
+    }
 
 }
