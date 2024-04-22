@@ -12,10 +12,13 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
@@ -79,7 +82,8 @@ public class BusinessController {
     @RequestMapping(method = RequestMethod.POST, path = "negocio/{businessId:\\d+}/solicitud-turno/{appoinmentId:\\d+}")
     public void acceptedOrDeniedAppointment(@PathVariable(value = "businessId") final long businessId,
                                             @PathVariable(value = "appoinmentId") final long appoinmentId,
-                                            @RequestParam(value = "accepted") final boolean accepted){
+                                            @RequestParam(value = "accepted") final boolean accepted,
+                                            HttpServletResponse response) throws IOException{
         // TODO: businessId por si es necesario para auth
 
         if ( accepted )
@@ -87,11 +91,13 @@ public class BusinessController {
                 appointmentService.confirmAppointment(appoinmentId);
             } catch (AppointmentNonExistentException e) {
                 //TODO: http response 422: Unprocessable Entity
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                response.getWriter().println("EL turno ya no existe");
             }
-
         else
             appointmentService.denyAppointment(appoinmentId);
 
     }
+
 
 }

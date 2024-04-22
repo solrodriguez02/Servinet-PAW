@@ -21,7 +21,7 @@
         </c:forEach>
     </div>
     <div>
-        <button >Pendientes</button>
+        <button >Proximos</button>
         <button>Solicitudes</button>
     </div>
     <div class="appointments-container">
@@ -87,7 +87,7 @@
             if (response.ok) {
                 console.log('Solicitud POST enviada exitosamente');
             } else {
-                console.error('Error al enviar la solicitud POST');
+                alert("el turno ya no existe");
             }
             document.getElementById(componentId).style.display = "none";
         })
