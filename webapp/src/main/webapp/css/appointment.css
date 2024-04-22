@@ -4,51 +4,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    width: 100%;
 }
 
 .title {
     margin-bottom: 20px;
     text-align: center;
     display: flex;
-}
-
-.fixed-card {
-    margin: 10px 0;
-    width: 50%;
-}
-
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-}
-
-.back-button {
-    display: flex;
-    cursor: pointer;
-}
-
-.arrow {
-    position: relative;
-    top: 10%;
-    cursor: pointer;
-    width: 100%;
-}
-
-.card-header h2 {
-    text-align: center;
-}
-
-.card-header svg {
-    margin: 0;
-}
-
-.success-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 .confirmed-icon {
@@ -61,4 +22,45 @@
     color: gray;
     font-size: 40px !important;
     margin-right: 20px;
+}
+
+.cancelBtn {
+    padding: 10px 25px;
+    border: none;
+    background-color: #ffcccc;
+    color: #ff4d4d;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 15px;
+}
+
+.cancelBtn:hover {
+    background-color: #ffb2b2;
+    transform: translateY(-2px);
+}
+
+.box {
+    box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
+    width: 60%;
+    margin-bottom: 40px;
+    border-radius: 15px;
+}
+
+.box-info {
+    padding: 20px;
+}
+
+.appointment-info {
+    margin-top: 25px;
+}
+
+.appointment-cancelBtn {
+    margin-bottom: 25px;
+}
+
+.state-text {
+    text-align: center;
 }
