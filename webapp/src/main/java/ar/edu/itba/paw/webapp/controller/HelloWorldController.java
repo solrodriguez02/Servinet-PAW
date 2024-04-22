@@ -38,6 +38,7 @@ public class HelloWorldController {
     private RatingService rating;
     private QuestionService question;
     private ImageService is;
+    private static final String TBDPricing = PricingTypes.TBD.getValue();
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
@@ -96,6 +97,7 @@ public class HelloWorldController {
         mav.addObject("resultsAmount", service.getServiceCount(category, neighbourhoodFilters,query));
         mav.addObject("pageCount", service.getPageCount(category, neighbourhoodFilters,query));
         mav.addObject("ratings", ratings);
+        mav.addObject("TBDPricing", TBDPricing);
         return mav;
     }
 
@@ -217,7 +219,7 @@ public ModelAndView service(
         @RequestParam(value = "opcion", required = false) final String option,
         @RequestParam(value = "qstPag", required = false) Integer questionPage,
         @RequestParam(value = "rwPag", required = false) Integer reviewPage
-        ) {
+) {
     final ModelAndView mav = new ModelAndView("service");
     Service serv;
     if(questionPage == null) questionPage = 0;
@@ -236,6 +238,7 @@ public ModelAndView service(
     mav.addObject("reviewsCount", rating.getRatingsCount(serviceId));
     mav.addObject("questionPage", questionPage);
     mav.addObject("reviewPage", reviewPage);
+    mav.addObject("TBDPricing", TBDPricing);
     return mav;
 }
 

@@ -175,3 +175,9 @@ p {
 .filter-text:hover {
     color: #585bfa !important;
 }
+
+.TBD-comment {
+    color: gray;
+    font-style: italic;
+    margin: 0 6px;
+}

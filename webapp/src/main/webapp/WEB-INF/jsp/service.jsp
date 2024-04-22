@@ -47,24 +47,20 @@
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i>
+                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i><c:out value="${service.duration}"/> min</p>
+                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i>
                         <c:choose>
-                            <c:when test="${service.duration < 60}">
-                                <c:out value="${service.duration}"/>
+                            <c:when test="${service.pricing == TBDPricing}">
+                                <label class="TBD-comment"><c:out value="${TBDPricing}"/></label>
                             </c:when>
                             <c:otherwise>
-                                <c:out value="${service.duration / 60}"/>h
-                                <c:if test="${service.duration % 60 != 0}">
-                                    <c:out value="${service.duration % 60}"/>min
-                                </c:if>
+                                <c:out value="${service.price}"/>
+                                <label class="comment"><c:out value="${service.pricing}"/></label>
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i><c:out value="${service.price}"/>
-                        <label class="comment">${service.pricing}</label>
-                    </p>
                     <c:if test="${service.additionalCharges}">
-                        <p class="text-with-icon"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
+                        <p class="text-with-icon warning-text"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
                     </c:if>
 
                     <div class="btn-container">

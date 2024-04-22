@@ -136,9 +136,23 @@
                                 <div class="service-info">
                                     <div class="service-header">
                                         <h3> <c:out value="${item.name}"/></h3>
-                                        <p class="align-right">$ <c:out value="${item.price}"/> </p>
+                                        <p class="align-right">$
+                                            <c:choose>
+                                                <c:when test="${item.pricing == TBDPricing}">
+                                                    <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:out value="${item.price}"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
-                                    <p class="item"> <i class="material-icons">location_on</i> <c:out value="${item.location} ${item.neighbourhoodAvailable}"/> </p>
+                                    <p class="item"> <i class="material-icons">location_on</i>
+                                        <c:if test="${not empty item.location}">
+                                            <c:out value="${item.location}"/>,
+                                        </c:if>
+                                        <c:out value="${item.neighbourhoodAvailable}"/>
+                                    </p>
                                     <p class="item"> <c:out value="${item.description}"/></p>
                                 </div>
                             </div>

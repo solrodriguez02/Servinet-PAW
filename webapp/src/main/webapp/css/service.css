@@ -66,6 +66,11 @@
     margin-left: 15px;
 }
 
+.TBD-comment {
+    color: gray;
+    font-style: italic;
+}
+
 .btn-container {
     width: 100%;
     display: flex;
@@ -210,4 +215,8 @@
     width: 100%;
     border-radius: 15px;
     margin-bottom: 15px;
+}
+
+.warning-text {
+    color: #fa7c7c;
 }
