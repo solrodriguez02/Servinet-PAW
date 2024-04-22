@@ -90,9 +90,6 @@
 .id{
     width: 40px;
     color: #969696;
-    text-overflow: fade;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 i {

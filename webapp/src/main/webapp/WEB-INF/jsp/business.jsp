@@ -13,9 +13,9 @@
     <div class="business-header">
         <h2><c:out value="${business.businessName}"/></h2>
         <div>
-            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/proximos">
+            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
                 <button >Proximos</button></a>
-            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/solicitados">
+            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
                 <button >Solicitudes</button></a>
         </div>
     </div>

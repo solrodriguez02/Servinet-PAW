@@ -50,8 +50,8 @@ public class BusinessController {
         return mav;
     }
 
-        @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/solicitados")
-    public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
+        @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
+    public ModelAndView businesses(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
 
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
@@ -61,15 +61,26 @@ public class BusinessController {
         Map<Long,Service> serviceMap = new HashMap<>();
         if ( services.isPresent()){
             services.get().forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), false).orElse(new ArrayList<>());
+            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed).orElse(new ArrayList<>());
         }
+
+        Map<Long, User> userMap = new HashMap<>();
+        if (confirmed){
+            for (Appointment a : appointmentList){
+                if (!userMap.containsKey(a.getUserid()))
+                    userMap.put(a.getUserid(),userService.findById(a.getUserid()).get());
+            }
+            mav.addObject("userMap", userMap );
+        }
+
         mav.addObject("business",business);
         mav.addObject("serviceMap", serviceMap );
         mav.addObject("appointmentList", appointmentList);
-        mav.addObject("confirmed",false);
+        mav.addObject("confirmed",confirmed);
         return mav;
     }
 
+    // TODO
     @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/pag")
     public List<Appointment> getMoreAppointments(@PathVariable("businessId") final long businessId,
                                                    @RequestParam(name = "confirmed") final boolean confirmed ) {
@@ -102,29 +113,6 @@ public class BusinessController {
             appointmentService.denyAppointment(appoinmentId);
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/proximos")
-    public ModelAndView getConfirmedAppointments(@PathVariable("businessId") final long businessId) {
 
-        final ModelAndView mav = new ModelAndView("business");
-        Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
-        List<Appointment> appointmentList = new ArrayList<>();
-
-        Map<Long,Service> serviceMap = new HashMap<>();
-        if ( services.isPresent()){
-            services.get().forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(),true).orElse(new ArrayList<>());
-        }
-        Map<Long, User> userMap = new HashMap<>();
-        appointmentList.forEach(a -> userMap.put(a.getUserid(),userService.findById(a.getUserid()).get()));
-
-        mav.addObject("business",business);
-        mav.addObject("serviceMap", serviceMap );
-        mav.addObject("userMap", userMap );
-        mav.addObject("appointmentList", appointmentList);
-        mav.addObject("confirmed",true);
-
-        return mav;
-    }
 
 }
