@@ -10,12 +10,8 @@ import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.services.UserService;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,9 +47,9 @@ public class BusinessController {
     }
 
         @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
-    public ModelAndView businesses(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
+    public ModelAndView businessesAppointments(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
 
-        final ModelAndView mav = new ModelAndView("business");
+        final ModelAndView mav = new ModelAndView("businessAppointments");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
         List<Appointment> appointmentList = new ArrayList<>();
@@ -81,7 +77,8 @@ public class BusinessController {
     }
 
     // TODO
-    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/pag")
+    /*
+    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
     public List<Appointment> getMoreAppointments(@PathVariable("businessId") final long businessId,
                                                    @RequestParam(name = "confirmed") final boolean confirmed ) {
         Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
@@ -93,7 +90,7 @@ public class BusinessController {
         }
         return appointmentsRequested.orElse(new ArrayList<>());
     }
-
+    */
 
     @RequestMapping(method = RequestMethod.POST, path = "negocio/{businessId:\\d+}/solicitud-turno/{appoinmentId:\\d+}")
     public void acceptOrDenyAppointment(@PathVariable(value = "businessId") final long businessId,
@@ -113,6 +110,15 @@ public class BusinessController {
             appointmentService.denyAppointment(appoinmentId);
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}")
+    public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
+        final ModelAndView mav = new ModelAndView("business");
+        Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
+        List<Service> serviceList = serviceService.getAllBusinessServices(businessId).orElse(new ArrayList<>());
 
+        mav.addObject("business",business);
+        mav.addObject("serviceList", serviceList);
+        return mav;
+    }
 
 }
