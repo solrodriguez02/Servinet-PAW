@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <html>
 <head>
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/logo.png'/>">
     <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
@@ -10,7 +11,7 @@
     <div class="nav-bar page">
         <a href="${pageContext.request.contextPath}/">
             <div class="logo-img-container">
-                <img class="img" src="${pageContext.request.contextPath}/resources/logo.png" alt="Logo Servinet">
+                <img class="img" src="${pageContext.request.contextPath}/resources/servinet.png" alt="Logo Servinet">
             </div>
         </a>
         <div class="nav-items">
