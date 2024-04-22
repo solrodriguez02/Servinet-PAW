@@ -28,7 +28,7 @@
 
 .appointment-box {
     background-color: white;
-    width: 100%;
+    /*width: 100%;*/
     height: 35px;
     display: flex;
     justify-content: flex-start;
@@ -44,9 +44,10 @@
     margin-right: auto
 }
 
-.appointment-container{
+.appointments-container, .appointment-container{
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 .appointment-field {
     padding-left: 30px;
@@ -57,54 +58,114 @@
     width: 150px;
 }
 
-.service-day {
+.service-name {
     text-decoration: none;
     color: #6c6fff;
-    width: 170px;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .time {
-    width: 155px;
+    width: 165px;
     display: flex;
     color: #969696;
-    justify-content: center;
+
+}
+.id{
+    width: 40px;
+    color: #969696;
 }
 
 i {
     width: 10px;
     height: 10px;
+    padding-right: 5px;
 }
 
 body {
     text-overflow: ellipsis;
 }
 
-.action-container{
-    margin-left: 40px;
+.decision-container{
     display: flex;
     flex-direction: row;
-    justify-content: center;
 }
-.action-btn {
+.decision-btn{
 
     /*all: unset;height: 110%;
     width: 110%;*/
     border: none;
+    background-color: transparent;
     cursor: pointer;
-    width: 100%;
-    height: 30px;
-    margin-inline: 20px;
+    width: 60px;
+    height: 50px;
+    margin-inline: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+.accept-btn :hover{
+    color: #38DE35;
+    background-color: #38DE35;
+}
+
+.deny-btn :hover{
+    background-color: #E24646;
+    color: #E24646;
+}
+.accordion-btn{
+    cursor: pointer;
+    width: 30px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+}
 
 .accept-icon {
     color: #38DE35;
-
 }
 
 .deny-icon {
     color: #E24646;
     rotate: 45deg;
+}
+
+.correct-btn {
+    margin-top: -10px;
+}
+
+.accordion-container {
+    background-color: #DADCE0;
+    color: #3d3d3d;
+    height: 50px;
+    display: none;
+    padding-top: 40px;
+    margin-top: -20px;
+    border-radius: 0 0 16px 16px;
+    position: relative;
+    z-index: -1;
+}
+
+.accordion-btn {
+    display: flex;
+    justify-items: center;
+    padding-right: 25px;
+}
+
+.accordion-btn.active {
+    rotate: 180deg;
+}
+
+.appointment-container.active .accordion-container{
+    display: flex;
+}
+
+.location {
+    display: flex;
+    justify-content: center;
 }

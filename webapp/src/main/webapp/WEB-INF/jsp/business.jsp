@@ -24,21 +24,37 @@
         <button >Pendientes</button>
         <button>Solicitudes</button>
     </div>
-    <div class="appointment-container">
+    <div class="appointments-container">
         <c:forEach items="${requestedAppointments}" var="appointment" varStatus="loop">
-            <div class="box appointment-box" id="${loop.count}">
-                <span class="appointment-field day"><c:out value="${appointment.startDate.dayOfWeek} ${appointment.startDate.dayOfMonth} ${appointment.startDate.month}"/></span>
-                <span class="appointment-field time"><i class="material-icons icon">schedule</i><c:out value="${appointment.startDate.hour}:${appointment.startDate.minute}"/>
-                    <c:if test="${serviceMap[appointment.serviceid].duration}>0">
-                        <c:out value="${appointment.endDate.hour}:${appointment.endDate.minute}"/>
-                    </c:if>
-                </span>
-                <a class="appointment-field service-day" href="${pageContext.request.contextPath}/servicio/${appointment.serviceid}">
-                    <c:out value="${serviceMap[appointment.serviceid].name}"/>
-                </a>
-                <div class="decision-container">
-                    <button onclick="acceptAppointment(${appointment.id},true,${loop.count})" class=" decision-btn" id="decision-btn"><i class="material-icons  accept-icon">check</i></button>
-                    <button onclick="acceptAppointment(${appointment.id},false,${loop.count})" class="decision-btn"><i class="material-icons  deny-icon">add</i></button>
+            <div class="appointment-container" id="${loop.count}">
+                <div class="box appointment-box">
+                    <span class="appointment-field day"><c:out value="${appointment.startDateString}"/></span>
+                    <span class="appointment-field time"><i class="material-icons icon">schedule</i>    <c:out value="${appointment.startDateTimeString}"/>
+                        <c:if test="${serviceMap[appointment.serviceid].duration}>0">
+                            <c:out value="${appointment.endDateTimeString}"/>
+                        </c:if>
+                    </span>
+                    <a class="appointment-field service-name" href="${pageContext.request.contextPath}/servicio/${appointment.serviceid}">
+                        <c:out value="${serviceMap[appointment.serviceid].name}"/>
+                    </a>
+                    <span class="appointment-field id"> #<c:out value="${appointment.id}"/></span>
+                    <div class="decision-container appointment-field correct-btn">
+                        <button onclick="acceptAppointment(${appointment.id},true,${loop.count})" class="decision-btn accept-btn" ><i class="material-icons  icon accept-icon">check</i></button>
+                        <button onclick="acceptAppointment(${appointment.id},false,${loop.count})" class="decision-btn decision-btn"><i class="material-icons  deny-icon">add</i></button>
+                    </div>
+                    <button class="appointment-field accordion-btn correct-btn" onclick="showAccordion(${loop.count},this)">
+                        <i class="material-icons icon">arrow_drop_down</i>
+                    </button>
+                </div>
+                <div class="accordion-container">
+                    <span class="appointment-field location"><i class="material-icons icon">location_on</i>
+                        Ubicacion:
+                        <c:choose>
+                        <c:when test="${serviceMap[appointment.serviceid].homeService}" >
+                            <c:out value="${appointment.location}"/></c:when>
+                        <c:otherwise>La del servicio</c:otherwise>
+                        </c:choose>
+                    </span>
                 </div>
             </div>
         </c:forEach>
@@ -47,7 +63,6 @@
         </c:if>
     </div>
 </div>
-
 
 </body>
 </html>
@@ -79,21 +94,6 @@
         .catch(error => {
             console.error('Error de red:', error);
         });
-        /*
-                const form = new FormData();
-                form.append("accepted", accepted.toString() )
-
-        const options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            },
-            body: form
-        };
-
-*/
-
-
 /*
       console.log(form)
         fetch(url, options)
@@ -114,37 +114,9 @@
     }
 
 
-/*
+    function showAccordion( id, btn ) {
+            btn.classList.toggle('active')
+            document.getElementById(id).classList.toggle('active')
+    }
 
-$.ajax({
-            url : url,
-            method: 'POST',
-            data : {
-                accepted: true
-            },
-            success : function() {
-                console.log('Solicitud POST enviada exitosamente');
-                document.getElementById(componentId).style.display = "none";
-            },
-            error: function(e){
-                console.log("ERROR: ", e);
-            }
-        });
-    $(document).ready(function() {
-        $('#decision-btn').click(function() {
-            var url = '/java/jdk-install';
-            $.getJSON(url, function(data) {
-                $('title').empty();
-                $('title').append(data.title);
-                $("meta[name='Keywords']").attr("content", data.keywords);
-                $("meta[name='Description']").attr("content", data.description);
-                $('article').empty();
-                $('article').append(data.content);
-                console.log(data);
-                console.log($("meta[name='Keywords']").attr("content"));
-                console.log($("meta[name='Description']").attr("content"));
-            });
-            return false;
-        });
-    });*/
 </script>
