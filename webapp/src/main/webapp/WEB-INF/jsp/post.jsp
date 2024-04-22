@@ -74,7 +74,11 @@
             <p class="label">Duracion minima del servicio (en minutos):</p>
             <input type="number" class="input" name="minimalduration" />
         </label>
-        <input type="submit" value="Publicar" class="submitBtn">
+
+        <div class="align-center btns-container">
+            <a class="none-decoration" href="${pageContext.request.contextPath}/"><input type="button" value="Cancelar" class="cancelBtn"></a>
+            <input type="submit" value="Publicar" class="btn submit-btn">
+        </div>
     </form>
 </div>
 </body>

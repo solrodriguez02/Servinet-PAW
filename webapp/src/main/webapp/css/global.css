@@ -105,10 +105,12 @@ body {
     cursor: pointer;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
+    color: white;
 }
 
 .btn:hover {
     background-color: #7475ff;
+    transform: translateY(-2px);
 }
 
 .btn-text {

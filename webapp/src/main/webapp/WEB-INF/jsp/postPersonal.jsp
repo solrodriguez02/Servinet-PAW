@@ -49,7 +49,9 @@
             <input type="text" class="input" name="ubicacion-negocio" placeholder="Ingresa tu teléfono para que tus clientes puedan contactarse"/>
         </label>
 
-        <input type="submit" value="Siguiente" class="submitBtn">
+        <div class="align-center btns-container">
+            <input type="submit" value="Siguiente" class="btn submit-btn">
+        </div>
     </form>
 </div>
 </body>

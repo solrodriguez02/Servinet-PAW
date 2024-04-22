@@ -15,7 +15,7 @@ body{
 .form {
     background-color: white;
     width: 700px;
-    border-radius: 8px;
+    border-radius: 15px;
     padding: 20px 40px;
     box-shadow: 0 10px 25px rgba(92, 99, 105, .2);
 }
@@ -45,24 +45,6 @@ select.input {
     font-size: 16px;
 }
 
-.submitBtn {
-    display: block;
-    margin-left: 5%;
-    padding: 15px 30px;
-    border: none;
-    background-color: #585bfa;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 30px;
-}
-
-.submitBtn:hover {
-    background-color: #6c6fff;
-    transform: translateY(-2px);
-}
-
 .form-title {
     text-align: center;
     margin-bottom: 10px;
@@ -75,22 +57,17 @@ select.input {
     font-size: 16px;
 }
 
-.options {
-    display: flex;
-    justify-content: flex-end;
-}
-
 .cancelBtn {
-    display: block;
-    margin-left: auto;
-    padding: 15px 30px;
+    padding: 10px 25px;
     border: none;
     background-color: white;
     color: #ff4d4d;
-    border-radius: 6px;
+    border-radius: 25px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 15px;
 }
 
 .cancelBtn:hover {
@@ -98,6 +75,10 @@ select.input {
     transform: translateY(-2px);
 }
 
-.options a {
-    text-decoration: none;
+.submit-btn {
+    padding: 10px 25px !important;
+}
+
+.btns-container {
+    margin: 20px 0;
 }
