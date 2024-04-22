@@ -103,4 +103,9 @@ public class ServiceServiceImpl implements ServiceService {
     public Optional<List<Service>> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
     }
+
+    @Override
+    public List<Service> getRecommendedServices() {
+        return serviceDao.getRecommendedServices();
+    }
 }

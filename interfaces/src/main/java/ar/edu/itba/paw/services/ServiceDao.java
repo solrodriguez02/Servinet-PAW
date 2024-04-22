@@ -18,4 +18,6 @@ public interface ServiceDao {
     List<Service> getServices(int page);
     List<Service> getServicesFilteredBy(int page, String category, String[] neighbourhoods, int rating, String query);
     int getServiceCount(String category, String[] neighbourhoods,String query);
+    List<Service> getRecommendedServices();
+
 }

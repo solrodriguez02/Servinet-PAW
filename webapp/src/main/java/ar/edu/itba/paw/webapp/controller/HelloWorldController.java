@@ -73,6 +73,8 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("home");
         mav.addObject("categories", categories);
         mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("TBDPricing", TBDPricing);
+        mav.addObject("recommendedServices", service.getRecommendedServices());
         return mav;
     }
 
@@ -97,7 +99,6 @@ public class HelloWorldController {
         mav.addObject("resultsAmount", service.getServiceCount(category, neighbourhoodFilters,query));
         mav.addObject("pageCount", service.getPageCount(category, neighbourhoodFilters,query));
         mav.addObject("ratings", ratings);
-        mav.addObject("TBDPricing", TBDPricing);
         return mav;
     }
 

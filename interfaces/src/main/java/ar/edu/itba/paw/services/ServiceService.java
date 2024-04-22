@@ -16,4 +16,6 @@ public interface ServiceService {
     int getServiceCount(String category, String[] location,String searchQuery);
     int getPageCount(String category, String[] location,String searchQuery);
     Optional<List<Service>> getAllBusinessServices(long businessid);
+    List<Service> getRecommendedServices();
+
 }

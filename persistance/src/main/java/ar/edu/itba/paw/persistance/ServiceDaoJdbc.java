@@ -115,4 +115,11 @@ public class ServiceDaoJdbc implements ServiceDao {
         return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
     }
 
- }
+    @Override
+    public List<Service> getRecommendedServices() {
+        final List<Service> list = jdbcTemplate.query("SELECT * from services ORDER BY id DESC LIMIT 10" , ROW_MAPPER);
+        return list;
+    }
+
+
+}

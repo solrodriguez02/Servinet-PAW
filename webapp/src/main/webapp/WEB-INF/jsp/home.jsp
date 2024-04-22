@@ -4,6 +4,7 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/home.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/css/services.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
@@ -74,6 +75,43 @@
 
     <div class="show-btn-container">
         <button class="show-btn" id="toggleLocationButton" onclick="toggleLocation()">Mostrar mas</button>
+    </div>
+
+    <div class="recommended-services-containers">
+        <h3 class="container-text">Servicios recomendados</h3>
+        <c:forEach items="${recommendedServices}" var="item">
+        <div class="service-box">
+            <a class="service-text" href="${pageContext.request.contextPath}/servicio/${item.id}">
+                <div class="service-data-container">
+                    <div class="service-img-container">
+                        <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="Imagen del servicio">
+                    </div>
+                    <div class="service-info">
+                        <div class="service-header">
+                            <h3> <c:out value="${item.name}"/></h3>
+                            <p class="align-right">$
+                                <c:choose>
+                                <c:when test="${item.pricing == TBDPricing}">
+                                <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:out value="${item.price}"/>
+                                </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                        <p class="item"> <i class="material-icons">location_on</i>
+                            <c:if test="${not empty item.location}">
+                                <c:out value="${item.location}"/>,
+                            </c:if>
+                            <c:out value="${item.neighbourhoodAvailable}"/>
+                        </p>
+                        <p class="item"> <c:out value="${item.description}"/></p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        </c:forEach>
     </div>
 
     <div class="btn-container">
