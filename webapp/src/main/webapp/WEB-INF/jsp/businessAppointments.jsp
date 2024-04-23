@@ -25,10 +25,10 @@
                 <div class="box appointment-box">
                     <span class="appointment-field day"><c:out value="${appointment.startDateString}"/></span>
                     <span class="appointment-field time"><i class="material-icons icon">schedule</i>    <c:out value="${appointment.startDateTimeString}"/>
-                <c:if test="${serviceMap[appointment.serviceid].duration}>0">
-                    <c:out value="${appointment.endDateTimeString}"/>
-                </c:if>
-            </span>
+                    <c:if test="${serviceMap[appointment.serviceid].duration}>0">
+                        <c:out value="${appointment.endDateTimeString}"/>
+                    </c:if>
+                    </span>
                     <a class="appointment-field service-name" href="${pageContext.request.contextPath}/servicio/${appointment.serviceid}">
                         <c:out value="${serviceMap[appointment.serviceid].name}"/>
                     </a>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </c:forEach>
-        <c:if test="${appointmentList.size()}==0">
+        <c:if test="${ empty appointmentList}">
             <p>No se han encontrado resultados</p>
         </c:if>
     </div>

@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.form.ResponseForm;
@@ -85,7 +84,9 @@ public class UserController {
 
         mav.addObject("appointmentList", appointmentList);
         mav.addObject("confirmed",confirmed);
+        mav.addObject("isUser", true);
         return mav;
     }
+
 
 }

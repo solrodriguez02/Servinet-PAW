@@ -33,7 +33,7 @@
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
                     <a href="${pageContext.request.contextPath}/2/perfil">Mi perfil</a>
-                    <a href="${pageContext.request.contextPath}/2/turnos">Mis turnos</a>
+                    <a href="${pageContext.request.contextPath}/2/turnos/?confirmados=true">Mis turnos</a>
                     <a href="${pageContext.request.contextPath}/2/negocios">Mis negocios</a>
                 </div>
             </div>

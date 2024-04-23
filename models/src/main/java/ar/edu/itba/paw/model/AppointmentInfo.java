@@ -27,4 +27,5 @@ public class AppointmentInfo extends BasicAppointment {
     public String getBusinessTelephone() {
         return businessTelephone;
     }
+
 }
