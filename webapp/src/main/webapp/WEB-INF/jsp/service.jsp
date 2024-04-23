@@ -39,7 +39,9 @@
                         <c:if test="${not empty service.location}">
                             <c:out value="${service.location}, "/>
                         </c:if>
-                        <c:out value="${service.neighbourhoodAvailable}"/>
+                        <c:forEach var="neighbour" items="${service.neighbourhoodAvailable}">
+                            <c:out value="${neighbour}"/>
+                        </c:forEach>
                     </p>
                     <p class="text-with-icon"> <i class="material-icons icon">house</i>
                         <c:choose>
