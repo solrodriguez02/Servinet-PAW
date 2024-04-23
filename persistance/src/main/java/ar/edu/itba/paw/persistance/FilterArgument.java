@@ -39,8 +39,9 @@ public class FilterArgument {
         return this;
     }
 
-    public String formSqlSentence() {
-        StringBuilder sql = new StringBuilder("where true "); //(p ^ 1) === p
+    public String formSqlSentence(String subquery) {
+        StringBuilder sql = new StringBuilder(subquery);
+        sql.append("where true ");//(p ^ 1) === p
         for (Map.Entry<FilterTypes, Object> entries : filters.entrySet()) {
                 sql.append("and ").append(entries.getKey()).append(" ");
         }
@@ -60,7 +61,7 @@ public class FilterArgument {
 
         private enum FilterTypes {
             CATEGORY("category = ? "),
-            LOCATION("serviceid in (select neighbourhoodservices where neighbourhood = any (?) )"),
+            LOCATION("? && neighbourhoods "),
             SERVICE_SEARCH("lower(servicename) like concat('%',lower(?),'%')");
 
             private final String value; //valores a ser filtrados/buscados en SQL
