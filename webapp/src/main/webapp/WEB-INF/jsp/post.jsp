@@ -28,22 +28,20 @@
             Descripcion:
             <input type="text" class="input" name="descripcion" placeholder="Describi tu servicio"/>
         </label>
-
-        <label id="label">
                 Ubicacion:
+        Seleccione barrios disponibles
             <label>
                 <input type="checkbox" id="homeservice" name="homeserv" />
                 <label for="homeservice">Servicio a domicilio</label>
             </label>
             <div class="service-div">
-                <select name="neighbourhood" class="input" >
-                    <c:forEach items="${neighbours}" var="item">
-                        <option value="${item}">${item.value}</option>
-                    </c:forEach>
-                </select>
-                <input type="text" class="input" name="ubicacion" value="" id="locationInput" placeholder="Ingresa la ubicacion donde brindarias el servicio"/>
+                    <select name="neighbourhood" multiple checkboxes class="input" >
+                        <c:forEach items="${neighbours}" var="item">
+                            <option value="${item}">${item.value}</option>
+                        </c:forEach>
+                    </select>
+                <input type="text" class="input" name="ubicacion" value="" id="locationInput" placeholder="Ingresa la ubicacion donde brindarias el servicio" style="height: fit-content; width: 60%"/>
             </div>
-        </label>
 
         <label  >
             <p class="label">Precio:
@@ -101,6 +99,30 @@
         }
     })
 
+    document.querySelectorAll('select[multiple][checkboxes] option').forEach(option => {
+        if (option.selected) {
+            option.textContent = '☑️ ' + option.textContent;
+        } else {
+            option.textContent = '🔳 ' + option.textContent;
+        }
+    });
 
+    document.querySelector('select[multiple][checkboxes]').addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        const initialPosition = e.target.parentElement.scrollTop;
+        if (e.target.tagName !== 'OPTION') return;
+        e.target.selected = !e.target.selected;
+        if (e.target.selected) {
+            e.target.textContent = e.target.textContent.replace('🔳', '☑️');
+        } else if (!e.target.selected) {
+            e.target.textContent = e.target.textContent.replace('☑️', '🔳');
+        }
+        setTimeout(() => {
+            e.target.parentElement.scrollTop = initialPosition;
+        }, 0);
+        e.target.dispatchEvent(new Event('change'));
+        return false;
+
+    });
 
 </script>
