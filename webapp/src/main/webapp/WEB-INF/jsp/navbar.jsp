@@ -22,7 +22,7 @@
                     </c:forEach>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-negocio">
                 <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
             </a>
             <!--
