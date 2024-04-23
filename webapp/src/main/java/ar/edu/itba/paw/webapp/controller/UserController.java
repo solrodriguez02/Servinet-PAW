@@ -1,8 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
@@ -10,14 +8,10 @@ import ar.edu.itba.paw.webapp.form.ResponseForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller()
 public class UserController {
@@ -25,16 +19,19 @@ public class UserController {
     private final ServiceService serviceService;
     private final UserService userService;
     private final QuestionService questionService;
-
+    private final AppointmentService appointmentService;
     //todo: autenticar q es el dueño del service
 
     @Autowired
     public UserController (@Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-                              @Qualifier("userServiceImpl") final UserService userService, @Qualifier("QuestionServiceImpl") final QuestionService questionService) {
+                              @Qualifier("userServiceImpl") final UserService userService,
+                           @Qualifier("QuestionServiceImpl") final QuestionService questionService,
+                           @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService) {
         this.businessService = businessService;
         this.serviceService = serviceService;
         this.userService = userService;
         this.questionService = questionService;
+        this.appointmentService = appointmentService;
 
     }
 
@@ -68,7 +65,8 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/2/negocios/consultas")
+    // ! USERID HARDCODEADO
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/negocios/consultas")
     public ModelAndView userServices(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userQuestions");
         // USER ID HARDCODEADO
@@ -76,5 +74,18 @@ public class UserController {
         return mav;
     }
 
+    // TODO
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/turnos/")
+    public ModelAndView userAppointments(@PathVariable("userId") final long userId, @RequestParam(name = "confirmados") final boolean confirmed) {
+
+        final ModelAndView mav = new ModelAndView("userAppointments");
+        //TODO: validar user
+
+        List<AppointmentInfo> appointmentList = appointmentService.getAllUpcomingUserAppointments(userId,confirmed).orElse(new ArrayList<>());
+
+        mav.addObject("appointmentList", appointmentList);
+        mav.addObject("confirmed",confirmed);
+        return mav;
+    }
 
 }

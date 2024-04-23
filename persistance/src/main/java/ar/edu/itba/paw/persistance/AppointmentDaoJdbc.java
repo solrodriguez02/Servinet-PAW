@@ -1,20 +1,16 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.Appointment;
+import ar.edu.itba.paw.model.AppointmentInfo;
 import ar.edu.itba.paw.services.AppointmentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.thymeleaf.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.sql.Array;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -24,8 +20,13 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
-    private static final RowMapper<Appointment> ROW_MAPPER = (rs, rowNum) -> new Appointment(rs.getInt("appointmentid"), rs.getInt("serviceid"), rs.getInt("userid"),
+    private static final RowMapper<Appointment> APPOINTMENT_ROW_MAPPER = (rs, rowNum) -> new Appointment(rs.getInt("appointmentid"), rs.getInt("serviceid"), rs.getInt("userid"),
             rs.getTimestamp("startDate").toLocalDateTime(), rs.getTimestamp("endDate").toLocalDateTime(),rs.getString("location") ,rs.getBoolean("confirmed"));
+
+    private static final RowMapper<AppointmentInfo> APPOINTMENT_INFO_ROW_MAPPER = (rs, rowNum) -> new AppointmentInfo(rs.getInt("appointmentid"), rs.getInt("serviceid"),
+            rs.getTimestamp("startDate").toLocalDateTime(), rs.getTimestamp("endDate").toLocalDateTime(),rs.getString("location") ,rs.getBoolean("confirmed"),
+            rs.getString("servicename"),rs.getString("businessemail"),rs.getString("businesstelephone") );
+
 
     @Autowired
     public AppointmentDaoJdbc(final DataSource ds){
@@ -36,13 +37,13 @@ public class AppointmentDaoJdbc implements AppointmentDao {
 
     @Override
     public Optional<Appointment> findById(long id) {
-        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE appointmentid = ?", new Object[] {id}, ROW_MAPPER);
+        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE appointmentid = ?", new Object[] {id}, APPOINTMENT_ROW_MAPPER);
         return list.stream().findFirst();
     }
 
     @Override
     public Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid) {
-        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE serviceid = ? and startdate > ? ", new Object[] {serviceid, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
+        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE serviceid = ? and startdate > NOW() ", new Object[] {serviceid }, APPOINTMENT_ROW_MAPPER);
         return Optional.of(list);
     }
 
@@ -50,13 +51,30 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     public Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed){
 
         List<Object> params = new ArrayList<>(serviceIds);
-        params.add(Timestamp.valueOf(LocalDateTime.now()));
         params.add(confirmed);
 
         String inSql = String.join(",", Collections.nCopies(serviceIds.size(), "?"));
-        final List<Appointment> list = jdbcTemplate.query(String.format("SELECT * from appointments WHERE serviceid in (%s) and startdate > ? and confirmed = ? ",inSql), params.toArray(), ROW_MAPPER);
+        final List<Appointment> list = jdbcTemplate.query(String.format("SELECT * from appointments WHERE serviceid in (%s) and startdate > NOW() and confirmed = ? ",inSql), params.toArray(), APPOINTMENT_ROW_MAPPER);
         return Optional.of(list);
     }
+
+    @Override
+    public Optional<List<AppointmentInfo>> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+        final List<AppointmentInfo> list = jdbcTemplate.query(
+                "SELECT info.* , businessemail, businesstelephone\n" +
+                        "    FROM business as b RIGHT JOIN\n" +
+                        "    (SELECT a.*, servicename, businessid FROM\n" +
+                        "        (SELECT id, servicename, businessid FROM services) as s\n" +
+                        "        RIGHT JOIN\n" +
+                        "        (SELECT * FROM appointments\n" +
+                        "                WHERE userid = ? and confirmed= ? and startdate > NOW()) as a\n" +
+                        "                ON a.serviceid = s.id) as info\n" +
+                        "on info.businessid = b.businessid;", new Object[] {userid, confirmed }, APPOINTMENT_INFO_ROW_MAPPER);
+        return Optional.of(list);
+    }
+
+
+
     @Override
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
 
