@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Appointment;
 
 import javax.mail.MessagingException;
 
+import ar.edu.itba.paw.model.PasswordRecoveryCode;
 import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
 
@@ -11,6 +12,9 @@ import java.util.List;
 
 public interface EmailService {
 
+    public void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode) throws MessagingException;
+
+    public void confirmNewPassword(User user) throws MessagingException;
     // ! tuve q agregar dependencia javax.mail en pom
     public void requestAppointment(Appointment appointment, User client) throws MessagingException ;
 

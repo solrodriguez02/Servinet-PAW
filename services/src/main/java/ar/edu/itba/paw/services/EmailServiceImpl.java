@@ -49,6 +49,21 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
+    public void recoverPassword(User user, PasswordRecoveryCode code) throws MessagingException {
+        final Context ctx = new Context(LOCALE);
+        ctx.setVariable("user", user);
+        ctx.setVariable("token", code.getCode());
+        sendMail(user.getEmail(), String.format("%s- Cuenta de Servinet de @%s", EmailTypes.PASSWORD_RECOVER.getSubject(""),user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getRecoverPasswordTemplate());
+    }
+    @Async
+    @Override
+    public void confirmNewPassword(User user) throws MessagingException {
+        final Context ctx = new Context(LOCALE);
+        ctx.setVariable("user", user);
+        sendMail(user.getEmail(), String.format("Nueva contraseña definida con éxito para @%s - Servinet", user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getConfirmNewPasswordTemplate());
+    }
+    @Async
+    @Override
     public void confirmedAppointment(Appointment appointment) throws MessagingException {
         Service service = serviceService.findById(appointment.getServiceid()).orElseThrow(NoSuchElementException::new);
         prepareAndSendAppointmentMails(appointment,EmailTypes.ACCEPTED, service, false);
