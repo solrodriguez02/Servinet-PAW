@@ -11,17 +11,14 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 public class ServiceDaoJdbc implements ServiceDao {
     private static final RowMapper<Service> ROW_MAPPER = (rs, rowNum) -> new Service(rs.getLong("id"),
             rs.getLong("businessid"), rs.getString("servicename"),
             rs.getString("servicedescription"), rs.getBoolean("homeservice"),
-            rs.getString("location"),Neighbourhoods.findByValue(rs.getString("neighbourhood")),
+            rs.getString("location"),(String[])rs.getObject("neighbourhood"),
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
             rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
@@ -41,7 +38,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods neighbourhood, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);
@@ -54,9 +51,11 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
         userData.put("imageid", imageId != 0 ? imageId : null);
-        userData.put("neighbourhood", neighbourhood.getValue());
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location,neighbourhood, category, minimalduration, pricing, price, additionalCharges, imageId);
+        for(Neighbourhoods n: neighbourhoods){
+            jdbcTemplate.update("INSERT INTO servicesbylocation (serviceid, neighbourhood) VALUES (?, ?)", generatedId, n.getValue());
+        }
+        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Arrays.stream(neighbourhoods).map(Enum::name).toArray(String[]::new), category, minimalduration, pricing, price, additionalCharges, imageId);
     }
 
     @Override

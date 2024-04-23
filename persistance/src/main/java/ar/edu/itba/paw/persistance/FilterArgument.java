@@ -60,7 +60,7 @@ public class FilterArgument {
 
         private enum FilterTypes {
             CATEGORY("category = ? "),
-            LOCATION("neighbourhood = any (?) "),
+            LOCATION("serviceid in (select neighbourhoodservices where neighbourhood = any (?) )"),
             SERVICE_SEARCH("lower(servicename) like concat('%',lower(?),'%')");
 
             private final String value; //valores a ser filtrados/buscados en SQL
