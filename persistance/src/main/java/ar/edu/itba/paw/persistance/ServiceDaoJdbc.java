@@ -15,13 +15,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Arrays;
 
 @Repository
 public class ServiceDaoJdbc implements ServiceDao {
     private static final RowMapper<Service> ROW_MAPPER = (rs, rowNum) -> new Service(rs.getLong("id"),
             rs.getLong("businessid"), rs.getString("servicename"),
             rs.getString("servicedescription"), rs.getBoolean("homeservice"),
-            rs.getString("location"),Neighbourhoods.findByValue(rs.getString("neighbourhood")),
+            rs.getString("location"),(String[])rs.getArray("neighbourhoods").getArray(),
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
             rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
@@ -36,12 +37,12 @@ public class ServiceDaoJdbc implements ServiceDao {
    }
     @Override
     public Optional<Service> findById(long id) {
-        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE id = ?", new Object[] {id}, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("SELECT * from (select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id,s.businessid) sq  WHERE id = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods neighbourhood, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);
@@ -54,21 +55,28 @@ public class ServiceDaoJdbc implements ServiceDao {
         userData.put("price", price);
         userData.put("additionalcharges", additionalCharges);
         userData.put("imageid", imageId != 0 ? imageId : null);
-        userData.put("neighbourhood", neighbourhood.getValue());
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location,neighbourhood, category, minimalduration, pricing, price, additionalCharges, imageId);
+        if(!homeservice) { //TODO: implementar esto bien con spring security
+            jdbcTemplate.update("insert into nbservices (serviceid,neighbourhood) values (?,?)", generatedId, neighbourhoods[0].getValue());
+        }
+        else {
+            for (Neighbourhoods n : neighbourhoods) {
+                jdbcTemplate.update("insert into nbservices (serviceid,neighbourhood) values (?,?)", generatedId, n.getValue());
+            }
+        }
+        return new Service(generatedId.longValue(), businessid, name, description, homeservice, location, Arrays.stream(neighbourhoods).map(Enum::name).toArray(String[]::new), category, minimalduration, pricing, price, additionalCharges, imageId);
     }
 
     @Override
     public Optional<List<Service>> getAllServices(){
-        final List<Service> list = jdbcTemplate.query("SELECT * from services", ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ;", ROW_MAPPER);
         return Optional.of(list);
 
     }
 
     @Override
     public Optional<List<Service>> getAllBusinessServices(long businessId){
-        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE businessid = ? ", new Object[] {businessId  }, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
         return Optional.of(list);
     }
 
@@ -87,14 +95,14 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public List<Service> getServices(int page) {
-        final List<Service> list = jdbcTemplate.query("SELECT * from services ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {page*10}, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {page*10}, ROW_MAPPER);
         return list;
     }
 
     @Override
     public List<Service> getServicesFilteredBy(int page, String category, String[] location,String searchQuery) {
     FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page);
-    String sqlQuery= "SELECT * from services " + filterArgument.formSqlSentence();
+    String sqlQuery= "select * from " + filterArgument.formSqlSentence("(select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ") ;
     Object[] values = filterArgument.getValues().toArray();
 
     return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
@@ -108,7 +116,7 @@ public class ServiceDaoJdbc implements ServiceDao {
             return jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);
 
         }
-        String sqlQuery= "SELECT count(id) from services " + filterArgument.formSqlSentence();
+        String sqlQuery=  filterArgument.formSqlSentence("SELECT count(id) from (select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ");
         return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
     }
 

@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.model;
 
+import java.util.Arrays;
+
 public class Service {
     private long id;
     private long businessid;
@@ -7,16 +9,16 @@ public class Service {
     private String description;
     private Boolean homeService;
     private String location;
-    private Neighbourhoods neighbourhoodAvailable;
+    private final String[] neighbourhoodAvailable;
     private int duration;
     private PricingTypes pricing;
     private String price;
     private Categories category;
     private Boolean additionalCharges;
-    private long imageId;
+    private final long imageId;
 
     // Constructor
-    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,Neighbourhoods neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges,long imageId) {
+    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,String[] neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges,long imageId) {
         this.id = id;
         this.businessid = businessid;
         this.name = name;
@@ -100,13 +102,11 @@ public class Service {
         this.duration = duration;
     }
 
-    public String getNeighbourhoodAvailable() {
-        return neighbourhoodAvailable.getValue();
+    public String[] getNeighbourhoodAvailable() {
+        return neighbourhoodAvailable;
     }
 
-    public void setNeighbourhoodAvailable(String neighbourhoodAvailable) {
-        this.neighbourhoodAvailable = Neighbourhoods.findByValue(neighbourhoodAvailable);
-    }
+
 
     public String getPricing() {
         return pricing.getValue();

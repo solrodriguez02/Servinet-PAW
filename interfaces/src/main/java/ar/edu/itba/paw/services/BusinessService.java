@@ -19,7 +19,7 @@ public interface BusinessService {
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);
 
-    Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId);
+    Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId);
 
     void deleteService(long serviceId);
 }

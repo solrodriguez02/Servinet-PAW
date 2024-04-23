@@ -43,11 +43,18 @@ CREATE TABLE IF NOT EXISTS services (
     imageId INT references images(imageid),
     neighbourhood VARCHAR(255)
     );
---script para generar la nueva columna neighbourhood
+CREATE TABLE IF NOT EXISTS nbservices(insertid serial primary key ,
+    serviceid int references services(id) on delete cascade ,
+    neighbourhood varchar(60)
+);
+
+--script para generar la nueva tabla
 --begin transaction;
 --alter table services add neighbourhood varchar(255);
 --update services set neighbourhood = split_part(location,';',1);
 --update services set location = split_part(location,';',2);
+--create table nbservices(insertid serial primary key, serviceid int references services(id) on delete cascade, neighbourhood text);
+--insert into nbservices(serviceid,neighbourhood) select id,neighbourhood from services;
 --commit;
 
 CREATE TABLE IF NOT EXISTS appointments (

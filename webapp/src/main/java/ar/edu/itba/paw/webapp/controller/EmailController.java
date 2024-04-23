@@ -93,7 +93,7 @@ public class EmailController {
     @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
     @RequestParam(value="categoria") final Categories category,
     @RequestParam(value="imageInput") final MultipartFile image,
-    @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
+    @RequestParam(value="neighbourhood") final Neighbourhoods[] neighbourhood,
     @RequestParam(value="pricingtype") final PricingTypes pricingtype,
     @RequestParam(value="precio") final String price,
     @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,

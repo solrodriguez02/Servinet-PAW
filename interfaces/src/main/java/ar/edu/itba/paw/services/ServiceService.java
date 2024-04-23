@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ServiceService {
     Optional <List<Service>> getAllServices();
     Optional<Service> findById(long id);
-    Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId);
+    Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId);
     Service edit(long serviceid, String field, String newvalue);
     void delete(Service service, Business business);
 
