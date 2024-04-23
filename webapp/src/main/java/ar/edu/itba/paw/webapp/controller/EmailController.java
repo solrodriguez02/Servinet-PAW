@@ -3,17 +3,18 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
+import ar.edu.itba.paw.webapp.form.AppointmentForm;
+import ar.edu.itba.paw.webapp.form.ServiceForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,50 +32,47 @@ public class EmailController {
     private final UserService userService;
     private final AppointmentService appointmentService;
     private final ManageServiceService manageServiceService;
+    private final HelloWorldController helloWorldController;
+    private final SecurityService securityService;
     private final ImageService is;
     @Autowired
     public EmailController(
             @Qualifier("emailServiceImpl") final EmailService emailService, @Qualifier("userServiceImpl") final UserService userService,@Qualifier("imageServiceImpl") final ImageService is,
             @Qualifier("serviceServiceImpl") final ServiceService serviceService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
-            @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+            @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService,
+            @Qualifier("securityServiceImpl") final SecurityService securityService,
+            HelloWorldController helloWorldController){
         this.emailService = emailService;
         this.serviceService = serviceService;
         this.userService = userService;
         this.appointmentService = appointmentService;
         this.manageServiceService = manageServiceService;
+        this.securityService = securityService;
         this.is = is;
+        this.helloWorldController = helloWorldController;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/nuevo-turno/{serviceId:\\d+}")
-    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId,
-                                    @RequestParam(value = "nombre") final String name,
-                                    @RequestParam(value = "apellido") final String surname,
-                                    @RequestParam(value = "lugar") final String location,
-                                    @RequestParam(value = "email") final String email,
-                                    @RequestParam(value = "telefono") final String telephone,
-                                    @RequestParam(value = "fecha") final String date
-    ) {
-        User newuser = userService.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = userService.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            userService.changeUsername(newuser.getUserId(),newUsername);
-        }else {
-            if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
-                //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
-                return new ModelAndView("redirect:/contratar-servicio/"+serviceId);
-            }
-        }
+    @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
+    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId, @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors) {
+        // User newuser = userService.findByEmail(securityemail).orElse(null);
+        // if (newuser == null){
+        //     newuser = userService.create("default",name,"default",surname,email,telephone);
+        //     String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
+        //     userService.changeUsername(newuser.getUserId(),newUsername);
+        // }else {
+        //     if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
+        //         //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
+        //         return new ModelAndView("redirect:/contratar-servicio/"+serviceId);
+        //     }
+        // }
         Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
 
-        LocalDateTime startDate = LocalDateTime.parse(date);
-        Appointment createdAppointment = appointmentService.create(serviceId, newuser.getUserId(),startDate, startDate.plusMinutes(service.getDuration()), location );
+        Appointment createdAppointment = appointmentService.create(serviceId, securityService.getCurrentUser().get().getUserId(),form.getDate(), form.getDate().plusMinutes(service.getDuration()), form.getLocation() );
 
         try {
             //* si ya tiene el Service => ya lo paso x param
-            emailService.requestAppointment(createdAppointment, newuser);
-
+            emailService.requestAppointment(createdAppointment, securityService.getCurrentUser().get());
         } catch (MessagingException e ){
             System.err.println(e.getMessage());
         }
@@ -146,26 +144,19 @@ public class EmailController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
-    public ModelAndView createService(@PathVariable("businessId") final long businessId,
-    @RequestParam(value = "titulo") final String title,
-    @RequestParam(value="descripcion") final String description,
-    @RequestParam(value="homeserv",required = false, defaultValue = "false") final boolean homeserv,
-    @RequestParam(value="ubicacion",required = false, defaultValue = "") final String location,
-    @RequestParam(value="categoria") final Categories category,
-    @RequestParam(value="imageInput") final MultipartFile image,
-    @RequestParam(value="neighbourhood") final Neighbourhoods neighbourhood,
-    @RequestParam(value="pricingtype") final PricingTypes pricingtype,
-    @RequestParam(value="precio") final String price,
-    @RequestParam(value="minimalduration",defaultValue = "0") final int minimalduration,
-    @RequestParam(value="additionalCharges",defaultValue = "false") final boolean additionalCharges) throws
-    IOException {
+    public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
 
-        long imageId = image.isEmpty()? 0 : is.addImage(image.getBytes()).getImageId();
+        if (errors.hasErrors()) {
+            return helloWorldController.registerService(businessId, form);
+        }
+
+        long imageId = form.getImage().isEmpty()? 0 : is.addImage(form.getImage().getBytes()).getImageId();
         //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
-        Service service = serviceService.create(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges, imageId);
+        Service service = serviceService.create(businessId,form.getTitle(),form.getDescription(),form.getHomeserv(),form.getNeighbourhood(),form.getLocation(),form.getCategory(),form.getMinimalduration(),form.getPricingtype(),form.getPrice(),form.getAdditionalCharges(), imageId);
         try {
             emailService.createdService(service);
         } catch (MessagingException e) {
+            //usar LOGGING
             throw new RuntimeException(e);
         }
         return new ModelAndView("redirect:/servicio/"+service.getId());
@@ -189,19 +180,5 @@ public class EmailController {
         return invalidOperation(SERVICET_NON_EXISTENT);
     }
 
-    /*
-    ! TESTING {
-    @RequestMapping(method = RequestMethod.GET, path = "/trucho")
-    public ModelAndView trucho(){
-        final long serviceId = manageServiceService.createService(1,"title","description",true,Neighbourhoods.ALMAGRO,"location",Categories.BELLEZA,4,PricingTypes.PER_TOTAL,"40",true);
-        return new ModelAndView("redirect:/"+serviceId);
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/borrar/{serviceId:\\d+}")
-    public ModelAndView trucho2(@PathVariable("serviceId") final long serviceId){
-        manageServiceService.deleteService(serviceId);
-        return new ModelAndView("redirect:/borrar-servicio/"+ serviceId);
-    }
-    ! } */
 }
 
