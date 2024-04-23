@@ -1,32 +1,21 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Categories;
-import ar.edu.itba.paw.model.Neighbourhoods;
-import ar.edu.itba.paw.model.PricingTypes;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.services.ImageService;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.ManageServiceService;
-import ar.edu.itba.paw.services.BusinessService;
-import ar.edu.itba.paw.services.ServiceService;
+import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import ar.edu.itba.paw.services.UserService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.util.*;
 
 
 @Controller
@@ -38,6 +27,8 @@ public class HelloWorldController {
     private AppointmentService appointment;
     private final ManageServiceService manageServiceService;
 
+    private final SecurityService securityService;
+    private final PasswordRecoveryCodeService passwordRecoveryCodeService;
     private ImageService is;
 
     List<Categories> categories = new ArrayList<>();
@@ -46,17 +37,73 @@ public class HelloWorldController {
 
     @Autowired
     public HelloWorldController( @Qualifier("userServiceImpl") final UserService us,@Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService service,
-    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService) {
+    @Qualifier("appointmentServiceImpl") final AppointmentService appointment, @Qualifier("BusinessServiceImpl") final BusinessService bs, @Qualifier("manageServiceServiceImpl") final ManageServiceService manageServiceService, @Qualifier("passwordRecoveryCodeServiceImpl") final PasswordRecoveryCodeService passwordRecoveryCodeService, @Qualifier("securityServiceImpl") final SecurityService securityService){
         this.us = us;
         this.service = service;
         this.appointment = appointment;
         this.manageServiceService = manageServiceService;
+        this.passwordRecoveryCodeService = passwordRecoveryCodeService;
+        this.securityService = securityService;
 
         this.is=is;
         this.bs = bs;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+    }
+
+    @RequestMapping(path="/login")
+    public ModelAndView login() {
+
+        return new ModelAndView("login");
+    }
+    @RequestMapping(path="/registrarse", method=RequestMethod.GET)
+    public ModelAndView registerUser(@ModelAttribute("registerUserForm") RegisterUserForm form) {
+        final ModelAndView mav = new ModelAndView("postPersonal");
+
+        return mav;
+    }
+    @RequestMapping(path="/olvide-mi-clave", method = RequestMethod.GET)
+    public ModelAndView forgotPasswordRequest(@ModelAttribute("requestPasswordRecoveryForm") RequestPasswordRecoveryForm form) {
+        return new ModelAndView("forgotPassword");
+    }
+
+    @RequestMapping(path="/olvide-mi-clave", method = RequestMethod.POST)
+    public ModelAndView requestPasswordRecovery(@Valid @ModelAttribute("requestPasswordRecoveryForm") RequestPasswordRecoveryForm form, final BindingResult errors) {
+        if (errors.hasErrors()){
+            return forgotPasswordRequest(form);
+        }
+        try{
+            passwordRecoveryCodeService.sendCode(form.getEmail());
+        }catch(MessagingException e){
+            //usar LOGGING
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/login");
+    }
+
+    @RequestMapping(path="/restablecer-clave/{token}", method = RequestMethod.GET)
+    public ModelAndView resetPasswordRequest(@PathVariable(value = "token") final String token, @ModelAttribute("PasswordResetForm") PasswordResetForm form){
+        if (!passwordRecoveryCodeService.validateCode(UUID.fromString(token))){
+            return invalidOperation("tokeninvalido");
+        }
+        ModelAndView mv = new ModelAndView("resetPassword");
+        mv.addObject("token", token);
+        return mv;
+    }
+
+    @RequestMapping(method = RequestMethod.POST , path = "/restablecer-clave/{token}")
+    public ModelAndView resetPassword(@PathVariable(value = "token")final String token, @Valid @ModelAttribute("PasswordResetForm") PasswordResetForm form, final BindingResult errors){
+        if (errors.hasErrors()){
+            return resetPasswordRequest(token, form);
+        }
+        try {
+            passwordRecoveryCodeService.changePassword(UUID.fromString(token), form.getPassword());
+        } catch (MessagingException e) {
+            System.err.println(e.getMessage());
+        }
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/")
@@ -67,6 +114,16 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
+    public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
+        if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
+        }
+        final ModelAndView mav = new ModelAndView("postService");
+        mav.addObject("pricingTypes",pricingTypes);
+        mav.addObject("neighbours",neighbourhoods);
+        return mav;
+    }
 
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")
     public ModelAndView services(
@@ -90,12 +147,17 @@ public class HelloWorldController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
     public ModelAndView postForm(@PathVariable("businessId") final long businessId){
-        final ModelAndView mav = new ModelAndView("post");
+        final ModelAndView mav = new ModelAndView("postService");
         mav.addObject("pricingTypes",pricingTypes);
         mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
-
+    @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
+    public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {
+        final ModelAndView mav = new ModelAndView("postBusiness");
+        mav.addObject("neighbours",neighbourhoods);
+        return mav;
+    }
     /*
     @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
     public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
@@ -104,49 +166,48 @@ public class HelloWorldController {
     }
     */
 
-    @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
-    public ModelAndView personalForm(
+    @RequestMapping(method = RequestMethod.POST, path = "/registrar-negocio")
+    public ModelAndView postBusiness(@ModelAttribute("BusinessForm") @Valid final BusinessForm form, final BindingResult errors
     ) {
-        return new ModelAndView("postPersonal");
+        if (errors.hasErrors()) {
+            return registerBusiness(form);
+        }
+        ServinetAuthUserDetails userDetails = (ServinetAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = us.findByEmail(userDetails.getUsername()).orElse(null);
+        if (user == null){
+            return new ModelAndView("redirect:/login");
+        }
+        bs.createBusiness(form.getBusinessName(),user.getUserId(), form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
+        return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crear-perfiles")
-    public ModelAndView post(
-            @RequestParam(value = "nombre") final String name,
-            @RequestParam(value = "apellido") final String surname,
-            @RequestParam(value = "email") final String email,
-            @RequestParam(value = "telefono") final String telephone,
-            @RequestParam(value = "nombre-negocio") final String businessName,
-            @RequestParam(value = "email-negocio") final String businessEmail,
-            @RequestParam(value = "telefono-negocio") final String businessTelephone,
-            @RequestParam(value = "ubicacion-negocio") final String businessLocation
+//@RequestParam(value = "nombre-negocio") final String businessName,
+//@RequestParam(value = "email-negocio") final String businessEmail,
+//@RequestParam(value = "telefono-negocio") final String businessTelephone,
+//@RequestParam(value = "ubicacion-negocio") final String businessLocation
+        // Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
+        // if (newBusiness == null) {
+        //     String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
+        //     String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
+        //     String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
+        //     newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
+        // }else {
+        //     if (newBusiness.getUserId() != newuser.getUserId()){
+        //         return new ModelAndView("redirect:/registrar-datos-personales");
+        //     }
+        // }
+    @RequestMapping(method = RequestMethod.POST, path = "/registrarse")
+    public ModelAndView post(@ModelAttribute @Valid final RegisterUserForm form, final BindingResult errors
     ) {
-        User newuser = us.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = us.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            us.changeUsername(newuser.getUserId(),newUsername);
-        }else {
-            if (!newuser.getName().equals(name) || !newuser.getSurname().equals(surname)){
-                return new ModelAndView("redirect:/registrar-datos-personales");
-            }
+        if (errors.hasErrors()) {
+            return registerUser(form);
         }
-        Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
-        if (newBusiness == null) {
-            String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
-            String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
-            String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
-            newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
-        }else {
-            if (newBusiness.getUserId() != newuser.getUserId()){
-                return new ModelAndView("redirect:/registrar-datos-personales");
-            }
-        }
-        return new ModelAndView("redirect:/publicar-servicio/" + newBusiness.getBusinessid());
+        us.create(form.getUsername(),form.getName(),form.getPassword(),form.getSurname(),form.getEmail(),form.getTelephone());
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId){
+    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
 
         final ModelAndView mav = new ModelAndView("postAppointment");
         try {
