@@ -6,6 +6,7 @@ import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
@@ -114,5 +115,6 @@ public class BusinessController {
         mav.addObject("serviceList", serviceList);
         return mav;
     }
+
 
 }

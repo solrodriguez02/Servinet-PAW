@@ -10,7 +10,7 @@ public class User {
     private String telephone;
 
     private Boolean isProvider;
-
+    private long imageId;
     public String getName() {
         return name;
     }
@@ -22,6 +22,13 @@ public class User {
     public String getFullName(){
         return name + ' ' + surname;
     }
+
+    //! TODO, temporal, deberia estar en db (cambiar en profile y navbar jsp)
+    public String getProfileImg(){
+        //if ( imageId==0 )
+            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png;";
+    }
+
     public String getEmail() {
         return email;
     }
@@ -31,6 +38,10 @@ public class User {
     }
 
     public Boolean getProvider() {
+        return isProvider;
+    }
+
+    public Boolean isProvider() {
         return isProvider;
     }
 

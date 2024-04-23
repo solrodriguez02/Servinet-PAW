@@ -36,16 +36,36 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/perfil/{userId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/perfil")
     public ModelAndView profile(@PathVariable("userId") final long userId) {
         final ModelAndView mav = new ModelAndView("profile");
 
         User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList = businessService.findByAdminId(userId).orElse(new ArrayList<>());
+        List<Business> businessList = new ArrayList<>();
+        if ( user.isProvider() )
+            businessList = businessService.findByAdminId(userId).orElse(new ArrayList<>());
+
+        mav.addObject("businessList", businessList);
+        mav.addObject("user",user);
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/negocios")
+    public ModelAndView business(@PathVariable("userId") final long userId) {
+        final ModelAndView mav = new ModelAndView("userBusiness");
+
+        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        List<Business> businessList = new ArrayList<>();
+        if ( user.isProvider() )
+            businessList = businessService.findByAdminId(userId).orElse(new ArrayList<>());
+        else
+            return new ModelAndView("redirect:/crear-negocio");
 
         mav.addObject("user",user);
         mav.addObject("businessList", businessList);
         return mav;
     }
+
+
 
 }

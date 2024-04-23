@@ -208,7 +208,7 @@ public class HelloWorldController {
 
     @RequestMapping(method = RequestMethod.GET, path = "/misservicios")
     public ModelAndView userServices() {
-        final ModelAndView mav = new ModelAndView("userServices");
+        final ModelAndView mav = new ModelAndView("userBusiness");
         return mav;
     }
 
