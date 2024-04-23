@@ -68,7 +68,8 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/2/negocios/consultas")
+    // ! USERID HARDCODEADO
+    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/negocios/consultas")
     public ModelAndView userServices(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userQuestions");
         // USER ID HARDCODEADO
