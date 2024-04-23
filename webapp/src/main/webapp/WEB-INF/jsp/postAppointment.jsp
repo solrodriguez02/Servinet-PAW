@@ -1,6 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<jsp:include page="navbar.jsp" />
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<jsp:include page="navbar.jsp" />
 <html lang="es">
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
@@ -8,15 +10,16 @@
     <title>Servinet - Reserva tu turno</title>
 </head>
 <body>
-<c:url value="/nuevo-turno/${serviceId}" var="postUrl"/>
+<c:url value="/contratar-servicio/${serviceId}" var="postUrl"/>
 <div class="postForm page">
-    <form action="${postUrl}" method="post" class="form">
-        <h3 class="form-title above-dropdown">Contratar el servicio: ${service.name}</h3>
+    <form:form action="${postUrl}" method="post" class="form" modelAttribute="appointmentForm">
+        <h3 class="form-title above-dropdown"><spring:message code="appointment.create" arguments="${service.name}"/></h3>
 
-        <h4 class="form-title above-dropdown">Información de contacto</h4>
+        <!--
         <label>
-            <p class="label">Nombre:</p>
-            <input required type="text" class="input" name="nombre" placeholder="Ingrese su nombre" value="${name}"/>
+            <p class="label"><message code="appointment.name-solicitor"/></p>
+            <message code="input.name" var="name"/>
+            <input type="text" class="input" path="name" placeholder="{name}" value="{user.name}"/>
         </label>
         <label>
             <p class="label">Apellido:</p>
@@ -30,43 +33,51 @@
             <p class="label">Telefono:</p>
             <input required type="text" class="input" name="telefono" placeholder="Ingresa su telefono"/>
         </label>
+-->
         <c:choose>
             <c:when test="${service.homeService}">
                 <label for="select">
                     <div class="select">
-                        <p class="label">Este servicio se realiza a domicilio, seleccione su barrio:</p>
-                        <select id="select" class="appointment-select" name="barrios">
+                        <p class="label"><spring:message code="appointment.home-service"/></p>
+                        <p class="label"><spring:message code="input.appointment-neighbourhood"/></p>
+                        <form:select id="select" class="appointment-select" path="neighbourhood">
                             <option value=""></option>
                             <option value="${service.location}"><c:out value="${service.location}"/></option>
-                        </select>
+                        </form:select>
                     </div>
-                    <p class="label">Direccion de residencia:</p>
-                    <input required type="text" class="input" name="lugar" placeholder="Ingrese su direccion"/>
+                    <p class="label"><spring:message code="address"/></p>
+                    <spring:message code="input.address" var="address"/>
+                    <form:input type="text" class="input" path="location" placeholder="${address}" required="true"/>
                 </label>
             </c:when>
             <c:otherwise>
-                <p class="label">Deberá presentarse en <c:out value="${service.location}"/></p>
+                <p class="label"><spring:message code="appointment.location"/><c:out value="${service.location}"/></p>
+                <!--
                 <label class="transparent">
-                    <input required type="text" class="input" name="lugar" placeholder="Ingrese su direccion" value="-"/>
+                    <input required="true" type="text" class="input" path="" placeholder="Ingrese su direccion" value="-"/>
                 </label>
+                -->
             </c:otherwise>
         </c:choose>
 
         <label>
-            <p class="label">Fecha:</p>
-            <input required type="datetime-local" class="input" name="fecha" value="${date}"/>
+            <p class="label"><spring:message code="appointment.date"/></p>
+            <form:input required="true" type="datetime-local" class="input" path="date" value="${date}"/>
+            <form:errors path="date" cssClass="error" element="p"/>
         </label>
         <c:if test="${service.duration > 0}">
-            <p>Recuerde que la duracion estimada del turno es de <span class="highlight-text">${service.duration} minutos</span></p>
+            <p><spring:message code="appointment.duration-general"/><span class="highlight-text"><spring:message code="appointment.duration-defined" arguments="${service.duration}"/></span></p>
         </c:if>
         <c:if test="${service.duration == 0}">
-            <p>Recuerde que para este servicio <span class="highlight-text">no hay una duracion definida por el proveedor del mismo</span></p>
+            <p><spring:message code="appointment.duration-general"/><span class="highlight-text"><spring:message code="appointment.duration-not-defined"/></span></p>
         </c:if>
         <div class="options">
-            <a href="${pageContext.request.contextPath}/"><input type="button" value="Cancelar" class="cancelBtn"></a>
-            <input type="submit" value="Reservar turno" class="submitBtn">
+            <spring:message code="cancel" var="cancel"/>
+            <a href="${pageContext.request.contextPath}/"><input type="button" value="${cancel}" class="cancelBtn"></a>
+            <spring:message code="appointment.submit" var="submit"/>
+            <input type="submit" value="${submit}" class="submitBtn">
         </div>
-    </form>
+    </form:form>
 </div>
 </body>
 </html>
