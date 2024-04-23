@@ -40,13 +40,7 @@ public class BusinessController {
         this.userService = userService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/misnegocios")
-    public ModelAndView userBusinesses() {
-        final ModelAndView mav = new ModelAndView("userBusinesses");
-        return mav;
-    }
-
-        @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
+    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
     public ModelAndView businessesAppointments(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
 
         final ModelAndView mav = new ModelAndView("businessAppointments");

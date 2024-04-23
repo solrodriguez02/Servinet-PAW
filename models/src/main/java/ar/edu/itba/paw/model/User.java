@@ -19,6 +19,9 @@ public class User {
         return surname;
     }
 
+    public String getFullName(){
+        return name + ' ' + surname;
+    }
     public String getEmail() {
         return email;
     }

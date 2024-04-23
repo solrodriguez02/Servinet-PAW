@@ -2,7 +2,7 @@
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
-
+    <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/business.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="page">
-    <div class="business-header">
+    <div class="header">
         <h2><c:out value="${business.businessName}"/></h2>
         <div>
             <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">

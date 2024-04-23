@@ -1,56 +1,3 @@
-.view-appointments-btn {
-    font-family: 'Poppins', sans-serif;
-    background-color: #6c6fff;
-    width: 120px;
-    font-size: medium;
-    border-radius: 8px;
-    border-color: transparent;
-}
-.business-header {
-    width:100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.service-box {
-    height: 180px;
-    border-radius: 15px;
-    padding: 10px;
-    width: 190px;
-    margin: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-weight: 400;
-}
-
-.service-img {
-    height: 180px;
-    width: 190px;
-    border-radius: 15px;
-}
-
-.box {
-    box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
-}
-.boxes-container {
-    display: flex;
-    margin-inline: -20px;
-    flex-wrap: wrap;
-}
-
-.box-text {
-    text-align: center;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    height: 31px;
-    width: 190px;
-}
-
 .appointment-box {
     background-color: white;
     /*width: 100%;*/
@@ -63,11 +10,6 @@
     border-radius: 15px;
 }
 
-.page {
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto
-}
 
 .appointments-container, .appointment-container{
     display: flex;

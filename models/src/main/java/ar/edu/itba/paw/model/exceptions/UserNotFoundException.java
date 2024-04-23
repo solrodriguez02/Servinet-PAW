@@ -1,0 +1,17 @@
+package ar.edu.itba.paw.model.exceptions;
+
+public class UserNotFoundException extends InvalidOperationException {
+
+    private static final String message = "The business was not found";
+    private static final String USER_NON_EXISTENT = "usuarionoexiste";
+
+    public UserNotFoundException() {
+        super(USER_NON_EXISTENT);
+    }
+
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+}
