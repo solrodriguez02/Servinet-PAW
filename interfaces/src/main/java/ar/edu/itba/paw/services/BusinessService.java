@@ -15,4 +15,6 @@ public interface BusinessService {
     void changeBusinessEmail(long businessId, String value);
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);
+
+    Boolean isBusinessOwner(long businessId, long userId);
 }
