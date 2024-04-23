@@ -11,7 +11,9 @@ public class Appointment {
     private LocalDateTime endDate;
     private String location;
     private Boolean confirmed;
-    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE dd MMMM yyyy, HH:mm");
+    private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE dd MMMM");
+    private final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("EEE dd MMMM yyyy, HH:mm");
+    private final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
     private String startDateString;
 
 
@@ -44,7 +46,15 @@ public class Appointment {
     public String getStartDateString() {
         return startDate.format(dateFormat);
     }
-
+    public String getStartDateWithTimeString(){
+        return startDate.format(dateTimeFormat);
+    }
+    public String getStartDateTimeString(){
+        return startDate.format(timeFormat);
+    }
+    public String getEndDateTimeString(){
+        return endDate.format(timeFormat);
+    }
     public LocalDateTime getEndDate() {
         return endDate;
     }

@@ -4,14 +4,14 @@
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
-    <link href="${pageContext.request.contextPath}/css/userServices.css" rel="stylesheet" />
+    <link href="${pageContext.request.contextPath}/css/userQuestions.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
 <body>
 <div class="page">
-    <h2>Mis servicios</h2>
+    <h2>Consultas</h2>
 
     <c:choose>
         <c:when test="${pendingQst!=null}">

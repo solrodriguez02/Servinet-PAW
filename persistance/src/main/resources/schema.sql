@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS appointments (
     startDate TIMESTAMP NOT NULL,
     endDate TIMESTAMP,
     location VARCHAR(255),
-    confirmed BOOLEAN DEFAULT FALSE
+    confirmed BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS questions (

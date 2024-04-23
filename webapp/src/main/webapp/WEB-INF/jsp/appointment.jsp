@@ -73,7 +73,7 @@
         <div class="card-body">
             <p class="card-text"><span class="highlight-text">Estado del turno:</span> ${appointment.confirmed ? "Confirmado":"Pendiente de confirmación"}</p>
             <p class="card-text"><span class="highlight-text">Nombre del solicitante:</span> ${user.name} ${user.surname}</p>
-            <p class="card-text"><span class="highlight-text">Fecha y hora: </span>${appointment.startDateString}</p>
+            <p class="card-text"><span class="highlight-text">Fecha y hora: </span>${appointment.startDateWithTimeString}</p>
             <p class="card-text"><span class="highlight-text">Lugar:</span> ${appointment.location}</p>
         </div>
     </div>

@@ -5,10 +5,16 @@ import ar.edu.itba.paw.services.AppointmentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.thymeleaf.util.StringUtils;
+
 import javax.sql.DataSource;
+import java.sql.Array;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -41,6 +47,17 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
+    public Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed){
+
+        List<Object> params = new ArrayList<>(serviceIds);
+        params.add(Timestamp.valueOf(LocalDateTime.now()));
+        params.add(confirmed);
+
+        String inSql = String.join(",", Collections.nCopies(serviceIds.size(), "?"));
+        final List<Appointment> list = jdbcTemplate.query(String.format("SELECT * from appointments WHERE serviceid in (%s) and startdate > ? and confirmed = ? ",inSql), params.toArray(), ROW_MAPPER);
+        return Optional.of(list);
+    }
+    @Override
     public Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location) {
 
         final Map<String, Object> appointmentData = new HashMap<>();
@@ -49,7 +66,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
         appointmentData.put("startdate", Timestamp.valueOf(startDate));
         appointmentData.put("enddate", Timestamp.valueOf(endDate) );
         appointmentData.put("location", location);
-        //appointmentData.put("confirmed", false); pues default es false
+        appointmentData.put("confirmed", false);
 
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(appointmentData);
         return new Appointment(generatedId.longValue(), serviceid, userid, startDate, endDate, location, false);

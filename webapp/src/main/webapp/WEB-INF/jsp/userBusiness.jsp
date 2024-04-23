@@ -1,28 +1,19 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
-<jsp:include page="navbar.jsp"/>
+<jsp:include page="navbar.jsp" />
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
-
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>Business</title>
 </head>
 <body>
 <div class="page">
-    <div class="box profile-box">
-        <!--img class="preview-box-img" src="${pageContext.request.contextPath}/images/$user.imageId" alt="Imagen del servicio"-->
-        <img class="profile-img profile-field" src="${user.profileImg}" alt="Imagen de perfil">
-        <div class="profile-info-container profile-field">
-            <h3><c:out value="${user.fullName}"/></h3>
-            <p class="accordion-field center-vertically"><i class="material-icons icon">account_circle</i>  <c:out value="${user.name}"/></p>
-            <p class="accordion-field center-vertically"><i class="material-icons icon">mail</i>  <c:out value="${user.email}"/></p>
-        </div>
-    </div>
-
-    <c:if test="${user.provider}">
     <div class="header">
-        <h2>Negocios</h2>
+        <h2>Mis negocios</h2>
+        <a href="${pageContext.request.contextPath}/${userId}/negocios/consultas" class="none-decoration">
+            <button class="btn center-vertically"><i class="material-icons ">notifications_active</i> Ver consultas</button>
+        </a>
     </div>
 
     <div class="boxes-container">
@@ -35,7 +26,6 @@
             </a>
         </c:forEach>
     </div>
-    </c:if>
 </div>
 </body>
 </html>

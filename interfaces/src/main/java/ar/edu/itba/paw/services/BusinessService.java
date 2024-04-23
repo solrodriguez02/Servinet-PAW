@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface BusinessService {
@@ -9,6 +10,8 @@ public interface BusinessService {
     Optional<Business> findById(long id);
 
     Optional<Business> findByBusinessName(String businessName);
+
+    Optional<List<Business>> findByAdminId(long adminId);
 
     void deleteBusiness(long businessid);
 

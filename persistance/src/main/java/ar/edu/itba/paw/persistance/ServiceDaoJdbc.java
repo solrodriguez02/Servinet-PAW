@@ -68,7 +68,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public Optional<List<Service>> getAllBusinessServices(long businessId){
-        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE businessid = ? ", new Object[] {businessId, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("SELECT * from services WHERE businessid = ? ", new Object[] {businessId  }, ROW_MAPPER);
         return Optional.of(list);
     }
 

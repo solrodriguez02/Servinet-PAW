@@ -17,16 +17,19 @@ public class RatingsQuestionsController {
     private final  RatingService rating;
     private final  QuestionService question;
     private final HelloWorldController helloWorldController;
+    private final UserController userController;
 
     @Autowired
     public RatingsQuestionsController(
             @Qualifier("HelloWorldController") HelloWorldController helloWorldController,
+            @Qualifier("userController") final UserController userController,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
             @Qualifier("RatingServiceImpl") final RatingService rating
     ){
         this.helloWorldController = helloWorldController;
         this.rating = rating;
         this.question = question;
+        this.userController = userController;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/preguntar/{serviceId:\\d+}")
@@ -48,10 +51,10 @@ public class RatingsQuestionsController {
             @PathVariable("questionId") final long questionId
     ){
         if(errors.hasErrors()) {
-            return helloWorldController.userServices(form);
+            return userController.userServices(form);
         }
         question.addResponse(questionId, form.getResponse());
-        return new ModelAndView("redirect:/misservicios");
+        return new ModelAndView("redirect:/2/negocios/consultas");
     }
 
 

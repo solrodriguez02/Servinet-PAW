@@ -28,18 +28,20 @@
                     </c:forEach>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">Publicar</a>
+
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/micuenta">Mi perfil</a>
-                    <a href="${pageContext.request.contextPath}/misturnos">Mis turnos</a>
-                    <a href="${pageContext.request.contextPath}/misservicios">Mis servicios</a>
+                    <a href="${pageContext.request.contextPath}/2/perfil">Mi perfil</a>
+                    <a href="${pageContext.request.contextPath}/2/turnos">Mis turnos</a>
+                    <a href="${pageContext.request.contextPath}/2/negocios">Mis negocios</a>
                 </div>
             </div>
+
             <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">
                 <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
             </a>
+
         </div>
     </div>
 </body>

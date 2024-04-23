@@ -32,11 +32,11 @@ public class AppointmentServiceImplTest {
     @Test
     public void testCreate() {
         // 1. Precondiciones
-
+/*
         Mockito.when(appointmentDao.create(Mockito.eq(SERVICEID),Mockito.eq(USERID),
                 Mockito.eq(STARTDATE),Mockito.eq(ENDDATE), Mockito.eq(""))).thenReturn(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,"f",false));
 
-        /*
+
         // 2. Ejecuta la class under test (una sola)
         Appointment appointment = appointmentService.create(SERVICEID,USERID,STARTDATE,ENDDATE,"");
 

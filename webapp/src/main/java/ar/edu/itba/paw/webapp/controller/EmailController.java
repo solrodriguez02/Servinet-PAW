@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller
@@ -46,6 +49,7 @@ public class EmailController {
     }
 
 
+
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
         final long serviceId = appointmentService.denyAppointment(appointmentId);
@@ -59,10 +63,26 @@ public class EmailController {
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
-    public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
+    public ModelAndView cancelAppointmentFromMail(@PathVariable("appointmentId") final long appointmentId) {
         final long serviceId = appointmentService.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
+
+    @RequestMapping(method = RequestMethod.DELETE , path = "/cancelar-turno/{appointmentId:\\d+}")
+    public void cancelAppointment(@PathVariable("appointmentId") final long appointmentId,
+                                  HttpServletResponse response) throws IOException{
+        try {
+            appointmentService.cancelAppointment(appointmentId);
+        } catch (Exception e) {
+            if ( e.getClass() != AppointmentNonExistentException.class ) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                return;
+            }
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
+
+    }
+
 
     // todo: serviceService.createAppointment => appointmentService.create()
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")

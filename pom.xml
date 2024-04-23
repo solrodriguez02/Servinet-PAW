@@ -124,6 +124,7 @@
         <version>${org.hibernate.validator}</version>
       </dependency>
     </dependencies>
+
   </dependencyManagement>
   <modules>
     <module>webapp</module>
