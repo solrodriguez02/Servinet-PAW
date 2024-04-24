@@ -340,6 +340,10 @@ public ModelAndView service(
     } catch (ServiceNotFoundException e) {
         return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
+    Business business = bs.findById(serv.getBusinessid()).get();
+    boolean isOwner = userId != null && business.getUserId()==userId;
+
+    mav.addObject("isOwner", isOwner);
     mav.addObject("option", option);
     mav.addObject("avgRating", rating.getRatingsAvg(serviceId));
     mav.addObject("service",serv);

@@ -44,10 +44,6 @@ public class User {
         return isProvider;
     }
 
-    public Boolean isBusinessAdmin(Business business) {
-        return userId == business.getUserId();
-    }
-
     public User(long userId, String username,String password ,String name, String surname, String email, String telephone, Boolean isProvider) {
         this.username = username;
         this.userId = userId;

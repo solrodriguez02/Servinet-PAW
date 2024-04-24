@@ -70,7 +70,8 @@
                     </p>
                 </span>
             </span>
-            <div class="btn-container">
+
+            <div class="btn-container" th:if="${type == 'CREATED'}">
                 <a th:href="${url}+'servicio/'+${serviceId}">
                     <button class="btn confirm">Ver servicio</button>
                 </a>
