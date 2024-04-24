@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.EmailAlreadyUsedException;
@@ -48,6 +45,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed) {
         return appointmentDao.getAllUpcomingServicesAppointments(serviceIds,confirmed);
+    }
+
+    @Override
+    public Optional<List<AppointmentInfo>> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+        return appointmentDao.getAllUpcomingUserAppointments(userid, confirmed);
     }
 
     @Override

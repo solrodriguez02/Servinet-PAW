@@ -15,7 +15,7 @@
         <img class="profile-img profile-field" src="${user.profileImg}" alt="Imagen de perfil">
         <div class="profile-info-container profile-field">
             <h3><c:out value="${user.fullName}"/></h3>
-            <p class="accordion-field center-vertically"><i class="material-icons icon">account_circle</i>  <c:out value="${user.name}"/></p>
+            <p class="accordion-field center-vertically"><i class="material-icons icon">account_circle</i>  <c:out value="${user.username}"/></p>
             <p class="accordion-field center-vertically"><i class="material-icons icon">mail</i>  <c:out value="${user.email}"/></p>
         </div>
     </div>
@@ -34,7 +34,13 @@
                 </div>
             </a>
         </c:forEach>
+        <c:if test="${empty businessList}" >
+            <div class="not-found-page">
+                No se han encontrado servicios en este negocio
+            </div>
+        </c:if>
     </div>
+
     </c:if>
 </div>
 </body>

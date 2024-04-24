@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
+import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AppointmentForm;
@@ -68,22 +69,32 @@ public class EmailController {
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
+    private void validateUser(long appointmentId) {
+        User user = securityService.getCurrentUser().get();
+        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(AppointmentNonExistentException::new);
+        // todo business find admin
+        if ( user.getUserId() != appointment.getUserid() || !businessService.isBusinessOwner(user.getUserId(), appointment.getUserid()) )
+            throw new ForbiddenOperation();
 
+    }
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        validateUser(appointmentId);
         final long serviceId = appointmentService.denyAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
+        validateUser(appointmentId);
         final long serviceId = appointmentService.confirmAppointment(appointmentId);
         return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointmentFromMail(@PathVariable("appointmentId") final long appointmentId) {
+        validateUser(appointmentId);
         final long serviceId = appointmentService.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
@@ -91,6 +102,7 @@ public class EmailController {
     @RequestMapping(method = RequestMethod.DELETE , path = "/cancelar-turno/{appointmentId:\\d+}")
     public void cancelAppointment(@PathVariable("appointmentId") final long appointmentId,
                                   HttpServletResponse response) throws IOException{
+        validateUser(appointmentId);
         try {
             appointmentService.cancelAppointment(appointmentId);
         } catch (Exception e) {

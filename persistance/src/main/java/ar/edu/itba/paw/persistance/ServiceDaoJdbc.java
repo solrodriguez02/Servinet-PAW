@@ -9,8 +9,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +25,11 @@ public class ServiceDaoJdbc implements ServiceDao {
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
             rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
 
+    private static final RowMapper<BasicService> BASIC_SERVICE_ROW_MAPPER = (rs, rowNum) -> new BasicService(rs.getLong("id"),
+            rs.getLong("businessid"), rs.getString("servicename"),
+            rs.getString("location"),rs.getLong("imageId"));
+
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -38,6 +41,11 @@ public class ServiceDaoJdbc implements ServiceDao {
     @Override
     public Optional<Service> findById(long id) {
         final List<Service> list = jdbcTemplate.query("SELECT * from (select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id,s.businessid) sq  WHERE id = ?", new Object[] {id}, ROW_MAPPER);
+        return list.stream().findFirst();
+    }
+
+    public Optional<BasicService> findBasicServiceById(long id) {
+        final List<BasicService> list = jdbcTemplate.query("SELECT id, businessid, servicename, location, imageId from services WHERE id = ?", new Object[] {id}, BASIC_SERVICE_ROW_MAPPER);
         return list.stream().findFirst();
     }
 
@@ -77,6 +85,12 @@ public class ServiceDaoJdbc implements ServiceDao {
     @Override
     public Optional<List<Service>> getAllBusinessServices(long businessId){
         final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId}, ROW_MAPPER);
+        return Optional.of(list);
+    }
+
+    @Override
+    public Optional<List<BasicService>> getAllBusinessBasicServices(long businessId){
+        final List<BasicService> list = jdbcTemplate.query("SELECT id, businessid, servicename, location, imageId from services WHERE businessid = ? ", new Object[] {businessId  }, BASIC_SERVICE_ROW_MAPPER);
         return Optional.of(list);
     }
 

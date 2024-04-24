@@ -8,7 +8,6 @@ public class User {
     private String surname;
     private String email;
     private String telephone;
-
     private Boolean isProvider;
     private long imageId;
     public String getName() {
@@ -43,6 +42,10 @@ public class User {
 
     public Boolean isProvider() {
         return isProvider;
+    }
+
+    public Boolean isBusinessAdmin(Business business) {
+        return userId == business.getUserId();
     }
 
     public User(long userId, String username,String password ,String name, String surname, String email, String telephone, Boolean isProvider) {

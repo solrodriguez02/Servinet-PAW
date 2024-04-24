@@ -22,6 +22,7 @@
     height: 180px;
     width: 190px;
     border-radius: 15px;
+    overflow: hidden;
 }
 
 .view-appointments {
@@ -96,3 +97,42 @@
     padding-bottom: 20px;
     width: 470px;
 }
+
+.info-btn {
+    font-weight: normal;
+    border-radius: 8px;
+    padding: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+    align-self: center;
+    align-items: center;
+}
+
+.info-access {
+    margin-right: 20px;
+}
+
+.info-icon{
+    padding-right: 5px ;
+}
+
+.btn-right {
+    border-radius: 0 20px 20px 0;
+}
+.btn-left {
+    border-radius: 20px 0 0 20px;
+}
+.btn-basic {
+    background-color: #dcdcdc;
+    border: none;
+    padding: 10px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: #6c6fff;
+}
+

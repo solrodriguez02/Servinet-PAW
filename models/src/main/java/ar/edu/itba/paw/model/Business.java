@@ -15,6 +15,10 @@ public class Business {
         return businessName;
     }
 
+    public String getName(){
+        return businessName;
+    }
+
     public String getTelephone() {
         return telephone;
     }

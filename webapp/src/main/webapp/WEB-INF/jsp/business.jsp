@@ -3,7 +3,6 @@
 <html>
 <head>
   <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
-
   <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <title>Business</title>
@@ -12,9 +11,11 @@
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
-    <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
-      <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
-    </a>
+    <c:if test="${not empty serviceList}" >
+      <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
+        <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
+      </a>
+    </c:if>
   </div>
 
   <div class="boxes-container">
@@ -26,6 +27,11 @@
         </div>
       </a>
     </c:forEach>
+    <c:if test="${empty serviceList}" >
+      <div class="not-found-page">
+          No se han encontrado servicios en este negocio
+      </div>
+    </c:if>
   </div>
 </div>
 </body>
