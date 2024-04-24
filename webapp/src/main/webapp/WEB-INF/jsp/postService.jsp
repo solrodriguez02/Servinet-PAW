@@ -88,7 +88,9 @@
             <form:errors path="minimalduration" cssClass="error"/>
             <form:input type="number" class="input" path="minimalduration" />
         </label>
-        <input type="submit" value="Publicar" class="submitBtn">
+        <div class="align-center">
+            <input type="submit" value="Publicar" class="btn submit-btn">
+        </div>
     </form:form>
 </div>
 </body>

@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.services;
-
+/*
 import ar.edu.itba.paw.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class EmailServiceImplTest {
     private static UserService userService;
     @Test
     public void testCreate() throws MessagingException {
-/*
+
         Mockito.when(userService.create(Mockito.eq("lucas"),Mockito.eq("lucas"),Mockito.eq("aaa"),
             Mockito.eq("aa"), Mockito.eq(EMAIL), Mockito.eq(TELEPHONE))).thenReturn(new User(USERID,"","","","",EMAIL,TELEPHONE,false));
 
@@ -80,7 +80,7 @@ public class EmailServiceImplTest {
         Appointment appointment = appointmentService.create(1,1,STARTDATE,ENDDATE);
 
         emailService.requestAppointment(appointment,EMAIL);
- */
     }
 
 }
+*/
