@@ -47,6 +47,21 @@ public class EmailController {
         this.securityService = securityService;
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
+    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
+
+        final ModelAndView mav = new ModelAndView("postAppointment");
+        try {
+            Service service = serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+            mav.addObject("service",service);
+        } catch (ServiceNotFoundException ex) {
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+        }
+
+        return mav;
+    }
+
+
     @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
     public ModelAndView appointment(@PathVariable("serviceId") final long serviceId, @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors) {
         // User newuser = userService.findByEmail(securityemail).orElse(null);
@@ -60,6 +75,9 @@ public class EmailController {
         //         return new ModelAndView("redirect:/contratar-servicio/"+serviceId);
         //     }
         // }
+        if (errors.hasErrors()) {
+            return hireService(serviceId, form);
+        }
         Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
         User user = securityService.getCurrentUser().get();

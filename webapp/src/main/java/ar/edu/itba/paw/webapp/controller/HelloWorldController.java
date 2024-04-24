@@ -260,20 +260,19 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/login");
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
-
-        final ModelAndView mav = new ModelAndView("postAppointment");
-        try {
-            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-            mav.addObject("service",service);
-        } catch (ServiceNotFoundException ex) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-
-        return mav;
-    }
-
+//    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
+//    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
+//
+//        final ModelAndView mav = new ModelAndView("postAppointment");
+//        try {
+//            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+//            mav.addObject("service",service);
+//        } catch (ServiceNotFoundException ex) {
+//            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+//        }
+//
+//        return mav;
+//    }
     @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
     public ModelAndView appointment(
             @PathVariable("appointmentId") final long appointmentId,
