@@ -76,16 +76,6 @@ body {
     margin-right: 10px;
 }
 
-.header {
-    width:100%;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-}
-
-
-
 .not-found-page {
     width: 100%;
     display: flex;

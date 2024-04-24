@@ -9,14 +9,22 @@
     <title>Business</title>
 </head>
 <body>
+<c:url value="/logout" var="logout"/>
 <div class="page">
     <div class="box profile-box">
         <!--img class="preview-box-img" src="${pageContext.request.contextPath}/images/$user.imageId" alt="Imagen del servicio"-->
-        <img class="profile-img profile-field" src="${user.profileImg}" alt="Imagen de perfil">
+        <!--<img class="profile-img profile-field" src="${user.profileImg}" alt="Imagen de perfil">-->
         <div class="profile-info-container profile-field">
             <h3><c:out value="${user.fullName}"/></h3>
             <p class="accordion-field center-vertically"><i class="material-icons icon">account_circle</i>  <c:out value="${user.username}"/></p>
             <p class="accordion-field center-vertically"><i class="material-icons icon">mail</i>  <c:out value="${user.email}"/></p>
+        </div>
+        <div class="align-center">
+            <a href="${logout}">
+                <button class="cancelBtn">
+                    Cerrar sesion
+                </button>
+            </a>
         </div>
     </div>
 
