@@ -81,7 +81,7 @@ public class EmailServiceImpl implements EmailService{
     private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client, Business business){
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("client", client);
-        ctx.setVariable("business", business);    // ! PONER MAIL BUSINESS
+        ctx.setVariable("business", business);
         ctx.setVariable("serviceName",service.getName());
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("appointmentId",appointment.getId());

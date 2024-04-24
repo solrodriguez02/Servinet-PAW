@@ -9,13 +9,19 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
-<c:url var="deleteUrl" value="/${service.id}/eliminar-servicio" />
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">
         <c:if test="${option==null}">
-        <h2><c:out value="${service.name}"/></h2>
-
+        <div class="header">
+            <h2><c:out value="${service.name}"/></h2>
+            <c:if test="${isOwner}">
+                <c:url value="/borrar-servicio/${serviceId}" var="deleteUrl"/>
+                <form:form action="${deleteUrl}" method="post">
+                    <button class="cancelBtn" type="submit">Eliminar servicio</button>
+                </form:form>
+            </c:if>
+        </div>
         <div class="info-container">
             <div class="img-container">
                 <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
