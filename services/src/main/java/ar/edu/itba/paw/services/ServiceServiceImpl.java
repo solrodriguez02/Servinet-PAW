@@ -87,13 +87,14 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public int getServiceCount(String category, String[] location,String searchQuery) {
-        return serviceDao.getServiceCount(category, location,searchQuery);
+    public int getServiceCount(String category, String[] location, String rating, String searchQuery) {
+        int ratingNum = Ratings.getMinValueByName(rating);
+        return serviceDao.getServiceCount(category, location, ratingNum, searchQuery);
     }
 
     @Override
-    public int getPageCount(String category, String[] location,String searchQuery) {
-        int serviceCount = getServiceCount(category, location,searchQuery);
+    public int getPageCount(String category, String[] location, String rating, String searchQuery) {
+        int serviceCount = getServiceCount(category, location, rating, searchQuery);
         int pageCount = serviceCount / 10;
         if(serviceCount % 10 != 0) pageCount++;
         return pageCount;

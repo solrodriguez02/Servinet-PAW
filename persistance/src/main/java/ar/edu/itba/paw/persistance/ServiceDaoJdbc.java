@@ -108,8 +108,8 @@ public class ServiceDaoJdbc implements ServiceDao {
    }
 
     @Override
-    public int getServiceCount(String category, String[] location,String searchQuery) {
-        FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
+    public int getServiceCount(String category, String[] location, int rating, String searchQuery) {
+        FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addRating(rating);
         Object[] values = filterArgument.getValues().toArray();
         if(values.length==0){
             return jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);

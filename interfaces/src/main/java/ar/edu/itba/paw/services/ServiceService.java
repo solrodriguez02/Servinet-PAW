@@ -13,8 +13,8 @@ public interface ServiceService {
     void delete(Service service, Business business);
 
     List<Service> services(int page,String category,String[] location, String rating, String query);
-    int getServiceCount(String category, String[] location,String searchQuery);
-    int getPageCount(String category, String[] location,String searchQuery);
+    int getServiceCount(String category, String[] location, String rating, String searchQuery);
+    int getPageCount(String category, String[] location, String rating, String searchQuery);
     Optional<List<Service>> getAllBusinessServices(long businessid);
     List<Service> getRecommendedServices();
 
