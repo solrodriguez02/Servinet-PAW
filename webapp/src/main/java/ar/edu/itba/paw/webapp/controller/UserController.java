@@ -84,7 +84,6 @@ public class UserController {
 
         mav.addObject("appointmentList", appointmentList);
         mav.addObject("confirmed",confirmed);
-        mav.addObject("isUser", true);
         return mav;
     }
 

@@ -7,6 +7,7 @@
     <title></title>
 </head>
 <body>
+<c:set var="isUser" value="true" scope="request" />
 <div class="page">
     <div class="header">
         <h2>Mis turnos</h2>
@@ -21,6 +22,8 @@
         <c:forEach items="${appointmentList}" var="appointment" varStatus="loop">
             <c:set var="appointment" value="${appointment}" scope="request" />
             <c:set var="loop" value="${loop}" scope="request" />
+            <c:set var="serviceName" value="${appointment.serviceName}" scope="request" />
+            <c:set var="email" value="${appointment.businessEmail}" scope="request" />
             <jsp:include page="appointmentContainer.jsp"/>
         </c:forEach>
         <c:if test="${ empty appointmentList}">

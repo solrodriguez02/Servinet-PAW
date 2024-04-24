@@ -18,7 +18,7 @@
                     </c:if>
                     </span>
             <a class="appointment-field service-name" href="${pageContext.request.contextPath}/servicio/${appointment.serviceid}">
-                <c:out value="${appointment.serviceName}"/>
+                <c:out value="${serviceName}"/>
             </a>
             <span class="appointment-field id"> #<c:out value="${appointment.id}"/></span>
 
@@ -39,22 +39,22 @@
         </div>
         <div class="accordion-container">
             <c:if test="${confirmed}">
-                <!-- si business
-                <set var="user" value="{userMap[appointment.userid}"/>
                 <div class="appointment-field contact-container">
-                            <span class="accordion-field"><i class="material-icons icon">account_circle</i> Solicitante:
-                                <out value="{user.name}"/></span> -->
-                    <span class=" accordion-field"><i class="material-icons icon">mail</i> Mail:<c:out value="${appointment.businessEmail}"/></span>
-
+                    <c:if test="${not isUser}">
+                        <span class="accordion-field"><i class="material-icons icon">account_circle</i>
+                            <c:out value="${name}"/></span>
+                    </c:if>
+                    <span class=" accordion-field"><i class="material-icons icon">mail</i> <c:out value="${email}"/></span>
+                </div>
             </c:if>
-            <span class="appointment-field accordion-field"><i class="material-icons icon">location_on</i>
-                        Ubicacion:
-                        <c:choose>
-                            <c:when test="${appointment.homeService}" >
-                                <c:out value="${appointment.location}"/></c:when>
-                            <c:otherwise>La del servicio</c:otherwise>
-                        </c:choose>
-                    </span>
+            <span class="appointment-field accordion-field"><i class="material-icons icon">house</i>
+                <c:choose>
+                    <c:when test="${appointment.homeService}" >
+                        <c:out value="${appointment.location}"/></c:when>
+                    <c:otherwise>En el domicilio del profesional</c:otherwise>
+                </c:choose>
+            </span>
+            <
         </div>
     </div>
 </body>
