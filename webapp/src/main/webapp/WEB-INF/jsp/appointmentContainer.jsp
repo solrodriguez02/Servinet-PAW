@@ -54,7 +54,7 @@
                     <c:otherwise>En el domicilio del profesional</c:otherwise>
                 </c:choose>
             </span>
-            <
+            
         </div>
     </div>
 </body>
