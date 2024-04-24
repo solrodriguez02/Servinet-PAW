@@ -22,6 +22,7 @@
     height: 180px;
     width: 190px;
     border-radius: 15px;
+    overflow: hidden;
 }
 
 .view-appointments {

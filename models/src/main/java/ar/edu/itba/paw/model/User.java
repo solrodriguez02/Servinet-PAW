@@ -8,7 +8,6 @@ public class User {
     private String surname;
     private String email;
     private String telephone;
-
     private Boolean isProvider;
     private long imageId;
     public String getName() {

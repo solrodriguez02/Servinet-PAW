@@ -25,7 +25,7 @@
                 <div class="box appointment-box">
                     <span class="appointment-field day"><c:out value="${appointment.startDateString}"/></span>
                     <span class="appointment-field time"><i class="material-icons icon">schedule</i>    <c:out value="${appointment.startDateTimeString}"/>
-                    <c:if test="${serviceMap[appointment.serviceid].duration}>0">
+                    <c:if test="${appointment.duration}">
                         <c:out value="${appointment.endDateTimeString}"/>
                     </c:if>
                     </span>
@@ -61,7 +61,7 @@
                     <span class="appointment-field accordion-field"><i class="material-icons icon">location_on</i>
                         Ubicacion:
                         <c:choose>
-                            <c:when test="${serviceMap[appointment.serviceid].homeService}" >
+                            <c:when test="${appointment.homeService}" >
                                 <c:out value="${appointment.location}"/></c:when>
                             <c:otherwise>La del servicio</c:otherwise>
                         </c:choose>
@@ -79,13 +79,13 @@
 </html>
 
 <script type="text/javascript">
-
     const businessUrl = '${pageContext.request.contextPath}/negocio/${businessId}'
     const deleteAppointmentUrl = '${pageContext.request.contextPath}/cancelar-turno/'
     function acceptAppointment(appointmentId,accepted, componentId){
 
         if(!accepted)
-            confirm("Esta seguro que desea rechazar el turno?")
+            if (!confirm("Esta seguro que desea rechazar el turno?"))
+                return
 
         const data = new FormData();
         data.append('accepted', accepted);
@@ -97,7 +97,8 @@
     function cancelAppointment(appointmentId,componentId) {
 
         const url = deleteAppointmentUrl + appointmentId;
-        confirm("Esta seguro que desea cancelar el turno?")
+        if( !confirm("Esta seguro que desea cancelar el turno?"))
+            return
         send(url,'DELETE',{}, componentId)
     }
 
@@ -106,22 +107,22 @@
             method: method,
             body: data
         })
-        .then(response => {
-            if (!response.ok) {
-                alert("el turno ya no existe");
-            } else
-                document.getElementById(componentId).style.display = "none";
-        })
-        .catch(error => {
-            console.error('Error de red:', error);
-        });
+            .then(response => {
+                if (!response.ok) {
+                    alert("el turno ya no existe");
+                } else
+                    document.getElementById(componentId).style.display = "none";
+            })
+            .catch(error => {
+                console.error('Error de red:', error);
+            });
 
     }
 
 
     function showAccordion( id, btn ) {
-            btn.classList.toggle('active')
-            document.getElementById(id).classList.toggle('active')
+        btn.classList.toggle('active')
+        document.getElementById(id).classList.toggle('active')
     }
 
 </script>

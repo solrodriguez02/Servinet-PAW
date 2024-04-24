@@ -61,13 +61,13 @@
 
 
 <script type="text/javascript">
-
     const businessUrl = '${pageContext.request.contextPath}/negocio/${businessId}'
     const deleteAppointmentUrl = '${pageContext.request.contextPath}/cancelar-turno/'
     function acceptAppointment(appointmentId,accepted, componentId){
 
         if(!accepted)
-            confirm("Esta seguro que desea rechazar el turno?")
+            if (!confirm("Esta seguro que desea rechazar el turno?"))
+                return
 
         const data = new FormData();
         data.append('accepted', accepted);
@@ -79,7 +79,8 @@
     function cancelAppointment(appointmentId,componentId) {
 
         const url = deleteAppointmentUrl + appointmentId;
-        confirm("Esta seguro que desea cancelar el turno?")
+        if( !confirm("Esta seguro que desea cancelar el turno?"))
+            return
         send(url,'DELETE',{}, componentId)
     }
 

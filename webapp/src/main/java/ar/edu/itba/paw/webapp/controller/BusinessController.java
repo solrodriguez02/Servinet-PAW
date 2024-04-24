@@ -1,9 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
@@ -46,10 +43,10 @@ public class BusinessController {
 
         final ModelAndView mav = new ModelAndView("businessAppointments");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
+        Optional<List<BasicService>> services = serviceService.getAllBusinessBasicServices(businessId);
         List<Appointment> appointmentList = new ArrayList<>();
 
-        Map<Long,Service> serviceMap = new HashMap<>();
+        Map<Long, BasicService> serviceMap = new HashMap<>();
         if ( services.isPresent()){
             services.get().forEach(service -> serviceMap.put(service.getId(), service) );
             appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed).orElse(new ArrayList<>());
@@ -109,7 +106,7 @@ public class BusinessController {
     public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        List<Service> serviceList = serviceService.getAllBusinessServices(businessId).orElse(new ArrayList<>());
+        List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId).orElse(new ArrayList<>());
 
         mav.addObject("business",business);
         mav.addObject("serviceList", serviceList);
