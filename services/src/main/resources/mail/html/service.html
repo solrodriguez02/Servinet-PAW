@@ -31,8 +31,20 @@
             button:hover {
                 opacity: 0.7;
             }
-            .cancel {
-                background-color: #de2121;
+            .btn {
+                font-weight: bold;
+                font-family: 'Poppins', sans-serif;
+                padding: 10px;
+                color: white;
+                padding-inline: 20px;
+            }
+            .confirm {
+                background-color: #585bfa;
+            }
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
             }
         </style>
 </head>
@@ -50,13 +62,6 @@
                 <span th:case="'CREATED'">
                     creado exitosamente. Su número de identificación es el #<span th:text="${serviceId}"></span>.
                     Ya se encuentra disponible en <a th:href="${url}+'servicio/'+${serviceId}" th:text="${url}+'servicio/'+${serviceId}"></a>.
-                    <p>
-                    Si desea eliminar el servicio y con ello todos los turnos solicitados desde nuestra página servinet, haga click en:
-                    <form th:action="${url}+'borrar-servicio/'+ ${serviceId}" method="post">
-                        <button class="cancel" type="submit">Eliminar servicio</button>
-                    </form>
-                    <em>Esta operación no se podrá deshacer</em>
-                    </p>
                 </span>
                 <span th:case="*">
                     borrado exitosamente. Todos los turnos solicitados desde nuestra página servinet han sido cancelados.
@@ -65,6 +70,11 @@
                     </p>
                 </span>
             </span>
+            <div class="btn-container">
+                <a th:href="${url}+'servicio/'+${serviceId}">
+                    <button class="btn confirm">Ver servicio</button>
+                </a>
+            </div>
         </div>
     </div>
 </div>
