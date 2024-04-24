@@ -330,6 +330,8 @@ public ModelAndView service(
         @RequestParam(value = "rwPag", required = false) Integer reviewPage
 ) {
     final ModelAndView mav = new ModelAndView("service");
+    Optional<User> currentUser = securityService.getCurrentUser();
+    Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
     Service serv;
     if(questionPage == null) questionPage = 0;
     if(reviewPage == null) reviewPage = 0;
@@ -348,7 +350,7 @@ public ModelAndView service(
     mav.addObject("questionPage", questionPage);
     mav.addObject("reviewPage", reviewPage);
     mav.addObject("TBDPricing", TBDPricing);
-    mav.addObject("hasAlreadyRated", rating.hasAlreadyRated(1, serviceId));
+    mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
     return mav;
 }
 

@@ -57,4 +57,9 @@ public class RatingServiceImpl implements RatingService {
         return rating;
     }
 
+    @Override
+    public void edit(long ratingid, int rating, String comment) {
+        ratingDao.edit(ratingid, rating, comment);
+    }
+
 }

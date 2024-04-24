@@ -11,5 +11,6 @@ public interface RatingDao {
     double getRatingsAvg(long serviceid);
     int getRatingsCount(long serviceid);
     Optional<Rating> hasAlreadyRated(long userid, long serviceid);
+    void edit(long ratingid, int rating, String comment);
 
 }
