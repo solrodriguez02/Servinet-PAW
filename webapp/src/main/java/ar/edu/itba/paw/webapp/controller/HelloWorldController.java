@@ -240,6 +240,7 @@ public ModelAndView service(
     mav.addObject("questionPage", questionPage);
     mav.addObject("reviewPage", reviewPage);
     mav.addObject("TBDPricing", TBDPricing);
+    mav.addObject("hasAlreadyRated", rating.hasAlreadyRated(1, serviceId));
     return mav;
 }
 

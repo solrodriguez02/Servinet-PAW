@@ -10,5 +10,6 @@ public interface RatingDao {
     Rating create(long serviceid, long userid, int rating, String comment);
     double getRatingsAvg(long serviceid);
     int getRatingsCount(long serviceid);
+    Optional<Rating> hasAlreadyRated(long userid, long serviceid);
 
 }

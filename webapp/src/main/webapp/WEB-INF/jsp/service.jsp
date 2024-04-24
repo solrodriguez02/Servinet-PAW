@@ -176,24 +176,32 @@
                 </c:choose>
 
                 <h3>Opiniones</h3>
-                <h4>Agrega tu opinion</h4>
-                <c:url value="/opinar/${serviceId}" var="rateUrl"/>
-                <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
+                <c:choose>
+                    <c:when test="${hasAlreadyRated != null}">
+                        Ya has opinado!
+                    </c:when>
+                    <c:otherwise>
+                        <h4>Agrega tu opinion</h4>
+                        <c:url value="/opinar/${serviceId}" var="rateUrl"/>
+                        <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
 
-                    <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
+                            <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
 
-                    <form:input path="questionUserId" type="number" class="transparent" value="1"/>
+                            <form:input path="questionUserId" type="number" class="transparent" value="1"/>
 
-                    <c:forEach begin="1" end="5" var="i">
-                        <i class="material-icons star" onclick="selectRate(${i})">star</i>
-                    </c:forEach>
-                    <form:input path="rating" type="hidden" id="rating" value="0"/>
-                    <div class="flex">
-                        <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
-                        <input type="submit" value="Enviar" class="send-btn">
-                    </div>
-                    <form:errors path="rating" element="p" cssClass="error"/>
-                </form:form>
+                            <c:forEach begin="1" end="5" var="i">
+                                <i class="material-icons star" onclick="selectRate(${i})">star</i>
+                            </c:forEach>
+                            <form:input path="rating" type="hidden" id="rating" value="0"/>
+                            <div class="flex">
+                                <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
+                                <input type="submit" value="Enviar" class="send-btn">
+                            </div>
+                            <form:errors path="rating" element="p" cssClass="error"/>
+                        </form:form>
+                    </c:otherwise>
+                </c:choose>
+
 
                 <c:choose>
                     <c:when test="${reviews == null}">
