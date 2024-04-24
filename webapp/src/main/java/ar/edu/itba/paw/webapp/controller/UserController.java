@@ -68,7 +68,7 @@ public class UserController {
         if ( currentUser.isProvider() )
             businessList = businessService.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
         else
-            return new ModelAndView("redirect:/crear-negocio");
+            return new ModelAndView("redirect:/registrar-negocio");
 
         mav.addObject("user",currentUser);
         mav.addObject("businessList", businessList);

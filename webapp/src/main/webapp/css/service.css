@@ -40,6 +40,9 @@
 
 .info-text {
     padding:20px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .category-text {
@@ -53,6 +56,7 @@
 
 .text-description {
     margin-top: 15px;
+    padding: 20px;
     color: #3d3d3d;
 }
 
@@ -60,6 +64,11 @@
     color: gray;
     font-style: italic;
     margin-left: 15px;
+}
+
+.TBD-comment {
+    color: gray;
+    font-style: italic;
 }
 
 .btn-container {
@@ -90,7 +99,7 @@
 }
 
 .btn-basic {
-    background-color: #dcdcdc;
+    background-color: #eaeaea;
     border: none;
     border-radius: 20px 0 0 20px;
     padding: 10px 20px;
@@ -100,7 +109,7 @@
 }
 
 .btn-basic:hover {
-    background-color: #e3e3e3;
+    background-color: #dcdcdc;
 }
 
 .btn-left {
@@ -158,12 +167,16 @@
 }
 
 .input {
-    background-color: #e3e3e3;
+    background-color: #efefef;
     padding: 10px 15px;
     border: none;
     border-radius: 10px 0 0 10px;
     font-family: 'Poppins', sans-serif;
     width: 60%;
+}
+
+.input:hover {
+    background-color:#e1e1e1;
 }
 
 .send-btn {
@@ -195,4 +208,15 @@
 .service-rate-star {
     font-size: 25px !important;
     margin: 0 10px;
+}
+
+.description-box {
+    box-shadow: 0 0 15px rgba(92, 99, 105, 0.15);
+    width: 100%;
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+.warning-text {
+    color: #fa7c7c;
 }

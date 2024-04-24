@@ -48,4 +48,13 @@ public class RatingServiceImpl implements RatingService {
         return ratingDao.getRatingsCount(serviceid);
     }
 
+    @Override
+    public Rating hasAlreadyRated(long userid, long serviceid) {
+        Rating rating;
+        if(ratingDao.hasAlreadyRated(userid, serviceid).isPresent()) {
+            rating = ratingDao.hasAlreadyRated(userid, serviceid).get();
+        } else rating = null;
+        return rating;
+    }
+
 }

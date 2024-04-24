@@ -39,7 +39,9 @@
         <form:input type="text" class="input" path="businessLocation" placeholder="${inputAddress}" />
         <form:errors path="businessLocation" cssClass="error" element="p"/>
     </label>
-    <input type="submit" value="<spring:message code="register.submit"/>" class="submitBtn">
+    <div class="align-center">
+        <input type="submit" value="<spring:message code="register.submit"/>" class="btn submit-btn">
+    </div>
     </form:form>
 </body>
 </html>

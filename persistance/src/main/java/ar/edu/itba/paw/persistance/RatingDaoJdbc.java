@@ -62,4 +62,10 @@ public class RatingDaoJdbc implements RatingDao {
         return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM ratings WHERE serviceId = ?", Integer.class, serviceid);
     }
 
+    @Override
+    public Optional<Rating> hasAlreadyRated(long userid, long serviceid) {
+        List<Rating> ratings = jdbcTemplate.query("SELECT * FROM ratings WHERE serviceid = ? AND userid = ?", new Object[] {serviceid, userid}, ROW_MAPPER);
+        return ratings.stream().findFirst();
+    }
+
 }

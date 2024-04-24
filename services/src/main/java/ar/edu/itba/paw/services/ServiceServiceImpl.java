@@ -4,6 +4,8 @@ import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,8 +81,9 @@ public class ServiceServiceImpl implements ServiceService {
 
 
     @Override
-    public List<Service> services(int page, String category, String[] location,String query) {
-            return serviceDao.getServicesFilteredBy(page, category, location,query);
+    public List<Service> services(int page, String category, String[] location, String rating, String query) {
+        int ratingNum = Ratings.getMinValueByName(rating);
+        return serviceDao.getServicesFilteredBy(page, category, location, ratingNum, query);
     }
 
     @Override
@@ -99,5 +102,10 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public Optional<List<Service>> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
+    }
+
+    @Override
+    public List<Service> getRecommendedServices() {
+        return serviceDao.getRecommendedServices();
     }
 }

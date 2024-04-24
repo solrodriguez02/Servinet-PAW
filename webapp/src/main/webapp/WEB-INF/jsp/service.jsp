@@ -16,10 +16,6 @@
         <c:if test="${option==null}">
         <h2><c:out value="${service.name}"/></h2>
 
-        <!--tal vez para un primer sprint se puede seleccionar cualquier fecha y horario
-        (no se muestran los turnos que ya estan tomados) y una vez hecho el input se
-         muestra un mensaje de error si es que esa fecha y hora ya fue tomada. -->
-
         <div class="info-container">
             <div class="img-container">
                 <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
@@ -53,24 +49,20 @@
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i>
+                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i><c:out value="${service.duration}"/> min</p>
+                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i>
                         <c:choose>
-                            <c:when test="${service.duration < 60}">
-                                <c:out value="${service.duration}"/>
+                            <c:when test="${service.pricing == TBDPricing}">
+                                <label class="TBD-comment"><c:out value="${TBDPricing}"/></label>
                             </c:when>
                             <c:otherwise>
-                                <c:out value="${service.duration / 60}"/>h
-                                <c:if test="${service.duration % 60 != 0}">
-                                    <c:out value="${service.duration % 60}"/>min
-                                </c:if>
+                                <c:out value="${service.price}"/>
+                                <label class="comment"><c:out value="${service.pricing}"/></label>
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"><i class="material-icons icon">attach_money</i><c:out value="${service.price}"/>
-                        <label class="comment">${service.pricing}</label>
-                    </p>
                     <c:if test="${service.additionalCharges}">
-                        <p class="text-with-icon"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
+                        <p class="text-with-icon warning-text"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
                     </c:if>
 
                     <div class="btn-container">
@@ -81,7 +73,10 @@
                 </div>
             </div>
         </div>
-        <p class="text-description"><c:out value="${service.description}"/></p>
+
+        <div class="description-box">
+            <p class="text-description"><c:out value="${service.description}"/></p>
+        </div>
         </c:if>
 
         <!--form action="${deleteUrl}" method="post">
@@ -179,19 +174,26 @@
                 </c:choose>
 
                 <h3>Opiniones</h3>
-                <h4>Agrega tu opinion</h4>
-                <c:url value="/opinar/${serviceId}" var="rateUrl"/>
-                <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
-                    <c:forEach begin="1" end="5" var="i">
-                        <i class="material-icons star" onclick="selectRate(${i})">star</i>
-                    </c:forEach>
-                    <form:input path="rating" type="hidden" id="rating" value="0"/>
-                    <div class="flex">
-                        <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
-                        <input type="submit" value="Enviar" class="send-btn">
-                    </div>
-                    <form:errors path="rating" element="p" cssClass="error"/>
-                </form:form>
+                <c:choose>
+                    <c:when test="${hasAlreadyRated != null}">
+                        Ya has opinado!
+                    </c:when>
+                    <c:otherwise>
+                        <h4>Agrega tu opinion</h4>
+                        <c:url value="/opinar/${serviceId}" var="rateUrl"/>
+                        <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
+                            <c:forEach begin="1" end="5" var="i">
+                                <i class="material-icons star" onclick="selectRate(${i})">star</i>
+                            </c:forEach>
+                            <form:input path="rating" type="hidden" id="rating" value="0"/>
+                            <div class="flex">
+                                <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
+                                <input type="submit" value="Enviar" class="send-btn">
+                            </div>
+                            <form:errors path="rating" element="p" cssClass="error"/>
+                        </form:form>
+                    </c:otherwise>
+                </c:choose>
 
                 <c:choose>
                     <c:when test="${reviews == null}">

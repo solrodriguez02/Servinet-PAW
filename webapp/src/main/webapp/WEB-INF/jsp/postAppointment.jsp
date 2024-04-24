@@ -74,11 +74,12 @@
         <c:if test="${service.duration == 0}">
             <p><spring:message code="appointment.duration-general"/><span class="highlight-text"><spring:message code="appointment.duration-not-defined"/></span></p>
         </c:if>
-        <div class="options">
+
+        <div class="align-center btns-container">
             <spring:message code="cancel" var="cancel"/>
             <a href="${pageContext.request.contextPath}/"><input type="button" value="${cancel}" class="cancelBtn"></a>
             <spring:message code="appointment.submit" var="submit"/>
-            <input type="submit" value="${submit}" class="submitBtn">
+            <input type="submit" value="${submit}" class="btn submit-btn">
         </div>
     </form:form>
 </div>

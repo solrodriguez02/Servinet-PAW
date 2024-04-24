@@ -38,20 +38,21 @@ import java.util.*;
 @Qualifier("HelloWorldController")
 public class HelloWorldController {
 
-    private final RatingService rating;
-    private final QuestionService question;
-    private final ImageService is;
     private UserService us;
     private BusinessService bs;
     private ServiceService ss;
     private AppointmentService appointment;
-
     private final SecurityService securityService;
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
+    private RatingService rating;
+    private QuestionService question;
+    private ImageService is;
+    private static final String TBDPricing = PricingTypes.TBD.getValue();
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
+    List<Ratings> ratings = new ArrayList<>();
 
 
     @Autowired
@@ -78,6 +79,7 @@ public class HelloWorldController {
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+        ratings.addAll(Arrays.asList(Ratings.values()));
     }
 
     @RequestMapping(path="/login")
@@ -85,12 +87,14 @@ public class HelloWorldController {
 
         return new ModelAndView("login");
     }
+
     @RequestMapping(path="/registrarse", method=RequestMethod.GET)
     public ModelAndView registerUser(@ModelAttribute("registerUserForm") RegisterUserForm form) {
         final ModelAndView mav = new ModelAndView("postPersonal");
 
         return mav;
     }
+
     @RequestMapping(path="/olvide-mi-clave", method = RequestMethod.GET)
     public ModelAndView forgotPasswordRequest(@ModelAttribute("requestPasswordRecoveryForm") RequestPasswordRecoveryForm form) {
         return new ModelAndView("forgotPassword");
@@ -140,6 +144,8 @@ public class HelloWorldController {
         final ModelAndView mav = new ModelAndView("home");
         mav.addObject("categories", categories);
         mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("TBDPricing", TBDPricing);
+        mav.addObject("recommendedServices", ss.getRecommendedServices());
         return mav;
     }
 
@@ -153,6 +159,7 @@ public class HelloWorldController {
         mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
+
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
     public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
 
@@ -167,17 +174,18 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/servicio/"+newService.getId());
     }
 
-
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
             @RequestParam(name = "ubicacion", required = false) String[] neighbourhoodFilters,
+            @RequestParam(name = "calificacion", required = false) String ratingFilters,
             @RequestParam(name = "pagina", required = false) Integer page,
             @RequestParam(name="query",required=false) String query
     ) {
         if(page == null) page = 0;
         final ModelAndView mav = new ModelAndView("services");
-        List<Service> serviceList = ss.services(page, category, neighbourhoodFilters, query);
+
+        List<Service> serviceList = ss.services(page, category, neighbourhoodFilters, ratingFilters, query);
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
@@ -186,6 +194,7 @@ public class HelloWorldController {
         mav.addObject("location", neighbourhoodFilters);
         mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters,query));
         mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters,query));
+        mav.addObject("ratings", ratings);
         return mav;
     }
 
@@ -319,7 +328,7 @@ public ModelAndView service(
         @RequestParam(value = "opcion", required = false) final String option,
         @RequestParam(value = "qstPag", required = false) Integer questionPage,
         @RequestParam(value = "rwPag", required = false) Integer reviewPage
-        ) {
+) {
     final ModelAndView mav = new ModelAndView("service");
     Service serv;
     if(questionPage == null) questionPage = 0;
@@ -338,6 +347,8 @@ public ModelAndView service(
     mav.addObject("reviewsCount", rating.getRatingsCount(serviceId));
     mav.addObject("questionPage", questionPage);
     mav.addObject("reviewPage", reviewPage);
+    mav.addObject("TBDPricing", TBDPricing);
+    mav.addObject("hasAlreadyRated", rating.hasAlreadyRated(1, serviceId));
     return mav;
 }
 

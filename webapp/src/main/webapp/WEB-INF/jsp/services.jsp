@@ -28,51 +28,70 @@
 
 <div class="page">
     <div class="filters-info">
-        <div>
-            <form action="${pageContext.request.contextPath}/servicios" method="GET">
-                <label>Ingresar Busqueda:
-                    <div>
-                <input type="text" class="input" placeholder="ingresar busqueda" name="query" value="<c:out value="${param.query}"/>"/>
-                <button type="submit" class="a"><i class="material-icon">Search</i></button>
-                    </div>
-                </label>
+        <div class="flex">
+            <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Que estas buscando?" name="query" value="<c:out value="${param.query}"/>"/>
+                    <button type="submit" class="search-button"><i class="material-icons">search</i></button>
+                </div>
             </form>
-        </div>
-        <div class="header">
-            <c:if test="${category!=null}">
-                <div class="category-header">
-                    <h3>Categoria: <c:out value="${category}"/></h3>
-                </div>
-            </c:if>
             <div class="align-right">
-                <div class="dropdown">
-                    <label>
-                        <p class="filters-text"><i class="material-icons">filter_alt</i>Filtrar por ubicacion</p>
-                    </label>
-                    <div class="dropdown-content">
-                        <c:forEach items="${neighbourhoods}" var="neighbourhood">
-                            <c:url value="/servicios" var="locationChange">
-                                <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
-                                <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
-                                <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:if test="${ubicaciones != neighbourhood.value}"><c:param name="ubicacion" value="${ubicaciones}"/></c:if> </c:forEach>
-                                <c:param name="ubicacion" value="${neighbourhood.value}"/>
-                            </c:url>
-                            <a href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
-                        </c:forEach>
-                    </div>
-
-                </div>
+                <label>
+                    <p class="filters-text" onclick="toggleFilters()" id="toggleFiltersButton"><i class="material-icons">filter_alt</i>Filtrar por<i class="material-icons" id="filtersIcon">expand_more</i></p>
+                </label>
             </div>
         </div>
 
+        <c:if test="${category!=null}">
+            <div class="category-header">
+                <h2><c:out value="${category}"/></h2>
+            </div>
+        </c:if>
+
+        <div class="align-right">
+            <div class="filters-box transparent" id="filters">
+                <h3>Calificacion</h3>
+                <c:forEach items="${ratings}" var="rate">
+                    <c:url value="/servicios" var="ratingChange">
+                        <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                        <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                        <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/></c:forEach>
+                        <c:param name="calificacion" value="${rate.name}"/>
+                    </c:url>
+                    <a class="none-decoration filter-text" href="${ratingChange}">
+                        <c:out value="${rate.name}"/>:
+                        <c:forEach begin="1" end="${rate.minValue}">
+                            <i class="material-icons stars">star</i>
+                        </c:forEach>
+                        <c:if test="${rate.minValue != 5}">
+                            o mas
+                        </c:if>
+                    </a>
+                </c:forEach>
+                <h3>Ubicacion</h3>
+                <c:forEach items="${neighbourhoods}" var="neighbourhood">
+                    <c:url value="/servicios" var="locationChange">
+                        <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                        <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                        <c:if test="${not empty param.calificacion}"><c:param name="calificacion" value="${param.calificacion}"/></c:if>
+                        <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:if test="${ubicaciones != neighbourhood.value}"><c:param name="ubicacion" value="${ubicaciones}"/></c:if> </c:forEach>
+                        <c:param name="ubicacion" value="${neighbourhood.value}"/>
+                    </c:url>
+                    <a class="none-decoration filter-text" href="${locationChange}"><c:out value="${neighbourhood.value}"/></a>
+                </c:forEach>
+            </div>
+        </div>
+
+        <c:if test="${not empty paramValues.ubicacion or not empty paramValues.calificacion}">
             <div class="filters-selected">
-                    <h5>Filtros seleccionados:</h5>
+                <h4>Filtros seleccionados:</h4>
                 <c:forEach items="${paramValues.ubicacion}" var="location">
                 <button class="filter-container">
                         <c:out value="${location}"/>
                     <c:url value="/servicios" var="locationRemove">
                         <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
                         <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                        <c:forEach var="calificaciones" items="${paramValues.calificacion}"><c:param name="calificacion" value="${calificaciones}"/></c:forEach>
                         <c:forEach items="${paramValues.ubicacion}" var="paramUb">
                             <c:if test="${paramUb != location}">
                                 <c:param name="ubicacion" value="${paramUb}"/>
@@ -82,7 +101,19 @@
                         <a href="${locationRemove}"><i class="material-icons close-filter-icon">close</i></a>
                     </button>
                 </c:forEach>
+                <c:if test="${not empty param.calificacion}">
+                    <button class="filter-container">
+                        <c:out value="${param.calificacion}"/>
+                        <c:url value="/servicios" var="rateRemove">
+                            <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                            <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+                            <c:forEach var="ubicaciones" items="${paramValues.ubicacion}"><c:param name="ubicacion" value="${ubicaciones}"/></c:forEach>
+                        </c:url>
+                        <a href="${rateRemove}"><i class="material-icons close-filter-icon">close</i></a>
+                    </button>
+                </c:if>
             </div>
+        </c:if>
 
         <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
     </div>
@@ -105,9 +136,27 @@
                                 <div class="service-info">
                                     <div class="service-header">
                                         <h3> <c:out value="${item.name}"/></h3>
-                                        <p class="align-right">$ <c:out value="${item.price}"/> </p>
+                                        <p class="align-right">$
+                                            <c:choose>
+                                                <c:when test="${item.pricing == TBDPricing}">
+                                                    <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <c:out value="${item.price}"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
                                     </div>
-                                    <p class="item"> <i class="material-icons">location_on</i><c:out value="${item.location}"/> <c:forEach items="${item.neighbourhoodAvailable}" var="neighbour"><c:out value=" ${neighbour}"/></c:forEach> </p>
+
+                                    <p class="item"> <i class="material-icons">location_on</i>
+                                        <c:if test="${not empty item.location}">
+                                            <c:out value="${item.location}"/>,
+                                        </c:if>
+                                        <c:forEach items="${item.neighbourhoodAvailable}" var="neighbour">
+                                            <c:out value=" ${neighbour}"/>
+                                        </c:forEach>
+                                    </p>
+
                                     <p class="item"> <c:out value="${item.description}"/></p>
                                 </div>
                             </div>
@@ -217,5 +266,20 @@
         </c:otherwise>
     </c:choose>
 </div>
+
+<script>
+    function toggleFilters() {
+        var showFilters = document.getElementById('filters');
+        var icon = document.getElementById('filtersIcon');
+
+        if (showFilters.classList.contains('transparent')) {
+            showFilters.classList.remove('transparent');
+            icon.textContent= "expand_less";
+        } else {
+            showFilters.classList.add('transparent');
+            icon.textContent= "expand_more";
+        }
+    }
+</script>
 </body>
 </html>

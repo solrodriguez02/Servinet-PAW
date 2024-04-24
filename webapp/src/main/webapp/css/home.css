@@ -27,6 +27,10 @@
     margin-bottom: 30px;
 }
 
+.box:hover {
+    background-color: #efefef;
+}
+
 .box-text {
     text-align: center;
 }
@@ -68,6 +72,11 @@
     cursor: pointer;
 }
 
+.show-btn:hover {
+    background-color: #d5d5d5;
+    color: gray;
+}
+
 .show-btn-container {
     width: 100%;
     display: flex;
@@ -76,4 +85,12 @@
 
 .location-box {
     height: 60px;
+}
+
+.form-box {
+    width: 70%;
+}
+
+.recommended-services-containers {
+    margin: 30px 0;
 }

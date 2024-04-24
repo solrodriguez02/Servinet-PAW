@@ -105,10 +105,12 @@ body {
     cursor: pointer;
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
+    color: white;
 }
 
 .btn:hover {
     background-color: #7475ff;
+    transform: translateY(-2px);
 }
 
 .btn-text {
@@ -135,4 +137,37 @@ body {
     text-decoration: none;
     color: #585bfa;
     margin: 0 15px;
+}
+
+.search-box {
+    width: 100%;
+    border-radius: 20px 0 0 20px;
+    padding: 10px 20px;
+    background-color: #efefef;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    height: 45px;
+}
+
+.search-box:hover {
+    background-color: #e1e1e1;
+}
+
+.search-button {
+    background-color: #585bfa;
+    border-radius: 0 20px 20px 0;
+    border: none;
+    color: white;
+    height: 45px;
+    padding: 0 15px;
+}
+
+.search-button:hover {
+    background-color: #7c7cfd;
+}
+
+.search-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
 }

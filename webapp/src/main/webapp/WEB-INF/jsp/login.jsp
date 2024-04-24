@@ -49,8 +49,8 @@
                 <p><spring:message code="login.register-1"/> <a href="${pageContext.request.contextPath}/registrarse"><spring:message code="login.register-2"/></a>
                 </p>
             </div>
-            <div class="large-btn">
-                <input type="submit" value="<spring:message code="login.submit"/>" class="submitBtn large-btn">
+            <div class="align-center">
+                <input type="submit" value="<spring:message code="login.submit"/>" class="btn submit-btn">
             </div>
         </form:form>
         </div>

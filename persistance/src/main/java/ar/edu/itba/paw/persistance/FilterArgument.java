@@ -10,6 +10,11 @@ public class FilterArgument {
         return addParameter(FilterTypes.CATEGORY,category);
 
     }
+
+    public FilterArgument addRating(int rating) {
+        return addParameter(FilterTypes.RATING, rating);
+    }
+
     private FilterArgument addParameter(FilterTypes type,String value){
         if(value!=null && !value.isEmpty()){
             filters.put(type,value);
@@ -18,6 +23,13 @@ public class FilterArgument {
     }
     private FilterArgument addParameter(FilterTypes type,String[] value){
         if(value!=null && value.length!=0){
+            filters.put(type,value);
+        }
+        return this;
+    }
+
+    private FilterArgument addParameter(FilterTypes type, int value){
+        if(value>0 && value<=5){
             filters.put(type,value);
         }
         return this;
@@ -41,7 +53,7 @@ public class FilterArgument {
 
     public String formSqlSentence(String subquery) {
         StringBuilder sql = new StringBuilder(subquery);
-        sql.append("where true ");//(p ^ 1) === p
+        sql.append("as s where true ");//(p ^ 1) === p
         for (Map.Entry<FilterTypes, Object> entries : filters.entrySet()) {
                 sql.append("and ").append(entries.getKey()).append(" ");
         }
@@ -62,6 +74,7 @@ public class FilterArgument {
         private enum FilterTypes {
             CATEGORY("category = ? "),
             LOCATION("? && neighbourhoods "),
+            RATING("s.id IN (SELECT serviceid FROM ratings GROUP BY serviceid HAVING AVG(rating) >= ?)"),
             SERVICE_SEARCH("lower(servicename) like concat('%',lower(?),'%')");
 
             private final String value; //valores a ser filtrados/buscados en SQL

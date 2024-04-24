@@ -61,8 +61,11 @@
         <p>
             <spring:message code="register.already-registered"/> <a href="<c:url value="/login"/>"><spring:message code="login"/></a>
         </p>
-        <input type="submit" value="<spring:message code="register.submit"/>" class="submitBtn">
+        <div class="align-center">
+            <input type="submit" value="<spring:message code="register.submit"/>" class="btn submit-btn">
+        </div>
     </form:form>
+
 </div>
 </body>
 </html>

@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS services (
     imageId INT references images(imageid),
     neighbourhood VARCHAR(255)
     );
+
 CREATE TABLE IF NOT EXISTS nbservices(insertid serial primary key ,
     serviceid int references services(id) on delete cascade ,
     neighbourhood varchar(60)

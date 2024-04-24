@@ -14,7 +14,12 @@
 .nav-item {
     text-decoration: none;
     color: black;
-    margin-left: 20px;
+    margin-left: 25px;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+    color: #585bfa;
 }
 
 .logo-img-container {

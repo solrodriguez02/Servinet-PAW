@@ -23,7 +23,9 @@
         <spring:message code="recover.explanation"/>
         </p>
     </label>
-        <input type="submit" value="<spring:message code="recover.submit"/>" class="submitBtn large-centered-btn"/>
+        <div class="align-center">
+            <input type="submit" value="<spring:message code="recover.submit"/>" class="btn submit-btn">
+        </div>
     </form:form>
 </div>
 </body>

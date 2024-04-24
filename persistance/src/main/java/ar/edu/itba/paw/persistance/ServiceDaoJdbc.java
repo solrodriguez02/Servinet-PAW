@@ -100,14 +100,13 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public List<Service> getServicesFilteredBy(int page, String category, String[] location,String searchQuery) {
-    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page);
-    String sqlQuery= "select * from " + filterArgument.formSqlSentence("(select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ") ;
+    public List<Service> getServicesFilteredBy(int page, String category, String[] location, int rating, String searchQuery) {
+    FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page).addRating(rating);
+    String sqlQuery= "select * from " + filterArgument.formSqlSentence("(select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ");
     Object[] values = filterArgument.getValues().toArray();
-
-    return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
-
+    return jdbcTemplate.query(sqlQuery.toString(), values, ROW_MAPPER);
    }
+
     @Override
     public int getServiceCount(String category, String[] location,String searchQuery) {
         FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery);
@@ -120,4 +119,11 @@ public class ServiceDaoJdbc implements ServiceDao {
         return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
     }
 
- }
+    @Override
+    public List<Service> getRecommendedServices() {
+        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id DESC LIMIT 10", ROW_MAPPER);
+        return list;
+    }
+
+
+}
