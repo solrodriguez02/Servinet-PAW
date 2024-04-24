@@ -76,7 +76,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public Optional<List<Service>> getAllBusinessServices(long businessId){
-        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId, Timestamp.valueOf(LocalDateTime.now()) }, ROW_MAPPER);
+        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId}, ROW_MAPPER);
         return Optional.of(list);
     }
 

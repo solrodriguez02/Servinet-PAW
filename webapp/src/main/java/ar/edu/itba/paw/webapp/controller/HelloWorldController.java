@@ -15,47 +15,62 @@ import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
 import ar.edu.itba.paw.webapp.form.ResponseForm;
 import ar.edu.itba.paw.webapp.form.ReviewsForm;
+import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
+import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.mail.MessagingException;
+import javax.validation.Valid;
+import java.io.IOException;
+import java.util.*;
 
 
 @Controller
 @Qualifier("HelloWorldController")
 public class HelloWorldController {
 
-    private final UserService us;
-    private final BusinessService bs;
-    private final ServiceService service;
-    private final AppointmentService appointment;
     private final RatingService rating;
     private final QuestionService question;
     private final ImageService is;
+    private UserService us;
+    private BusinessService bs;
+    private ServiceService ss;
+    private AppointmentService appointment;
+
+    private final SecurityService securityService;
+    private final PasswordRecoveryCodeService passwordRecoveryCodeService;
 
     List<Categories> categories = new ArrayList<>();
     List<PricingTypes> pricingTypes = new ArrayList<>();
     List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
+
     @Autowired
     public HelloWorldController(
             @Qualifier("userServiceImpl") final UserService us,
             @Qualifier("imageServiceImpl") final ImageService is,
-            @Qualifier("serviceServiceImpl") final ServiceService service,
+            @Qualifier("serviceServiceImpl") final ServiceService ss,
             @Qualifier("appointmentServiceImpl") final AppointmentService appointment,
             @Qualifier("BusinessServiceImpl") final BusinessService bs,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
-            @Qualifier("RatingServiceImpl") final RatingService rating
+            @Qualifier("RatingServiceImpl") final RatingService rating,
+            @Qualifier("passwordRecoveryCodeServiceImpl") final PasswordRecoveryCodeService passwordRecoveryCodeService,
+            @Qualifier("securityServiceImpl") final SecurityService securityService
     ){
         this.us = us;
-        this.service = service;
+        this.ss = ss;
         this.appointment = appointment;
+        this.passwordRecoveryCodeService = passwordRecoveryCodeService;
+        this.securityService = securityService;
         this.is=is;
         this.bs = bs;
         this.rating = rating;
@@ -65,12 +80,91 @@ public class HelloWorldController {
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
     }
 
+    @RequestMapping(path="/login")
+    public ModelAndView login() {
+
+        return new ModelAndView("login");
+    }
+    @RequestMapping(path="/registrarse", method=RequestMethod.GET)
+    public ModelAndView registerUser(@ModelAttribute("registerUserForm") RegisterUserForm form) {
+        final ModelAndView mav = new ModelAndView("postPersonal");
+
+        return mav;
+    }
+    @RequestMapping(path="/olvide-mi-clave", method = RequestMethod.GET)
+    public ModelAndView forgotPasswordRequest(@ModelAttribute("requestPasswordRecoveryForm") RequestPasswordRecoveryForm form) {
+        return new ModelAndView("forgotPassword");
+    }
+
+    @RequestMapping(path="/olvide-mi-clave", method = RequestMethod.POST)
+    public ModelAndView requestPasswordRecovery(@Valid @ModelAttribute("requestPasswordRecoveryForm") RequestPasswordRecoveryForm form, final BindingResult errors) {
+        if (errors.hasErrors()){
+            return forgotPasswordRequest(form);
+        }
+        try{
+            passwordRecoveryCodeService.sendCode(form.getEmail());
+        }catch(MessagingException e){
+            //usar LOGGING
+            System.err.println(e.getMessage());
+        }
+
+        return new ModelAndView("redirect:/login");
+    }
+
+    @RequestMapping(path="/restablecer-clave/{token}", method = RequestMethod.GET)
+    public ModelAndView resetPasswordRequest(@PathVariable(value = "token") final String token, @ModelAttribute("PasswordResetForm") PasswordResetForm form){
+        if (!passwordRecoveryCodeService.validateCode(UUID.fromString(token))){
+            //TODO: pantalla de error
+            return new ModelAndView("redirect:/login");
+        }
+        ModelAndView mv = new ModelAndView("resetPassword");
+        mv.addObject("token", token);
+        return mv;
+    }
+
+    @RequestMapping(method = RequestMethod.POST , path = "/restablecer-clave/{token}")
+    public ModelAndView resetPassword(@PathVariable(value = "token")final String token, @Valid @ModelAttribute("PasswordResetForm") PasswordResetForm form, final BindingResult errors){
+        if (errors.hasErrors()){
+            return resetPasswordRequest(token, form);
+        }
+        try {
+            passwordRecoveryCodeService.changePassword(UUID.fromString(token), form.getPassword());
+        } catch (MessagingException e) {
+            System.err.println(e.getMessage());
+        }
+        return new ModelAndView("redirect:/login");
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
         mav.addObject("categories", categories);
         mav.addObject("neighbourhoods", neighbourhoods);
         return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
+    public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
+        if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
+        }
+        final ModelAndView mav = new ModelAndView("postService");
+        mav.addObject("pricingTypes",pricingTypes);
+        mav.addObject("neighbours",neighbourhoods);
+        return mav;
+    }
+    @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
+    public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
+
+        if (errors.hasErrors()) {
+            return registerService(businessId, form);
+        }
+
+        long imageId = form.getImage().isEmpty()? 0 : is.addImage(form.getImage().getBytes()).getImageId();
+        //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
+        Business business = bs.findById(businessId).orElseThrow(ServiceNotFoundException::new);
+        Service newService = ss.create(business,form.getTitle(),form.getDescription(),form.getHomeserv(),form.getNeighbourhood(),form.getLocation(),form.getCategory(),form.getMinimalduration(),form.getPricingtype(),form.getPrice(),form.getAdditionalCharges(), imageId);
+        return new ModelAndView("redirect:/servicio/"+newService.getId());
     }
 
 
@@ -83,74 +177,86 @@ public class HelloWorldController {
     ) {
         if(page == null) page = 0;
         final ModelAndView mav = new ModelAndView("services");
-        List<Service> serviceList = service.services(page, category, neighbourhoodFilters, query);
+        List<Service> serviceList = ss.services(page, category, neighbourhoodFilters, query);
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
         mav.addObject("category", category);
         mav.addObject("neighbourhoods", neighbourhoods);
         mav.addObject("location", neighbourhoodFilters);
-        mav.addObject("resultsAmount", service.getServiceCount(category, neighbourhoodFilters,query));
-        mav.addObject("pageCount", service.getPageCount(category, neighbourhoodFilters,query));
+        mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters,query));
+        mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters,query));
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
-    public ModelAndView postForm(@PathVariable("businessId") final long businessId){
-        final ModelAndView mav = new ModelAndView("post");
-        mav.addObject("pricingTypes",pricingTypes);
+    // @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
+    // public ModelAndView postForm(@PathVariable("businessId") final long businessId){
+    //     final ModelAndView mav = new ModelAndView("postService");
+    //     mav.addObject("pricingTypes",pricingTypes);
+    //     mav.addObject("neighbours",neighbourhoods);
+    //     return mav;
+    // }
+
+    @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
+    public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {
+        final ModelAndView mav = new ModelAndView("postBusiness");
         mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
+    /*
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
+    public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
+        service.delete(serviceid);
+        return new ModelAndView("redirect:/");
+    }
+    */
 
-
-    @RequestMapping(method = RequestMethod.GET, path = "/registrar-datos-personales")
-    public ModelAndView personalForm(
+    @RequestMapping(method = RequestMethod.POST, path = "/registrar-negocio")
+    public ModelAndView postBusiness(@ModelAttribute("BusinessForm") @Valid final BusinessForm form, final BindingResult errors
     ) {
-        return new ModelAndView("postPersonal");
+        if (errors.hasErrors()) {
+            return registerBusiness(form);
+        }
+        ServinetAuthUserDetails userDetails = (ServinetAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = us.findByEmail(userDetails.getUsername()).orElse(null);
+        if (user == null){
+            return new ModelAndView("redirect:/login");
+        }
+        bs.createBusiness(form.getBusinessName(),user.getUserId(), form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
+        return new ModelAndView("redirect:/");
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/crear-perfiles")
-    public ModelAndView post(
-            @RequestParam(value = "nombre") final String name,
-            @RequestParam(value = "apellido") final String surname,
-            @RequestParam(value = "email") final String email,
-            @RequestParam(value = "telefono") final String telephone,
-            @RequestParam(value = "nombre-negocio") final String businessName,
-            @RequestParam(value = "email-negocio") final String businessEmail,
-            @RequestParam(value = "telefono-negocio") final String businessTelephone,
-            @RequestParam(value = "ubicacion-negocio") final String businessLocation
+//@RequestParam(value = "nombre-negocio") final String businessName,
+//@RequestParam(value = "email-negocio") final String businessEmail,
+//@RequestParam(value = "telefono-negocio") final String businessTelephone,
+//@RequestParam(value = "ubicacion-negocio") final String businessLocation
+        // Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
+        // if (newBusiness == null) {
+        //     String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
+        //     String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
+        //     String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
+        //     newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
+        // }else {
+        //     if (newBusiness.getUserId() != newuser.getUserId()){
+        //         return new ModelAndView("redirect:/registrar-datos-personales");
+        //     }
+        // }
+    @RequestMapping(method = RequestMethod.POST, path = "/registrarse")
+    public ModelAndView post(@ModelAttribute @Valid final RegisterUserForm form, final BindingResult errors
     ) {
-        User newuser = us.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = us.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            us.changeUsername(newuser.getUserId(),newUsername);
-        }else {
-            if (!newuser.getName().equals(name) || !newuser.getSurname().equals(surname)){
-                return new ModelAndView("redirect:/registrar-datos-personales");
-            }
+        if (errors.hasErrors()) {
+            return registerUser(form);
         }
-        Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
-        if (newBusiness == null) {
-            String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
-            String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
-            String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
-            newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
-        }else {
-            if (newBusiness.getUserId() != newuser.getUserId()){
-                return new ModelAndView("redirect:/registrar-datos-personales");
-            }
-        }
-        return new ModelAndView("redirect:/publicar-servicio/" + newBusiness.getBusinessid());
+        us.create(form.getUsername(),form.getName(),form.getPassword(),form.getSurname(),form.getEmail(),form.getTelephone());
+        return new ModelAndView("redirect:/login");
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId){
+    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
 
         final ModelAndView mav = new ModelAndView("postAppointment");
         try {
-            Service service = this.service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
             mav.addObject("service",service);
         } catch (ServiceNotFoundException ex) {
             return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
@@ -166,7 +272,7 @@ public class HelloWorldController {
 
         Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
         if(!optionalAppointment.isPresent()) {
-            if(service.findById(serviceId).isPresent() ) {
+            if(ss.findById(serviceId).isPresent() ) {
                 return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
             }
             else {
@@ -176,7 +282,7 @@ public class HelloWorldController {
 
         Appointment app = appointment.findById(appointmentId).get();
         User user = us.findById(app.getUserid()).get();
-        Service service = this.service.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        Service service = ss.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final ModelAndView mav = new ModelAndView("appointment");
         mav.addObject("appointment", app);
         mav.addObject("user", user);
@@ -219,7 +325,7 @@ public ModelAndView service(
     if(questionPage == null) questionPage = 0;
     if(reviewPage == null) reviewPage = 0;
     try {
-        serv = service.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        serv = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
     } catch (ServiceNotFoundException e) {
         return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }

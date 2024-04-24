@@ -14,22 +14,12 @@ public class ReviewsForm {
     @Size(max=255)
     private String comment;
 
-    private long questionUserId;
-
     public int getRating() {
         return rating;
     }
 
     public String getComment() {
         return comment;
-    }
-
-    public long getQuestionUserId() {
-        return questionUserId;
-    }
-
-    public void setQuestionUserId(long userId) {
-        this.questionUserId = userId;
     }
 
     public void setRating(int rating) {

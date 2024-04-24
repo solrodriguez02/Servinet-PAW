@@ -11,7 +11,7 @@
 <div class="page">
     <div class="header">
         <h2>Mis negocios</h2>
-        <a href="${pageContext.request.contextPath}/${userId}/negocios/consultas" class="none-decoration">
+        <a href="${pageContext.request.contextPath}/negocios/consultas" class="none-decoration">
             <button class="btn center-vertically"><i class="material-icons ">notifications_active</i> Ver consultas</button>
         </a>
     </div>

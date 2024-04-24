@@ -1,56 +1,68 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <jsp:include page="navbar.jsp" />
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Únete a la comunidad de Servinet</title>
 </head>
 <body>
-<c:url value="/crear-perfiles" var="postUrl"/>
+<c:url value="/registrarse" var="postUrl"/>
 <div class="postForm page">
-    <form action="${postUrl}" method="post" class="form">
-
-        <h3 class="form-title">Datos personales y contacto</h3>
-
+    <form:form action="${postUrl}" modelAttribute="registerUserForm" method="post" class="form">
+        <h2 class="form-title highlight-text"><spring:message code="register.create-profile"/></h2>
         <label>
-            <p class="label">Nombre:</p>
-            <input type="text" class="input" name="nombre" placeholder="Ingresa tu nombre"/>
+            <p class="label"><spring:message code="name"/></p>
+            <spring:message code="input.name" var="inputName"/>
+            <form:errors path="name" cssClass="error" element="p"/>
+            <form:input type="text" cssClass="input" path="name" placeholder="${inputName}" required="true"/>
         </label>
         <label>
-            <p class="label">Apellido:</p>
-            <input type="text" class="input" name="apellido" placeholder="Ingresa tu apellido"/>
+            <p class="label"><spring:message code="lastname"/></p>
+            <spring:message code="input.lastname" var="inputLastname"/>
+            <form:errors path="surname" cssClass="error" element="p"/>
+            <form:input type="text" cssClass="input" path="surname" placeholder="${inputLastname}" required="true"/>
         </label>
         <label>
-            <p class="label">Email:</p>
-            <input type="text" class="input" name="email" placeholder="Ingresa tu mail para que tus clientes puedan contactarse"/>
+            <p class="label"><spring:message code="email"/></p>
+            <spring:message code="input.email" var="inputEmail"/>
+            <form:errors path="email" cssClass="error" element="p"/>
+            <form:input type="email" id="email" cssClass="input" path="email" placeholder="${inputEmail}" required="true"/>
         </label>
         <label>
-            <p class="label">Teléfono</p>
-            <input type="text" class="input" name="telefono" placeholder="Ingresa tu teléfono para que tus clientes puedan contactarse"/>
-        </label>
-
-        <h3 class="form-title">Datos del negocio (opcionales)</h3>
-        <label>
-            <p class="label">Nombre del negocio:</p>
-            <input type="text" class="input" name="nombre-negocio" placeholder="Ingresa tu nombre"/>
+            <p class="label"><spring:message code="telephone"/></p>
+            <spring:message code="input.telephone" var="inputTelephone"/>
+            <form:errors path="telephone" cssClass="error" element="p"/>
+            <form:input type="text" cssClass="input" path="telephone" placeholder="${inputTelephone}" required="true"/>
         </label>
         <label>
-            <p class="label">Email del negocio:</p>
-            <input type="text" class="input" name="email-negocio" placeholder="Ingresa tu mail para que tus clientes puedan contactarse"/>
+            <p class="label"><spring:message code="username"/></p>
+            <spring:message code="input.username" var="inputUsername"/>
+            <form:errors path="username" cssClass="error" element="p"/>
+            <form:input type="text" cssClass="input" path="username" placeholder="${inputUsername}" required="true"/>
         </label>
         <label>
-            <p class="label">Teléfono del negocio:</p>
-            <input type="text" class="input" name="telefono-negocio" placeholder="Ingresa tu teléfono para que tus clientes puedan contacarse"/>
+            <p class="label"><spring:message code="password"/></p>
+            <spring:message code="input.password" var="inputPassword"/>
+            <form:errors path="password" cssClass="error" element="p"/>
+            <form:input type="text" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
         </label>
+            <form:errors path="" cssClass="error"/>
         <label>
-            <p class="label">Dirección física del negocio:</p>
-            <input type="text" class="input" name="ubicacion-negocio" placeholder="Ingresa tu teléfono para que tus clientes puedan contactarse"/>
+            <p class="label"><spring:message code="repeat-password"/></p>
+            <spring:message code="input.repeat-password" var="inputRepeatPassword"/>
+            <form:errors path="passwordConfirmation" cssClass="error" element="p"/>
+            <form:input type="text" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}" required="true"/>
         </label>
-
-        <input type="submit" value="Siguiente" class="submitBtn">
-    </form>
+        <p>
+            <spring:message code="register.already-registered"/> <a href="<c:url value="/login"/>"><spring:message code="login"/></a>
+        </p>
+        <input type="submit" value="<spring:message code="register.submit"/>" class="submitBtn">
+    </form:form>
 </div>
 </body>
 </html>

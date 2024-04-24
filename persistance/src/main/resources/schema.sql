@@ -85,6 +85,12 @@ CREATE TABLE IF NOT EXISTS ratings (
      date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS passwordrecoverycodes (
+    userid INT REFERENCES users ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+--    code VARCHAR(255) UNIQUE NOT NULL,
+    code uuid UNIQUE NOT NULL,
+    expirationdate TIMESTAMP
+);
 
 
 --insert into users  (username, password, name, surname, email, telephone,isprovider)  values ('admin', 'admin', 'adminname', 'adminlastname','admin@mail.com','123456789', true);

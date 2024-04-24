@@ -28,8 +28,8 @@ select.input {
     display: flex;
     justify-content: space-between;
     margin-bottom: 15px;
-
 }
+
 .input {
     width: 100%;
     border: 1px solid #DADCE0;
@@ -93,6 +93,11 @@ select.input {
     margin-top: 30px;
 }
 
+.large-centered-btn{
+    margin: 5px auto;
+    width: 100%;
+}
+
 .cancelBtn:hover {
     background-color: #ffcccc;
     transform: translateY(-2px);
@@ -100,4 +105,27 @@ select.input {
 
 .options a {
     text-decoration: none;
+}
+
+.password-options{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.password-options a {
+    text-decoration: none;
+    color: #585bfa;
+    padding-left: 30px;
+}
+
+.register-options{
+   display: flex;
+   justify-content: space-between;
+}
+
+input[type="checkbox"] {
+    height: 1.5em;
+    width: 1.5em;
+    vertical-align: middle;
 }

@@ -42,7 +42,20 @@ public class EmailServiceImpl implements EmailService{
     @Async
     @Override
     public void confirmedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException {
-        prepareAndSendAppointmentMails(appointment,EmailTypes.ACCEPTED, service, business, client, false);
+        prepareAndSendAppointmentMails(appointment, EmailTypes.ACCEPTED, service, business, client, false);
+    }
+    public void recoverPassword(User user, PasswordRecoveryCode code) throws MessagingException {
+        final Context ctx = new Context(LOCALE);
+        ctx.setVariable("user", user);
+        ctx.setVariable("token", code.getCode());
+        sendMail(user.getEmail(), String.format("%s- Cuenta de Servinet de @%s", EmailTypes.PASSWORD_RECOVER.getSubject(""),user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getRecoverPasswordTemplate());
+    }
+    @Async
+    @Override
+    public void confirmNewPassword(User user) throws MessagingException {
+        final Context ctx = new Context(LOCALE);
+        ctx.setVariable("user", user);
+        sendMail(user.getEmail(), String.format("Nueva contraseña definida con éxito para @%s - Servinet", user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getConfirmNewPasswordTemplate());
     }
 
     @Async

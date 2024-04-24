@@ -2,7 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,10 +13,12 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(final UserDao userDao) {
+    public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,8 +32,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User create(final String username, final String password ,final String name, final String surname, final String email, final String telephone) {
-        return userDao.create(username,name, password, surname, email, telephone,false);
+    public Optional<User> findByUsername(String username) {
+        return userDao.findByUsername(username);
+    }
+    @Override
+    public User create(final String username,final String name, final String surname, final String password, final String email, final String telephone) {
+        User user = userDao.findByEmail(email).orElse(null);
+        if (user!= null){
+            throw new IllegalArgumentException("User already exists");
+        }
+        return userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
     }
 
     @Override
@@ -54,4 +64,13 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Override
+    public void changePassword(String email,String password){
+        userDao.changePassword(email,passwordEncoder.encode(password));
+    }
+
+    @Override
+    public void changeUserType(long userid){
+        userDao.changeUserType(userid);
+    }
 }

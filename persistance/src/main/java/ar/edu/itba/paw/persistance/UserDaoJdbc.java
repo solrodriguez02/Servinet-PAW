@@ -41,6 +41,11 @@ public class UserDaoJdbc implements UserDao {
         final List<User> list = jdbcTemplate.query("SELECT * from users WHERE email = ?", new Object[] {email}, ROW_MAPPER);
         return list.stream().findFirst();
     }
+    @Override
+    public Optional<User> findByUsername(String username) {
+        final List<User> list = jdbcTemplate.query("SELECT * from users WHERE username = ?", new Object[] {username}, ROW_MAPPER);
+        return list.stream().findFirst();
+    }
 
     @Override
     public void changeUsername(long userid,String value){
@@ -50,13 +55,21 @@ public class UserDaoJdbc implements UserDao {
     public void changeEmail(long userid,String value){
         changeField("email",userid,value);
     }
+    @Override
+    public void changePassword(String email,String value){
+        changeField("password",findByEmail(email).get().getUserId(),value);
+    }
+    @Override
+    public void changeUserType(long userid){
+        jdbcTemplate.update("update users set isprovider = not isprovider where userid = ?",userid);
+    }
 
     private void changeField(final String field,long userid,String value){//CONSULTAR: si se puede concatenar asi el field
         jdbcTemplate.update(String.format("update users set  %s  = ? where userid = ? ", field),value,userid);//deberia ser seguro, pues field es un parametro que no viene del usuario
     }
 
     @Override
-    public User create(final String username, final String password,final String name,final String surname, final String email, final String telephone, final Boolean isProvider) {
+    public User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final Boolean isProvider) {
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
         userData.put("name", name);

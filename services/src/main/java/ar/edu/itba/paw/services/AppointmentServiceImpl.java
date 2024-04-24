@@ -53,19 +53,7 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date){
         Service service = serviceDao.findById(serviceid).orElseThrow(ServiceNotFoundException::new);
-        // ! TEMP {
         User newuser = userService.findByEmail(email).orElse(null);
-        if (newuser == null){
-            newuser = userService.create("default",name,"default",surname,email,telephone);
-            String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-            userService.changeUsername(newuser.getUserId(),newUsername);
-        }else {
-            if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
-                //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
-                throw new EmailAlreadyUsedException(email);
-            }
-        }
-        // ! }
         LocalDateTime startDate = LocalDateTime.parse(date);
         Appointment appointment = appointmentDao.create(service.getId(), newuser.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
         Business business = businessDao.findById( service.getBusinessid()).get();

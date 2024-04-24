@@ -11,12 +11,14 @@ public class BusinessServiceImpl implements BusinessService{
 
     private final BusinessDao businessDao;
     private final ServiceService serviceService;
+    private final UserService userService;
 
 
     @Autowired
-    public BusinessServiceImpl(final BusinessDao businessDao, final ServiceService serviceService){
+    public BusinessServiceImpl(final BusinessDao businessDao, final ServiceService serviceService, final UserService userService){
         this.businessDao = businessDao;
         this.serviceService = serviceService;
+        this.userService = userService;
     }
 
     @Override
@@ -50,7 +52,17 @@ public class BusinessServiceImpl implements BusinessService{
     }
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
-        return businessDao.createBusiness(businessName,userId,telephone,email,location);
+        Business business = businessDao.createBusiness(businessName,userId,telephone,email,location);
+        userService.changeUserType(userId);
+        return business;
+    }
+    @Override
+    public Boolean isBusinessOwner(long businessId, long userId){
+        Business business = businessDao.findById(businessId).orElse(null);
+        if(business == null){
+            return false;
+        }
+        return business.getUserId() == userId;
     }
 
     @Override

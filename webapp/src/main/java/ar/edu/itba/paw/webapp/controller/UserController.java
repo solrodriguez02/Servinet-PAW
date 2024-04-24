@@ -19,61 +19,69 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller()
+@Controller
 public class UserController {
     private final BusinessService businessService;
     private final ServiceService serviceService;
     private final UserService userService;
     private final QuestionService questionService;
+    private final SecurityService securityService;
 
     //todo: autenticar q es el dueño del service
 
     @Autowired
     public UserController (@Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-                              @Qualifier("userServiceImpl") final UserService userService, @Qualifier("QuestionServiceImpl") final QuestionService questionService) {
+                              @Qualifier("userServiceImpl") final UserService userService, @Qualifier("QuestionServiceImpl") final QuestionService questionService,
+                              @Qualifier("securityServiceImpl") final SecurityService securityService){
         this.businessService = businessService;
         this.serviceService = serviceService;
         this.userService = userService;
         this.questionService = questionService;
+        this.securityService = securityService;
 
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/perfil")
-    public ModelAndView profile(@PathVariable("userId") final long userId) {
+//    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/perfil")
+    @RequestMapping(method = RequestMethod.GET, path = "/perfil")
+    public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");
+        //TODO:agregar regla para casos anonymous
+        long userid = securityService.getCurrentUser().get().getUserId();
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
         List<Business> businessList = new ArrayList<>();
         if ( user.isProvider() )
-            businessList = businessService.findByAdminId(userId).orElse(new ArrayList<>());
+            businessList = businessService.findByAdminId(userid).orElse(new ArrayList<>());
 
         mav.addObject("businessList", businessList);
-        mav.addObject("user",user);
+        mav.addObject("user", user);
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/negocios")
-    public ModelAndView business(@PathVariable("userId") final long userId) {
+    @RequestMapping(method = RequestMethod.GET, path = "/negocios")
+    public ModelAndView business() {
         final ModelAndView mav = new ModelAndView("userBusiness");
+        long userid = securityService.getCurrentUser().get().getUserId();
+        User currentUser = userService.findById(userid).orElseThrow(UserNotFoundException::new);
 
-        User user = userService.findById(userId).orElseThrow(UserNotFoundException::new);
         List<Business> businessList;
-        if ( user.isProvider() )
-            businessList = businessService.findByAdminId(userId).orElse(new ArrayList<>());
+        if ( currentUser.isProvider() )
+            businessList = businessService.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
         else
             return new ModelAndView("redirect:/crear-negocio");
 
-        mav.addObject("user",user);
+        mav.addObject("user",currentUser);
         mav.addObject("businessList", businessList);
         return mav;
     }
 
     // ! USERID HARDCODEADO
-    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/negocios/consultas")
+    @RequestMapping(method = RequestMethod.GET, path = "/negocios/consultas")
     public ModelAndView userServices(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userQuestions");
-        // USER ID HARDCODEADO
-        mav.addObject("pendingQst", questionService.getQuestionsToRespond(2));
+        long userid = securityService.getCurrentUser().get().getUserId();
+
+        mav.addObject("pendingQst", questionService.getQuestionsToRespond(userid));
         return mav;
     }
 

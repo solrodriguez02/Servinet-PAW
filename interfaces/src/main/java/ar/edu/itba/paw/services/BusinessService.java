@@ -22,4 +22,5 @@ public interface BusinessService {
     Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId);
 
     void deleteService(long serviceId);
+    Boolean isBusinessOwner(long businessId, long userId);
 }

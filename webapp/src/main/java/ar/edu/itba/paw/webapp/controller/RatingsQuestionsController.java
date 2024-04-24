@@ -14,23 +14,26 @@ import javax.validation.Valid;
 
 @Controller
 public class RatingsQuestionsController {
+
     private final  RatingService rating;
     private final  QuestionService question;
     private final HelloWorldController helloWorldController;
     private final UserController userController;
+    private final SecurityService securityService;
 
     @Autowired
     public RatingsQuestionsController(
             @Qualifier("HelloWorldController") HelloWorldController helloWorldController,
             @Qualifier("userController") final UserController userController,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
-            @Qualifier("RatingServiceImpl") final RatingService rating
-    ){
+            @Qualifier("RatingServiceImpl") final RatingService rating,
+            @Qualifier("securityServiceImpl") final SecurityService securityService){
         this.helloWorldController = helloWorldController;
         this.rating = rating;
         this.question = question;
         this.userController = userController;
-    }
+        this.securityService = securityService;
+}
 
     @RequestMapping(method = RequestMethod.POST, path = "/preguntar/{serviceId:\\d+}")
     public ModelAndView addQuestion(
@@ -40,7 +43,8 @@ public class RatingsQuestionsController {
         if(errors.hasErrors()) {
             return helloWorldController.service(serviceId, form, null, "qst", 0, 0);
         }
-        question.create(serviceId, form.getUserId(), form.getQuestion());
+        long userid = securityService.getCurrentUser().get().getUserId();
+        question.create(serviceId, userid, form.getQuestion());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=qst");
     }
 
@@ -54,7 +58,7 @@ public class RatingsQuestionsController {
             return userController.userServices(form);
         }
         question.addResponse(questionId, form.getResponse());
-        return new ModelAndView("redirect:/2/negocios/consultas");
+        return new ModelAndView("redirect:/negocios/consultas");
     }
 
 
@@ -66,7 +70,8 @@ public class RatingsQuestionsController {
         if(errors.hasErrors()) {
             return helloWorldController.service(serviceId, null, form, "rw", 0, 0);
         }
-        rating.create(serviceId, form.getQuestionUserId(), form.getRating(), form.getComment());
+        long userid = securityService.getCurrentUser().get().getUserId();
+        rating.create(serviceId, userid, form.getRating(), form.getComment());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");
     }
 

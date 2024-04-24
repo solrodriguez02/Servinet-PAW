@@ -108,10 +108,6 @@
                 <form:form action="${askUrl}" method="post" modelAttribute="questionForm">
                     <div class="flex">
                         <form:input path="question" type="text" class="input" placeholder="Escribi una pregunta"/>
-
-                        <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
-
-                        <form:input path="userId" type="text" element="p" class="transparent" value="1"/>
                         <input type="submit" value="Enviar" class="send-btn">
                     </div>
                     <form:errors path="question" element="p" cssClass="error"/>
@@ -186,11 +182,6 @@
                 <h4>Agrega tu opinion</h4>
                 <c:url value="/opinar/${serviceId}" var="rateUrl"/>
                 <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
-
-                    <!-- ¡¡¡¡¡¡¡¡¡¡¡¡¡¡ ID DEL USUARIO HARDCODEADO !!!!!!!!!!!!! -->
-
-                    <form:input path="questionUserId" type="number" class="transparent" value="1"/>
-
                     <c:forEach begin="1" end="5" var="i">
                         <i class="material-icons star" onclick="selectRate(${i})">star</i>
                     </c:forEach>

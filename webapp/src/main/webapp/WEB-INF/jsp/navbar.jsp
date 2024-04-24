@@ -32,13 +32,12 @@
             <div class="dropdown">
                 <p class="nav-item">Mi cuenta</p>
                 <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/2/perfil">Mi perfil</a>
-                    <a href="${pageContext.request.contextPath}/2/turnos">Mis turnos</a>
-                    <a href="${pageContext.request.contextPath}/2/negocios">Mis negocios</a>
+                    <a href="${pageContext.request.contextPath}/perfil">Mi perfil</a>
+                    <a href="${pageContext.request.contextPath}/turnos">Mis turnos</a>
+                    <a href="${pageContext.request.contextPath}/negocios">Mis negocios</a>
                 </div>
             </div>
-
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-datos-personales">
+            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-negocio">
                 <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
             </a>
 
