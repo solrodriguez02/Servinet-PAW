@@ -3,7 +3,6 @@
 <html>
 <head>
   <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
-
   <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <title>Business</title>

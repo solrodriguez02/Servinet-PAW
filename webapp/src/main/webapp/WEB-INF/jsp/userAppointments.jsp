@@ -13,9 +13,9 @@
         <h2>Mis turnos</h2>
         <div>
             <a href="${pageContext.request.contextPath}/${userId}/turnos/?confirmados=true">
-                <button >Proximos</button></a>
+                <button class="btn-basic btn-left ${confirmed? 'selected':''}" >Proximos</button></a>
             <a href="${pageContext.request.contextPath}/${userId}/turnos/?confirmados=false">
-                <button >Solicitudes</button></a>
+                <button class="btn-basic btn-right ${!confirmed? 'selected':''}" >Solicitudes</button></a>
         </div>
     </div>
     <div class="appointments-container">
@@ -35,4 +35,4 @@
 </body>
 </html>
 
-
+<jsp:include page="appointmentScript.jsp" />

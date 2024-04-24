@@ -14,16 +14,10 @@
     <div class="header">
         <h2><c:out value="${business.businessName}"/></h2>
         <div>
-            <c:choose>
-                <c:when test="${confirmed}">
-                    <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
-                        <button class="btn" >Solicitudes</button></a>
-                </c:when>
-                <c:otherwise>
-                    <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
-                        <button class="btn" >Proximos</button></a>
-                </c:otherwise>
-            </c:choose>
+            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
+                <button class="btn-basic btn-left ${confirmed? 'selected':''}" >Proximos</button></a>
+            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
+                <button class="btn-basic btn-right ${!confirmed? 'selected':''}" >Solicitudes</button></a>
         </div>
     </div>
     <div class="appointments-container">
@@ -44,3 +38,4 @@
 </body>
 </html>
 
+<jsp:include page="appointmentScript.jsp" />
