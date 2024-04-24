@@ -14,10 +14,16 @@
     <div class="header">
         <h2><c:out value="${business.businessName}"/></h2>
         <div>
-            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
-                <button >Proximos</button></a>
-            <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
-                <button >Solicitudes</button></a>
+            <c:choose>
+                <c:when test="${confirmed}">
+                    <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
+                        <button class="btn" >Solicitudes</button></a>
+                </c:when>
+                <c:otherwise>
+                    <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
+                        <button class="btn" >Proximos</button></a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
     <div class="appointments-container">

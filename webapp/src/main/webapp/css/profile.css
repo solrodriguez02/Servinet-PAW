@@ -97,3 +97,22 @@
     padding-bottom: 20px;
     width: 470px;
 }
+
+.info-btn {
+    font-weight: normal;
+    border-radius: 8px;
+    padding: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 10px;
+    align-self: center;
+    align-items: center;
+}
+
+.info-access {
+    margin-right: 20px;
+}
+
+.info-icon{
+    padding-right: 5px ;
+}
