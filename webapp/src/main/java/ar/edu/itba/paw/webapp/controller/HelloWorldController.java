@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
@@ -149,6 +150,18 @@ public class HelloWorldController {
         return mav;
     }
 
+    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio")
+    public ModelAndView selectBusinessForService() {
+        final ModelAndView mav = new ModelAndView("businessesForNewService");
+        long userid = securityService.getCurrentUser().get().getUserId();
+        User currentUser = us.findById(userid).orElseThrow(UserNotFoundException::new);
+        List<Business> businessList;
+        businessList = bs.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
+        mav.addObject("user",currentUser);
+        mav.addObject("businessList", businessList);
+        return mav;
+    }
+
     @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
     public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
         if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){
@@ -205,6 +218,16 @@ public class HelloWorldController {
     //     mav.addObject("neighbours",neighbourhoods);
     //     return mav;
     // }
+
+    @RequestMapping(method = RequestMethod.GET, path="/publicar")
+    public ModelAndView publish() {
+        final ModelAndView mav = new ModelAndView("publish");
+        User currentUser = securityService.getCurrentUser().get();
+        if(!currentUser.isProvider()) {
+            return new ModelAndView("redirect:/registrar-negocio");
+        }
+        return mav;
+    }
 
     @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
     public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {

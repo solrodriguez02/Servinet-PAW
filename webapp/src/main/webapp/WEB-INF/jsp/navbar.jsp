@@ -38,7 +38,7 @@
                     <a href="${pageContext.request.contextPath}/negocios">Mis negocios</a>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/registrar-negocio">
+            <a class="nav-item" href="${pageContext.request.contextPath}/publicar">
                 <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
             </a>
 

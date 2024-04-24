@@ -1,0 +1,46 @@
+.btn-new {
+    padding: 15px !important;
+}
+
+.btns-container {
+    margin-top: 20%;
+}
+
+.business-btn {
+    margin-right: 18px;
+    background-color: #e1e1e1 !important;
+}
+
+.business-btn:hover {
+    background-color: #d2d2d2 !important;
+}
+
+.business-btn-text {
+    color: black !important;
+    align-items: center;
+    display: flex;
+}
+
+.business-icon {
+    margin-right: 8px;
+}
+
+.service-btn-text {
+    align-items: center;
+    display: flex;
+}
+
+.add-service-text {
+    color: #585bfa;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.add-service-text:hover {
+    color: #7c7cfd;
+}
+
+.add-icon {
+    margin-left: 8px;
+}
