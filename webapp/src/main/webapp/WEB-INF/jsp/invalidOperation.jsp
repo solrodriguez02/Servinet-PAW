@@ -10,14 +10,21 @@
 <div class="page">
     <c:choose>
         <c:when test="${argument == 'servicionoexiste'}">
-            <h2 class="header-text">Este servicio ya no existe, lo sentimos.</h2>
+            <h2 class="header-text">Este servicio no existe.</h2>
         </c:when>
         <c:when test="${argument == 'turnonoexiste'}">
-            <h2 class="header-text">Este turno ya no existe, lo sentimos.</h2>
+            <h2 class="header-text">Este turno no existe.</h2>
         </c:when>
         <c:when test="${argument == 'turnoyaconfirmado'}">
             <h2 class="header-text">Esta operacion ya no es valida pues el turno ya se ha confirmado anteriormente.</h2>
         </c:when>
+        <c:when test="${argument == 'operacionprohibida'}">
+            <h2 class="header-text">No tiene permiso para realizar esta operacion</h2>
+        </c:when>
+        <c:when test="${argument == 'negocionoexiste'}">
+            <h2 class="header-text">Este servicio no existe.</h2>
+        </c:when>
+
 
     </c:choose>
     <div class="align-center">
