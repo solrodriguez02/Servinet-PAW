@@ -329,6 +329,8 @@ public ModelAndView service(
         @RequestParam(value = "rwPag", required = false) Integer reviewPage
 ) {
     final ModelAndView mav = new ModelAndView("service");
+    Optional<User> currentUser = securityService.getCurrentUser();
+    Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
     Service serv;
     if(questionPage == null) questionPage = 0;
     if(reviewPage == null) reviewPage = 0;
@@ -337,6 +339,10 @@ public ModelAndView service(
     } catch (ServiceNotFoundException e) {
         return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
     }
+    Business business = bs.findById(serv.getBusinessid()).get();
+    boolean isOwner = userId != null && business.getUserId()==userId;
+
+    mav.addObject("isOwner", isOwner);
     mav.addObject("option", option);
     mav.addObject("avgRating", rating.getRatingsAvg(serviceId));
     mav.addObject("service",serv);
@@ -347,7 +353,7 @@ public ModelAndView service(
     mav.addObject("questionPage", questionPage);
     mav.addObject("reviewPage", reviewPage);
     mav.addObject("TBDPricing", TBDPricing);
-    mav.addObject("hasAlreadyRated", rating.hasAlreadyRated(1, serviceId));
+    mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
     return mav;
 }
 

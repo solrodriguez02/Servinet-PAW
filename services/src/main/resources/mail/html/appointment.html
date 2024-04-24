@@ -26,15 +26,25 @@
             font-family: 'Poppins', sans-serif;
             background: #585bfa;
             padding: 50px;
+            text-align: justify;
         }
         button:hover {
             opacity: 0.7;
         }
-        .btn-container {
-            display: flex;
-            align-items: center;
+
+        .btn {
+            font-weight: bold;
+            font-family: 'Poppins', sans-serif;
+            padding: 10px;
+            color: white;
+            padding-inline: 20px;
         }
 
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+        }
         .confirm {
             background-color: #585bfa;
         }
@@ -43,9 +53,12 @@
             background-color: #de2121;
             margin-left: 20px;
         }
-        .cancel {
-            background-color: #de2121;
-        }
+        /*
+        .align-center {
+            text-align: center;
+            opacity: 0.8;
+        }*/
+
     </style>
 </head>
 <body class="bg">
@@ -61,7 +74,7 @@
             <div th:case="'WAITING'">
                 Su
                 <span th:fragment="datetime">
-                    turno <!--span th:text="'#'+${appointmentId}"></span-->
+                    turno
                     para el servicio <span th:text="${serviceName}"/> el día
                     <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
                     <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
@@ -80,17 +93,17 @@
 
                     <div class="btn-container">
                         <form th:action="${url}+'aceptar-turno/'+ ${appointmentId}" method="post">
-                            <button class="confirm" type="submit">
+                            <button class="btn confirm" type="submit">
                             Aceptar
                             </button>
                         </form>
                         <form th:action="${url}+'rechazar-turno/'+${appointmentId}" method="post">
-                            <button class="deny" type="submit">
+                            <button class="btn deny" type="submit">
                             Rechazar
                             </button>
                         </form>
                     </div>
-                    <p>
+                    <p class="align-center">
                         <em>Este mail dejará de ser válido luego de seleccionar una opción</em>
                     </p>
             </div>
@@ -107,12 +120,6 @@
                             quien solicitó el turno, su correo es <span th:text="${client.getEmail()}"></span>.
                         </span>
                     </span>
-                </p>
-                <p>
-                    Si desea cancelarlo, haga click en:
-                    <form th:action="${url}+'cancelar-turno/'+ ${appointmentId}" method="post">
-                        <button class="cancel" type="submit">Cancelar turno</button>
-                    </form>
                 </p>
             </div>
 
@@ -138,10 +145,17 @@
             <img src="sample.png" th:src="|cid:${imageResourceName}|" />
         </p-->
 
-        <p th:if="${type != 'CANCELLED' && type != 'DENIED'}">
-            Para mas detalles del turno haga click
-            <a th:href="${url}+'turno/'+${serviceId}+'/'+${appointmentId}">aqui</a>
-        </p>
+        <div th:if="${ isClient &&  type != 'CANCELLED' && type != 'DENIED'}" >
+            <p>
+                Para mas detalles del turno haga click en
+            </p>
+            <div class="btn-container">
+                <a th:href="${url}+'turno/'+${serviceId}+'/'+${appointmentId}">
+                    <button class="btn confirm">Ver turno</button>
+                </a>
+            </div>
+
+        </div>
     </div>
 </div>
 

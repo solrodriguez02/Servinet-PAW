@@ -9,13 +9,19 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title></title>
 </head>
-<c:url var="deleteUrl" value="/${service.id}/eliminar-servicio" />
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
     <div class="page">
         <c:if test="${option==null}">
-        <h2><c:out value="${service.name}"/></h2>
-
+        <div class="header">
+            <h2><c:out value="${service.name}"/></h2>
+            <c:if test="${isOwner}">
+                <c:url value="/borrar-servicio/${serviceId}" var="deleteUrl"/>
+                <form:form action="${deleteUrl}" method="post">
+                    <button class="cancelBtn" type="submit">Eliminar servicio</button>
+                </form:form>
+            </c:if>
+        </div>
         <div class="info-container">
             <div class="img-container">
                 <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
@@ -176,7 +182,18 @@
                 <h3>Opiniones</h3>
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
-                        Ya has opinado!
+                        <h4>Tu opinion en <c:out value="${service.name}"/>:</h4>
+                        <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
+                        <form action="${rateUrl}" method="post">
+                            <c:forEach begin="1" end="5" var="i">
+                                <i class="material-icons star" onclick="selectRate(${i})">star</i>
+                            </c:forEach>
+                            <input name="rating" type="hidden" id="rating" value="${hasAlreadyRated.rating}"/>
+                            <div class="flex">
+                                <input  name="comment" type="text" class="input" placeholder="Escribi una opinion" value="${hasAlreadyRated.comment}"/>
+                                <input type="submit" value="Editar" class="send-btn">
+                            </div>
+                        </form>
                     </c:when>
                     <c:otherwise>
                         <h4>Agrega tu opinion</h4>
@@ -288,6 +305,13 @@
                 toggleQuestionsButton.classList.remove('btn-selected');
             }
         }
+
+        window.onload = function() {
+            var hasAlreadyRated = ${hasAlreadyRated != null};
+            if(hasAlreadyRated) {
+                selectRate(${hasAlreadyRated.rating})
+            }
+        };
 
         function selectRate(rating) {
             document.getElementById("rating").value = rating;

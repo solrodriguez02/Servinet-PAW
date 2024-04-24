@@ -75,4 +75,18 @@ public class RatingsQuestionsController {
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");
     }
 
+
+    @RequestMapping(method = RequestMethod.POST, path = "/editar-opinion/{serviceId:\\d+}/{ratingId:\\d+}")
+    public ModelAndView editReview (
+            @PathVariable("ratingId") final long ratingId,
+            @PathVariable("serviceId") final long serviceId,
+            @RequestParam("comment") final String newComment,
+            @RequestParam("rating") final int newRating
+    ){
+
+        rating.edit(ratingId, newRating, newComment);
+        return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");
+    }
+
+
 }

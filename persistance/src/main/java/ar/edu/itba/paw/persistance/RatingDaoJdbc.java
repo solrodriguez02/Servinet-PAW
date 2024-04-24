@@ -68,4 +68,9 @@ public class RatingDaoJdbc implements RatingDao {
         return ratings.stream().findFirst();
     }
 
+    @Override
+    public void edit(long ratingid, int rating, String comment) {
+        jdbcTemplate.update("UPDATE ratings SET rating = ?, comment = ? WHERE ratingid = ?", rating, comment, ratingid);
+    }
+
 }
