@@ -1,4 +1,4 @@
-/*
+
 
 package ar.edu.itba.paw.persistance;
 
@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
@@ -41,9 +42,9 @@ public class RatingsDaoJdbcTest {
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "services" );
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "users" );
         JdbcTestUtils.deleteFromTables(jdbcTemplate, "business" );
-        jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (USERID, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
+        jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
         jdbcTemplate.execute("INSERT INTO business(businessid, userid, businessname, businessTelephone, businessEmail, businessLocation) VALUES (1, 1, 'businessname', 'businessTelephone', 'businessEmail', 'businessLocation')");
-        jdbcTemplate.execute("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId, neighbourhood) VALUES (1, 1, 'serviceName', 'serviceDescription', true, 'serviceLocation', 'Belleza', 30, 'Total', '1000', false, 123, 'Palermo');\n");
+        jdbcTemplate.execute("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (1, 1, 'serviceName', 'serviceDescription', true, 'serviceLocation', 'Belleza', 30, 'Total', '1000', false, null);");
     }
 
     @Test
@@ -58,14 +59,9 @@ public class RatingsDaoJdbcTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "ratings"));
     }
 
-    @Test
+    @Test(expected = DataIntegrityViolationException.class)
     public void testInvalidCreate() {
-        try {
-            ratingDao.create(SERVICEID, USERID,6, COMMENT);
-            Assert.fail("An exception was expected due to invalid rating value");
-        } catch (Exception e) {
-            Assert.assertTrue(e instanceof SQLException);
-        }
+        ratingDao.create(SERVICEID, USERID,6, COMMENT);
     }
 
     @Test
@@ -88,4 +84,4 @@ public class RatingsDaoJdbcTest {
     }
 
 }
-*/
+
