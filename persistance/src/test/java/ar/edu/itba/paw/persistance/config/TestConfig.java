@@ -22,8 +22,7 @@ public class TestConfig {
     @Value("classpath:sql/schema.sql")
     private Resource schemaSql;
 
-    @Value("classpath:sql/appointments.sql")
-    private Resource appointmentsSql;
+
 
     @Bean
     public DataSource dataSource() {
