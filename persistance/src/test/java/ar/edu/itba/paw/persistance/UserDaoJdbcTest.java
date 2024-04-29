@@ -20,7 +20,7 @@ import javax.sql.DataSource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
 public class UserDaoJdbcTest {
-
+    private static final int USERID = 1;
     private static final String USERNAME = "username";
     private static final String PASSWORD = "mepassword";
     private static final String NAME = "name";
@@ -48,7 +48,7 @@ public class UserDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userDao.create(USERNAME, PASSWORD,NAME, SURNAME, EMAIL, TELEPHONE, false);
+        User user = userDao.create(USERNAME, NAME, SURNAME,PASSWORD, EMAIL, TELEPHONE, false);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);
@@ -62,10 +62,10 @@ public class UserDaoJdbcTest {
     @Test
     public void testChangeUsername() {
         // 1. Precondiciones
-        jdbcTemplate.execute(String.format("INSERT INTO users (username, password, name, surname, email, telephone, isprovider) VALUES ('%s','%s','%s','%s','%s','%s',false)",USERNAME, PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE));
+        jdbcTemplate.execute(String.format("INSERT INTO users (userid,username, password, name, surname, email, telephone, isprovider) VALUES (%d,'%s','%s','%s','%s','%s','%s',false)",USERID,USERNAME, PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE));
 
         // 2. Ejecuta la class under test (una sola)
-        userDao.changeUsername(1,"newUsername");
+        userDao.changeUsername(USERID,"newUsername");
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTableWhere(jdbcTemplate, "users", "username = 'newUsername'"));
