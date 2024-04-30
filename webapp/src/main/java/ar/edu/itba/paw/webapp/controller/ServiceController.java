@@ -2,9 +2,9 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AppointmentForm;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
 import ar.edu.itba.paw.webapp.form.ReviewsForm;

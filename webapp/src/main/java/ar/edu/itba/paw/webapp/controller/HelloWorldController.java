@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.User;
@@ -12,14 +13,9 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
-import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
-import ar.edu.itba.paw.webapp.form.QuestionForm;
-import ar.edu.itba.paw.webapp.form.ResponseForm;
-import ar.edu.itba.paw.webapp.form.ReviewsForm;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
-import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -245,47 +241,6 @@ public class HelloWorldController {
         us.create(form.getUsername(),form.getName(),form.getPassword(),form.getSurname(),form.getEmail(),form.getTelephone());
         return new ModelAndView("redirect:/login");
     }
-
-
-    @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
-    public ModelAndView appointment(
-            @PathVariable("appointmentId") final long appointmentId,
-            @PathVariable("serviceId") final long serviceId) {
-
-        Optional<Appointment> optionalAppointment = appointment.findById(appointmentId);
-        if(!optionalAppointment.isPresent()) {
-            if(ss.findById(serviceId).isPresent() ) {
-                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
-            }
-            else {
-                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=noexiste");
-            }
-        }
-
-        Appointment app = appointment.findById(appointmentId).get();
-        User user = us.findById(app.getUserid()).get();
-        Service service = ss.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
-        final ModelAndView mav = new ModelAndView("appointment");
-        mav.addObject("appointment", app);
-        mav.addObject("user", user);
-        mav.addObject("service", service);
-        mav.addObject("new", true);
-        mav.addObject("confirmed", app.getConfirmed());
-        return mav;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/sinturno/{serviceId:\\d+}")
-    public ModelAndView noneAppointment(
-            @PathVariable("serviceId") final long serviceId,
-            @RequestParam(name = "argumento") String argument
-    ){
-        final ModelAndView mav = new ModelAndView("noneAppointment");
-        mav.addObject("argument", argument);
-        mav.addObject("serviceId", serviceId);
-        return mav;
-    }
-
-
 
 
 }

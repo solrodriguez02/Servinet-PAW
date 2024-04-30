@@ -2,8 +2,8 @@ package ar.edu.itba.paw.webapp.controller;
 
 
 import ar.edu.itba.paw.model.ImageModel;
+import ar.edu.itba.paw.model.exceptions.ImageNotFoundException;
 import ar.edu.itba.paw.services.ImageService;
-import ar.edu.itba.paw.webapp.exception.ImageNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

@@ -55,7 +55,7 @@ public class RatingsQuestionsController {
             @PathVariable("questionId") final long questionId
     ){
         if(errors.hasErrors()) {
-            return userController.userServices(form);
+            return userController.userServicesQuestions(form);
         }
         question.addResponse(questionId, form.getResponse());
         return new ModelAndView("redirect:/negocios/consultas");

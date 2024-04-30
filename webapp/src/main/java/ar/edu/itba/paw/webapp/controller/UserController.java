@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/negocios/consultas")
-    public ModelAndView userServices(@ModelAttribute("responseForm") final ResponseForm responseForm) {
+    public ModelAndView userServicesQuestions(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userQuestions");
         long userid = securityService.getCurrentUser().get().getUserId();
 
@@ -84,7 +84,6 @@ public class UserController {
     public ModelAndView userAppointments( @RequestParam(name = "confirmados") final boolean confirmed) {
 
         final ModelAndView mav = new ModelAndView("userAppointments");
-        //TODO: validar user
 
         long userid = securityService.getCurrentUser().get().getUserId();
 

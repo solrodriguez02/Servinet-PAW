@@ -3,8 +3,8 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.exception.ServiceNotFoundException;
 import ar.edu.itba.paw.webapp.form.AppointmentForm;
 import ar.edu.itba.paw.webapp.form.ServiceForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,26 +20,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
-public class EmailController {
+public class AppointmentController {
 
     private final ServiceService serviceService;
     private final AppointmentService appointmentService;
     private final SecurityService securityService;
     private final ImageService is;
     private final BusinessService businessService;
-    private final EmailService emailService;
 
     @Autowired
-    public EmailController(
-    @Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-    @Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
-            @Qualifier("emailServiceImpl") final EmailService emailService,
-            @Qualifier("securityServiceImpl") final SecurityService securityService){
-        this.emailService = emailService;
+    public AppointmentController(
+        @Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
+        @Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
+        @Qualifier("securityServiceImpl") final SecurityService securityService){
         this.serviceService = serviceService;
         this.is = is;   // TODO: debe ir en ServiceService, en create() paso MultipartFile como param
         this.businessService = businessService;
@@ -49,12 +45,10 @@ public class EmailController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
     public ModelAndView appointment(@PathVariable("serviceId") final long serviceId, @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors) {
-        Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-        //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
+        //todo: manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
         User user = securityService.getCurrentUser().get();
 
         Appointment createdAppointment = appointmentService.create(serviceId,user.getName(),user.getSurname(),user.getEmail(),form.getLocation(),user.getEmail(), form.getDate().toString());
-
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
@@ -64,7 +58,6 @@ public class EmailController {
         // todo business find admin
         if ( user.getUserId() != appointment.getUserid() || !businessService.isBusinessOwner(user.getUserId(), appointment.getUserid()) )
             throw new ForbiddenOperation();
-
     }
 
     @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
@@ -102,6 +95,47 @@ public class EmailController {
         }
         response.setStatus(HttpServletResponse.SC_OK);
 
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
+    public ModelAndView getAppointment(
+            @PathVariable("appointmentId") final long appointmentId,
+            @PathVariable("serviceId") final long serviceId) {
+
+        Optional<Appointment> optionalAppointment = appointmentService.findById(appointmentId);
+        if(!optionalAppointment.isPresent()) {
+            if(serviceService.findById(serviceId).isPresent() ) {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
+            }
+            else {
+                return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=noexiste");
+            }
+        }
+
+        Appointment app = appointmentService.findById(appointmentId).get();
+        User user = securityService.getCurrentUser().get();
+        if ( app.getUserid() != user.getUserId() )
+            throw new ForbiddenOperation();
+
+        Service service = serviceService.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        final ModelAndView mav = new ModelAndView("appointment");
+        mav.addObject("appointment", app);
+        mav.addObject("user", user);
+        mav.addObject("service", service);
+        mav.addObject("new", true);
+        mav.addObject("confirmed", app.getConfirmed());
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/sinturno/{serviceId:\\d+}")
+    public ModelAndView noneAppointment(
+            @PathVariable("serviceId") final long serviceId,
+            @RequestParam(name = "argumento") String argument
+    ){
+        final ModelAndView mav = new ModelAndView("noneAppointment");
+        mav.addObject("argument", argument);
+        mav.addObject("serviceId", serviceId);
+        return mav;
     }
 
 }
