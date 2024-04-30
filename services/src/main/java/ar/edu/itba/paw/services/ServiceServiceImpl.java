@@ -1,9 +1,12 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,14 +20,19 @@ public class ServiceServiceImpl implements ServiceService {
     private final EmailService emailService;
     private final AppointmentService appointmentService;
     private final UserService userService;
+    private final BusinessDao businessDao;
+    private final ImageService imageService;
 
     @Autowired
     public ServiceServiceImpl(final ServiceDao serviceDao, final EmailService emailService,
-                              final AppointmentService appointmentService, final UserService userService) {
+                              final AppointmentService appointmentService, final UserService userService,
+                              final ImageService imageService, final BusinessDao businessDao) {
         this.serviceDao = serviceDao;
         this.emailService = emailService;
         this.appointmentService = appointmentService;
         this.userService = userService;
+        this.businessDao = businessDao;
+        this.imageService = imageService;
     }
 
     @Override
@@ -38,7 +46,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
 
-    public Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessId, String name, String description, Boolean homeservice,
+                          Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
+                          PricingTypes pricing, String price, Boolean additionalCharges, MultipartFile image) throws IOException {
+        Business business = businessDao.findById( businessId).orElseThrow(BusinessNotFoundException::new);
+
+        long imageId = image.isEmpty()? 0 : imageService.addImage(image.getBytes()).getImageId();
+
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
             emailService.createdService(service, business);

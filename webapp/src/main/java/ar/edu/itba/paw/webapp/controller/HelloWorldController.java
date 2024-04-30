@@ -150,43 +150,6 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio")
-    public ModelAndView selectBusinessForService() {
-        final ModelAndView mav = new ModelAndView("businessesForNewService");
-        long userid = securityService.getCurrentUser().get().getUserId();
-        User currentUser = us.findById(userid).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList;
-        businessList = bs.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
-        mav.addObject("user",currentUser);
-        mav.addObject("businessList", businessList);
-        return mav;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
-    public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
-        if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
-        }
-        final ModelAndView mav = new ModelAndView("postService");
-        mav.addObject("pricingTypes",pricingTypes);
-        mav.addObject("neighbours",neighbourhoods);
-        return mav;
-    }
-
-    @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
-    public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
-
-        if (errors.hasErrors()) {
-            return registerService(businessId, form);
-        }
-
-        long imageId = form.getImage().isEmpty()? 0 : is.addImage(form.getImage().getBytes()).getImageId();
-        //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
-        Business business = bs.findById(businessId).orElseThrow(ServiceNotFoundException::new);
-        Service newService = ss.create(business,form.getTitle(),form.getDescription(),form.getHomeserv(),form.getNeighbourhood(),form.getLocation(),form.getCategory(),form.getMinimalduration(),form.getPricingtype(),form.getPrice(),form.getAdditionalCharges(), imageId);
-        return new ModelAndView("redirect:/servicio/"+newService.getId());
-    }
-
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")
     public ModelAndView services(
             @RequestParam(name = "categoria", required = false) String category,
@@ -283,19 +246,6 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/login");
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
-
-        final ModelAndView mav = new ModelAndView("postAppointment");
-        try {
-            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-            mav.addObject("service",service);
-        } catch (ServiceNotFoundException ex) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-
-        return mav;
-    }
 
     @RequestMapping(method = RequestMethod.GET, path = "/turno/{serviceId:\\d+}/{appointmentId:\\d+}")
     public ModelAndView appointment(
@@ -335,51 +285,7 @@ public class HelloWorldController {
         return mav;
     }
 
-/*
-    @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
-    public ModelAndView cancelAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        Appointment app = appointment.findById(appointmentId).get();
-        appointment.cancelAppointment(appointmentId);
-        return new ModelAndView("redirect:/");
-    }
-*/
-@RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
-public ModelAndView service(
-        @PathVariable("serviceId") final long serviceId,
-        @ModelAttribute("questionForm") final QuestionForm questionForm,
-        @ModelAttribute("reviewForm") final ReviewsForm reviewForm,
-        @RequestParam(value = "opcion", required = false) final String option,
-        @RequestParam(value = "qstPag", required = false) Integer questionPage,
-        @RequestParam(value = "rwPag", required = false) Integer reviewPage
-) {
-    final ModelAndView mav = new ModelAndView("service");
-    Optional<User> currentUser = securityService.getCurrentUser();
-    Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
-    Service serv;
-    if(questionPage == null) questionPage = 0;
-    if(reviewPage == null) reviewPage = 0;
-    try {
-        serv = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-    } catch (ServiceNotFoundException e) {
-        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-    }
-    Business business = bs.findById(serv.getBusinessid()).get();
-    boolean isOwner = userId != null && business.getUserId()==userId;
 
-    mav.addObject("isOwner", isOwner);
-    mav.addObject("option", option);
-    mav.addObject("avgRating", rating.getRatingsAvg(serviceId));
-    mav.addObject("service",serv);
-    mav.addObject("questions", question.getAllQuestions(serviceId, questionPage));
-    mav.addObject("reviews", rating.getAllRatings(serviceId, reviewPage));
-    mav.addObject("questionsCount", question.getQuestionsCount(serviceId));
-    mav.addObject("reviewsCount", rating.getRatingsCount(serviceId));
-    mav.addObject("questionPage", questionPage);
-    mav.addObject("reviewPage", reviewPage);
-    mav.addObject("TBDPricing", TBDPricing);
-    mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
-    return mav;
-}
 
 
 }

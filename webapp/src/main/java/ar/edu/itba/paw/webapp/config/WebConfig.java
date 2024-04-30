@@ -104,13 +104,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
-    @Bean
-    public String emailAccount() {
-        return "paw@itba.edu.ar"; // TODO : read from properties file
-    }
-
-    @Bean
-    public String emailPassword() {
-        return "superSecretVerySecure"; // TODO : read from properties file
-    }
 }

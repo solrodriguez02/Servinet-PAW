@@ -65,11 +65,13 @@ public class BusinessServiceImpl implements BusinessService{
         return business.getUserId() == userId;
     }
 
+    /*
     @Override
     public Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId) {
-        Business business = findById( businessId).get();
+
         return serviceService.create(business, name,description, homeservice, neighbourhood,location,category,minimalduration,pricing,price,additionalCharges,imageId);
     }
+     */
 
     @Override
     public void deleteService(long serviceId) {

@@ -49,17 +49,6 @@ public class EmailController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
     public ModelAndView appointment(@PathVariable("serviceId") final long serviceId, @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors) {
-        // User newuser = userService.findByEmail(securityemail).orElse(null);
-        // if (newuser == null){
-        //     newuser = userService.create("default",name,"default",surname,email,telephone);
-        //     String newUsername = String.format("%s%s%d",name.replaceAll("\\s", ""),surname.replaceAll("\\s", ""),newuser.getUserId());
-        //     userService.changeUsername(newuser.getUserId(),newUsername);
-        // }else {
-        //     if(!newuser.getName().equals(name) || !newuser.getSurname().equals(surname) || !newuser.getTelephone().equals(telephone)){
-        //         //TODO: manejar error de usuario ya existente para que el usuario sepa por que se lo redirige nuevamente
-        //         return new ModelAndView("redirect:/contratar-servicio/"+serviceId);
-        //     }
-        // }
         Service service = this.serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
         //falta manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
         User user = securityService.getCurrentUser().get();
@@ -115,23 +104,6 @@ public class EmailController {
 
     }
 
-
-    // todo: serviceService.createAppointment => appointmentService.create()
-//    @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
-//    public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
-//
-//        if (errors.hasErrors()) {
-//            return helloWorldController.registerService(businessId, form);
-//        }
-//
-//        long imageId = form.getImage().isEmpty()? 0 : is.addImage(form.getImage().getBytes()).getImageId();
-//        //final long serviceId = manageServiceService.createService(businessId,title,description,homeserv,neighbourhood,location,category,minimalduration,pricingtype,price,additionalCharges,imageId);
-//        Business business = businessService.findById(businessId).orElseThrow(ServiceNotFoundException::new);
-//        Service service = serviceService.create(business,form.getTitle(),form.getDescription(),form.getHomeserv(),form.getNeighbourhood(),form.getLocation(),form.getCategory(),form.getMinimalduration(),form.getPricingtype(),form.getPrice(),form.getAdditionalCharges(), imageId);
-//        return new ModelAndView("redirect:/servicio/"+service.getId());
-//    }
-//
-    // todo: serviceService.createAppointment => appointmentService.create()
     @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
 
