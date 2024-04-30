@@ -14,6 +14,7 @@ public interface ServiceService {
     Service create(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, MultipartFile image) throws IOException;
     Service edit(long serviceid, String field, String newvalue);
     void delete(Service service, Business business);
+    void delete(long serviceId);
     List<Service> services(int page,String category,String[] location, String rating, String query);
     int getServiceCount(String category, String[] location, String rating, String searchQuery);
     int getPageCount(String category, String[] location, String rating, String searchQuery);

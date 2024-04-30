@@ -73,6 +73,18 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public void delete(long serviceId) {
+
+        Optional<Service> optionalService = findById(serviceId);
+        if (!optionalService.isPresent())
+            return;
+        final Service service = optionalService.get();
+        final Business business = businessDao.findById(service.getBusinessid()).get();
+
+        delete(service,business);
+    }
+
+        @Override
     public void delete(Service service, Business business) {
 
         Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());

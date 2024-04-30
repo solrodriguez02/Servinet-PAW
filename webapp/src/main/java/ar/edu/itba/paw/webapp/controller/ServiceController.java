@@ -95,6 +95,13 @@ public class ServiceController {
         return new ModelAndView("redirect:/servicio/"+newService.getId());
     }
 
+    @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
+    public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
+
+        ss.delete(serviceId);
+        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+    }
+
     @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")
     public ModelAndView service(
             @PathVariable("serviceId") final long serviceId,

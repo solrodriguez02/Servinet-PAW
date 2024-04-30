@@ -104,12 +104,5 @@ public class EmailController {
 
     }
 
-    @RequestMapping(method = RequestMethod.POST , path = "/borrar-servicio/{serviceId:\\d+}")
-    public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
-
-        businessService.deleteService(serviceId);
-        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-    }
-
 }
 

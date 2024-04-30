@@ -34,7 +34,8 @@ public class BusinessServiceImpl implements BusinessService{
     public Optional<List<Business>> findByAdminId(long adminId){
         return businessDao.findByAdminId(adminId);
     }
-        @Override
+
+    @Override
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }
@@ -56,6 +57,7 @@ public class BusinessServiceImpl implements BusinessService{
         userService.changeUserType(userId);
         return business;
     }
+
     @Override
     public Boolean isBusinessOwner(long businessId, long userId){
         Business business = businessDao.findById(businessId).orElse(null);
@@ -65,21 +67,4 @@ public class BusinessServiceImpl implements BusinessService{
         return business.getUserId() == userId;
     }
 
-    /*
-    @Override
-    public Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId) {
-
-        return serviceService.create(business, name,description, homeservice, neighbourhood,location,category,minimalduration,pricing,price,additionalCharges,imageId);
-    }
-     */
-
-    @Override
-    public void deleteService(long serviceId) {
-        Optional<Service> optionalService = serviceService.findById(serviceId);
-        if ( !optionalService.isPresent() )
-            return;
-        final Service service = optionalService.get();
-        final Business business = findById( service.getBusinessid() ).get();
-        serviceService.delete(service, business);
-    }
 }
