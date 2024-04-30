@@ -30,15 +30,6 @@ public class EmailConfig {
     @Autowired
     private Environment env;
 
-    /*
-        @Bean
-    public ResourceBundleMessageSource emailMessageSource() {
-        final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
-        messageSource.setBasename("mail/MailMessages");
-        return messageSource;
-    }
-     */
-
 
     @Bean
     public JavaMailSender mailSender() throws IOException {
@@ -77,7 +68,6 @@ public class EmailConfig {
     private ITemplateResolver TemplateResolver() {
         final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
         templateResolver.setResolvablePatterns(Collections.singleton("html/*"));
-        //resolver.setApplicationContext(applicationContext);
         templateResolver.setOrder(1);
         templateResolver.setPrefix("/mail/");
         templateResolver.setSuffix(".html");

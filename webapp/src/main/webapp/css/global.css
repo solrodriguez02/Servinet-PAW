@@ -172,3 +172,9 @@ body {
     display: flex;
     align-items: center;
 }
+
+.svg {
+    height: 300px;
+    margin-top: 50px;
+    margin-bottom: -100px;
+}
