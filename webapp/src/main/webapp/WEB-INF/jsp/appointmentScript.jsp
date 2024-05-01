@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
+<script src="${pageContext.request.contextPath}/js/fetch.js"></script>
 <script type="text/javascript">
     const businessUrl = '${pageContext.request.contextPath}/negocio/${businessId}'
     const deleteAppointmentUrl = '${pageContext.request.contextPath}/cancelar-turno/'
@@ -13,7 +14,8 @@
         data.append('accepted', accepted);
 
         const url = businessUrl + '/solicitud-turno/' + appointmentId;
-        send(url,'POST', data, componentId)
+        if ( send(url,'POST', data) === 0)
+            document.getElementById(componentId).style.display = "none";
     }
 
     function cancelAppointment(appointmentId,componentId) {
@@ -21,26 +23,9 @@
         const url = deleteAppointmentUrl + appointmentId;
         if( !confirm("Esta seguro que desea cancelar el turno?"))
             return
-        send(url,'DELETE',{}, componentId)
+        if ( send(url,'DELETE',{}) === 0 )
+            document.getElementById(componentId).style.display = "none";
     }
-
-    function send( url, method, data, componentId){
-        fetch(url, {
-            method: method,
-            body: data
-        })
-            .then(response => {
-                if (!response.ok) {
-                    alert("el turno ya no existe");
-                } else
-                    document.getElementById(componentId).style.display = "none";
-            })
-            .catch(error => {
-                console.error('Error de red:', error);
-            });
-
-    }
-
 
     function showAccordion( id, btn ) {
         btn.classList.toggle('active')

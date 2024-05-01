@@ -22,7 +22,7 @@
             <h2 class="header-text">No tiene permiso para realizar esta operacion</h2>
         </c:when>
         <c:when test="${argument == 'negocionoexiste'}">
-            <h2 class="header-text">Este servicio no existe.</h2>
+            <h2 class="header-text">Este negocio no existe.</h2>
         </c:when>
 
 

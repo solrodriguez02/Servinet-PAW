@@ -68,6 +68,13 @@ public class BusinessController {
         return new ModelAndView("redirect:/");
     }
 
+    @RequestMapping(method = RequestMethod.DELETE , path = "/borrar-negocio/{businessId:\\d+}")
+    public ModelAndView deleteBusiness(@PathVariable("businessId") final long businessId){
+        validateUserIsOwner(businessId);
+        businessService.deleteBusiness(businessId);
+        return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
+    }
+
     //todo: autenticar q es el dueño del service
     private void validateUserIsOwner(long businessId) {
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);

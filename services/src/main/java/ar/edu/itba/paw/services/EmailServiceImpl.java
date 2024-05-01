@@ -48,14 +48,14 @@ public class EmailServiceImpl implements EmailService{
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("user", user);
         ctx.setVariable("token", code.getCode());
-        sendMail(user.getEmail(), String.format("%s- Cuenta de Servinet de @%s", EmailTypes.PASSWORD_RECOVER.getSubject(""),user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getRecoverPasswordTemplate());
+        sendMail(user.getEmail(), String.format("%s- Cuenta de Servinet de @%s", EmailTypes.PASSWORD_RECOVER.getSubject(""),user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getTemplate());
     }
     @Async
     @Override
     public void confirmNewPassword(User user) throws MessagingException {
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("user", user);
-        sendMail(user.getEmail(), String.format("Nueva contraseña definida con éxito para @%s - Servinet", user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getConfirmNewPasswordTemplate());
+        sendMail(user.getEmail(), String.format("Nueva contraseña definida con éxito para @%s - Servinet", user.getUsername()) ,ctx, EmailTypes.PASSWORD_RECOVER.getTemplate());
     }
 
     @Async
@@ -110,10 +110,30 @@ public class EmailServiceImpl implements EmailService{
         sendMailToBusiness(EmailTypes.DELETED_SERVICE, business.getEmail(),ctx);
     }
 
+    @Override
+    @Async
+    public void createdBusiness(Business business) throws MessagingException {
+        Context ctx = new Context(LOCALE);
+        ctx.setVariable("businessId",business.getBusinessid());
+        ctx.setVariable("businessName",business.getName());
+        sendMail(business.getEmail(),EmailTypes.CREATED_BUSINESS.getSubject(business.getBusinessName()), ctx, EmailTypes.CREATED_BUSINESS.getTemplate());
+    }
+
+    @Override
+    @Async
+    public void deletedBusiness(Business business) throws MessagingException {
+
+        Context ctx = new Context(LOCALE);
+        ctx.setVariable("businessId",business.getBusinessid());
+        ctx.setVariable("businessName",business.getName());
+        sendMail(business.getEmail(),EmailTypes.DELETED_BUSINESS.getSubject(business.getBusinessName()), ctx, EmailTypes.DELETED_BUSINESS.getTemplate());
+    }
+
+
     public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
         ctx.setVariable("isClient",true);
         ctx.setVariable("type", emailType.getType());
-        sendMail(userMail, emailType.getSubject((Long) ctx.getVariable("appointmentId"), (String) ctx.getVariable("serviceName")),ctx, emailType.getAppointmentTemplate());
+        sendMail(userMail, emailType.getSubject((Long) ctx.getVariable("appointmentId"), (String) ctx.getVariable("serviceName")),ctx, emailType.getTemplate());
     }
 
     private void sendMailToBusiness( EmailTypes emailType, String businessMail, Context ctx) throws MessagingException {

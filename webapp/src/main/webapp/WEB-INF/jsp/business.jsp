@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
@@ -11,11 +13,17 @@
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
-    <c:if test="${not empty serviceList}" >
-      <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
-        <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
-      </a>
-    </c:if>
+    <c:url value="/borrar-negocio/${businessId}" var="deleteUrl"/>
+    <div class="flex center-vertically">
+      <button class="cancelBtn" id="deleteBtn" onclick="deleteBusiness()" >
+        <i class="material-icons ">delete</i>
+      </button>
+      <c:if test="${not empty serviceList}" >
+        <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
+          <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
+        </a>
+      </c:if>
+    </div>
   </div>
 
   <div class="boxes-container">
@@ -35,4 +43,17 @@
   </div>
 </div>
 </body>
+<script src="${pageContext.request.contextPath}/js/fetch.js"></script>
+<script>
+
+  function deleteBusiness(){
+    if (!confirm('<spring:message code="business.confirm-delete"/>'))
+      return
+
+    if (send('${deleteUrl}','DELETE',{}) === 0)
+      window.location.href = "${pageContext.request.contextPath}/negocios";
+      //window.location.href = "${pageContext.request.contextPath}/operacion-invalida/?argumento=negocionoexiste";
+
+  }
+</script>
 </html>

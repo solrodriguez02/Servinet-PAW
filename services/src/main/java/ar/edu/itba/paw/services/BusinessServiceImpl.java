@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,13 +13,15 @@ public class BusinessServiceImpl implements BusinessService{
     private final BusinessDao businessDao;
     private final ServiceService serviceService;
     private final UserService userService;
-
+    private final EmailService emailService;
 
     @Autowired
-    public BusinessServiceImpl(final BusinessDao businessDao, final ServiceService serviceService, final UserService userService){
+    public BusinessServiceImpl(final BusinessDao businessDao, final ServiceService serviceService,
+                               final UserService userService, final EmailService emailService){
         this.businessDao = businessDao;
         this.serviceService = serviceService;
         this.userService = userService;
+        this.emailService = emailService;
     }
 
     @Override
@@ -48,12 +51,22 @@ public class BusinessServiceImpl implements BusinessService{
         if ( servicesList.isPresent())
             for ( Service service : servicesList.get() )
                 serviceService.delete(service, business );
-
+        //todo: email
+        try {
+            emailService.deletedBusiness(business);
+        } catch (MessagingException e){
+            throw new RuntimeException(e);
+        }
         businessDao.deleteBusiness(businessid);
     }
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         Business business = businessDao.createBusiness(businessName,userId,telephone,email,location);
+        try {
+            emailService.createdBusiness(business);
+        } catch (MessagingException e){
+            throw new RuntimeException(e);
+        }
         userService.changeUserType(userId);
         return business;
     }
