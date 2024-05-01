@@ -25,6 +25,7 @@
  @ContextConfiguration(classes = TestConfig.class)
  public class ServiceDaoJdbcTest {
      private static final String NAME = "name";
+     private static final long SERVICEID=1;
      private static final long BUSINESSID = 1;
      private static final String DESCRIPTION = "description";
      private static final Boolean HOMESERVICE = true;
@@ -72,42 +73,39 @@
 
     @Test
      public void testFindById() {
-        Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, NEIGHBOURHOODS,CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
-        List<Service> lis= serviceDao.getAllServices().get();
-        Service service2 = serviceDao.findById(service.getId()).get();
+        jdbcTemplate.execute(String.format("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (%d, %d, '%s', '%s', true, '%s', 'Belleza', 30, 'Total', '1000', false, null);", SERVICEID,BUSINESSID, NAME, DESCRIPTION, LOCATION));
+        Service service = serviceDao.findById(SERVICEID).get();
 
-        Assert.assertNotNull(service2);
-        Assert.assertEquals(service.getId(), service2.getId());
-        Assert.assertEquals(service.getBusinessid(), service2.getBusinessid());
-        Assert.assertEquals(service.getName(), service2.getName());
-        Assert.assertEquals(service.getDescription(), service2.getDescription());
-        Assert.assertEquals(service.getHomeService(), service2.getHomeService());
-        Assert.assertEquals(service.getLocation(), service2.getLocation());
-        Assert.assertEquals(service.getCategory(), service2.getCategory());
-        Assert.assertEquals(service.getDuration(), service2.getDuration());
-        Assert.assertEquals(service.getPricing(), service2.getPricing());
-        Assert.assertEquals(service.getPrice(), service2.getPrice());
-        Assert.assertEquals(service.getAdditionalCharges(), service2.getAdditionalCharges());
+        Assert.assertNotNull(service);
+        Assert.assertEquals(SERVICEID,service.getId());
+        Assert.assertEquals(BUSINESSID,service.getBusinessid());
+        Assert.assertEquals(NAME,service.getName());
+        Assert.assertEquals(DESCRIPTION,service.getDescription());
+        Assert.assertEquals(HOMESERVICE,service.getHomeService());
+        Assert.assertEquals(LOCATION,service.getLocation());
+        Assert.assertEquals(CATEGORY.getValue(),service.getCategory());
+        Assert.assertEquals(DURATION,service.getDuration());
+        Assert.assertEquals(PRICING.getValue(),service.getPricing());
+        Assert.assertEquals(PRICE,service.getPrice());
+        Assert.assertEquals(ADDITIONALCHARGES,service.getAdditionalCharges());
     }
 
     @Test
      public void testEdit() {
-        Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, NEIGHBOURHOODS,CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);
-        Service service2 = serviceDao.edit(service.getId(), "servicename", "newname");
+        jdbcTemplate.execute(String.format("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (%d, %d, '%s', '%s', true, '%s', 'Belleza', 30, 'Total', '1000', false, null);", SERVICEID,BUSINESSID, NAME, DESCRIPTION, LOCATION));
+        Service service = serviceDao.edit(SERVICEID, "servicename", "newname");
 
-        Assert.assertNotNull(service);
-        Assert.assertNotNull(service2);
-        Assert.assertEquals(service.getId(), service2.getId());
-        Assert.assertEquals(service.getBusinessid(), service2.getBusinessid());
-        Assert.assertEquals("newname", service2.getName());
-        Assert.assertEquals(service.getDescription(), service2.getDescription());
-        Assert.assertEquals(service.getHomeService(), service2.getHomeService());
-        Assert.assertEquals(service.getLocation(), service2.getLocation());
-        Assert.assertEquals(service.getCategory(), service2.getCategory());
-        Assert.assertEquals(service.getDuration(), service2.getDuration());
-        Assert.assertEquals(service.getPricing(), service2.getPricing());
-        Assert.assertEquals(service.getPrice(), service2.getPrice());
-        Assert.assertEquals(service.getAdditionalCharges(), service2.getAdditionalCharges());
+        Assert.assertEquals(SERVICEID,service.getId());
+        Assert.assertEquals(BUSINESSID,service.getBusinessid());
+        Assert.assertEquals(NAME,service.getName());
+        Assert.assertEquals("newname",service.getDescription());
+        Assert.assertEquals(HOMESERVICE,service.getHomeService());
+        Assert.assertEquals(LOCATION,service.getLocation());
+        Assert.assertEquals(CATEGORY.getValue(),service.getCategory());
+        Assert.assertEquals(DURATION,service.getDuration());
+        Assert.assertEquals(PRICING.getValue(),service.getPricing());
+        Assert.assertEquals(PRICE,service.getPrice());
+        Assert.assertEquals(ADDITIONALCHARGES,service.getAdditionalCharges());
     }
    @Test
     public void testDelete() {
