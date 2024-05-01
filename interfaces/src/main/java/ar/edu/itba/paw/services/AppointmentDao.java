@@ -5,7 +5,6 @@ import ar.edu.itba.paw.model.AppointmentInfo;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.security.SecureRandom;
 import java.util.concurrent.TimeUnit;
 @EnableWebSecurity
 @ComponentScan({

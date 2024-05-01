@@ -3,13 +3,11 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
-import ar.edu.itba.paw.model.exceptions.EmailAlreadyUsedException;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

@@ -12,9 +12,9 @@ import ar.edu.itba.paw.model.User;
 public interface EmailService {
 
     void requestAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
-    public void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode) throws MessagingException;
+    void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode) throws MessagingException;
 
-    public void confirmNewPassword(User user) throws MessagingException;
+    void confirmNewPassword(User user) throws MessagingException;
     // ! tuve q agregar dependencia javax.mail en pom
 
     void confirmedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;

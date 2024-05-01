@@ -3,8 +3,6 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.model.Neighbourhoods;
 
 import javax.validation.constraints.Future;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class AppointmentForm {
