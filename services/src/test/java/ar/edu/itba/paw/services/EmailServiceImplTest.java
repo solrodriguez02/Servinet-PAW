@@ -1,5 +1,5 @@
 package ar.edu.itba.paw.services;
-/*
+
 import ar.edu.itba.paw.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,14 +13,15 @@ import org.thymeleaf.TemplateEngine;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 
 @RunWith(MockitoJUnitRunner.class)
 public class EmailServiceImplTest {
 
 
-    private static LocalDateTime STARTDATE = LocalDateTime.now();
-    private static LocalDateTime ENDDATE = STARTDATE.plusHours(2);
+    private static final LocalDateTime STARTDATE = LocalDateTime.now();
+    private static final LocalDateTime ENDDATE = STARTDATE.plusHours(2);
     private static final String EMAIL = "andresdominguez555@gmail.com";
     private static final String PROVIDER_EMAIL = "peluqueria@gmail.com";
     private static final String SUBJECT = "Confirmation";
@@ -37,7 +38,9 @@ public class EmailServiceImplTest {
     private static final long BUSINESSID = 1;
     private static final String DESCRIPTION = "description";
     private static final Boolean HOMESERVICE = true;
-    private static final String LOCATION = "Palermo";
+    private static final String SURNAME = "surname";
+    private static final String LOCATION = "calle 123";
+    private static final Neighbourhoods[] NEIGHBOURHOODS = {Neighbourhoods.PALERMO};
     private static final Categories CATEGORY = Categories.BELLEZA;
     private static final int DURATION = 30;
     private static final String PRICE = "ARS 1000";
@@ -69,18 +72,18 @@ public class EmailServiceImplTest {
         Mockito.when(businessService.createBusiness(Mockito.eq(BUSINESS_NAME),
                 Mockito.eq(PROVIDERID),Mockito.eq(TELEPHONE),Mockito.eq(PROVIDER_EMAIL),Mockito.eq(LOCATION))).thenReturn(new Business(1,BUSINESS_NAME,USERID,TELEPHONE,EMAIL,LOCATION));
 
-        Mockito.when(serviceService.create(Mockito.eq(BUSINESSID),
-                Mockito.eq(NAME),Mockito.eq(DESCRIPTION),Mockito.eq(HOMESERVICE),Mockito.eq(LOCATION),Mockito.eq(CATEGORY),Mockito.eq(DURATION),
-                        Mockito.eq(PRICING),Mockito.eq(PRICE),Mockito.eq(ADDITIONALCHARGES)))
-                .thenReturn(new Service(ID,BUSINESSID,NAME,DESCRIPTION,HOMESERVICE,LOCATION,Neighbourhoods.ALMAGRO,CATEGORY,DURATION,PRICING,PRICE,ADDITIONALCHARGES));
+        Mockito.when(serviceService.create(Mockito.eq(Mockito.any()),
+                Mockito.eq(NAME),Mockito.eq(DESCRIPTION),Mockito.eq(HOMESERVICE),Mockito.eq(NEIGHBOURHOODS),Mockito.eq(LOCATION),Mockito.eq(CATEGORY),Mockito.eq(DURATION),
+                        Mockito.eq(PRICING),Mockito.eq(PRICE),Mockito.eq(ADDITIONALCHARGES),Mockito.eq(0)))
+                .thenReturn(new Service(ID,BUSINESSID,NAME,DESCRIPTION,HOMESERVICE,LOCATION,(String[]) Arrays.stream(NEIGHBOURHOODS).map(Neighbourhoods::getValue).toArray() ,CATEGORY,DURATION,PRICING,PRICE,ADDITIONALCHARGES,0));
 
-        Mockito.when(appointmentService.create(Mockito.eq(SERVICEID),Mockito.eq(USERID),
-                Mockito.eq(STARTDATE),Mockito.eq(ENDDATE))).thenReturn(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,false));
+        Mockito.when(appointmentService.create(Mockito.eq(SERVICEID),Mockito.eq(NAME),Mockito.eq(SURNAME),Mockito.eq(EMAIL),Mockito.eq(LOCATION),Mockito.eq(TELEPHONE),
+                Mockito.eq(STARTDATE.toString()))).thenReturn(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,LOCATION,false));
 
-        Appointment appointment = appointmentService.create(1,1,STARTDATE,ENDDATE);
+        Appointment appointment = appointmentService.create(SERVICEID,NAME,"surname",EMAIL,LOCATION,TELEPHONE,STARTDATE.toString());
 
-        emailService.requestAppointment(appointment,EMAIL);
+        //emailService.requestAppointment(appointment,);
     }
 
 }
-*/
+
