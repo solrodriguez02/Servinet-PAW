@@ -11,7 +11,7 @@ public interface BusinessService {
 
     Optional<Business> findByBusinessName(String businessName);
 
-    Optional<List<Business>> findByAdminId(long adminId);
+    List<Business> findByAdminId(long adminId);
 
     void deleteBusiness(long businessid);
 

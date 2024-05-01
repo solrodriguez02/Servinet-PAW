@@ -42,9 +42,8 @@ public class BusinessDaoJdbc implements BusinessDao {
     }
 
     @Override
-    public Optional<List<Business>> findByAdminId(long adminId){
-        final List<Business> list = jdbcTemplate.query("SELECT * from business WHERE userid= ?", new Object[] {adminId}, ROW_MAPPER);
-        return Optional.of(list);
+    public List<Business> findByAdminId(long adminId){
+        return jdbcTemplate.query("SELECT * from business WHERE userid= ?", new Object[] {adminId}, ROW_MAPPER);
     }
 
     @Override

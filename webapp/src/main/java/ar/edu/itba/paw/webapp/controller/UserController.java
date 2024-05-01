@@ -44,8 +44,7 @@ public class UserController {
         User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
         List<Business> businessList = new ArrayList<>();
         if ( user.isProvider() )
-            businessList = businessService.findByAdminId(userid).orElse(new ArrayList<>());
-
+            businessList = businessService.findByAdminId(userid);
         mav.addObject("businessList", businessList);
         mav.addObject("user", user);
         return mav;
@@ -59,7 +58,7 @@ public class UserController {
 
         List<Business> businessList;
         if ( currentUser.isProvider() )
-            businessList = businessService.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
+            businessList = businessService.findByAdminId(currentUser.getUserId());
         else
             return new ModelAndView("redirect:/registrar-negocio");
 
@@ -85,7 +84,7 @@ public class UserController {
 
         long userid = securityService.getCurrentUser().get().getUserId();
 
-        List<AppointmentInfo> appointmentList = appointmentService.getAllUpcomingUserAppointments(userid,confirmed).orElse(new ArrayList<>());
+        List<AppointmentInfo> appointmentList = appointmentService.getAllUpcomingUserAppointments(userid,confirmed);
 
         mav.addObject("appointmentList", appointmentList);
         mav.addObject("confirmed",confirmed);

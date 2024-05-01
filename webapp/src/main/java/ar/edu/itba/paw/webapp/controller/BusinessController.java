@@ -84,14 +84,12 @@ public class BusinessController {
 
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         validateUserIsOwner(business);
-        Optional<List<BasicService>> services = serviceService.getAllBusinessBasicServices(businessId);
-        List<Appointment> appointmentList = new ArrayList<>();
+        List<BasicService> services = serviceService.getAllBusinessBasicServices(businessId);
+        List<Appointment> appointmentList;
 
         Map<Long, BasicService> serviceMap = new HashMap<>();
-        if ( services.isPresent()){
-            services.get().forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed).orElse(new ArrayList<>());
-        }
+            services.forEach(service -> serviceMap.put(service.getId(), service) );
+            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed);
 
         final ModelAndView mav = new ModelAndView("businessAppointments");
         Map<Long, User> userMap = new HashMap<>();
@@ -148,7 +146,7 @@ public class BusinessController {
     public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId).orElse(new ArrayList<>());
+        List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId);
 
         mav.addObject("business",business);
         mav.addObject("serviceList", serviceList);

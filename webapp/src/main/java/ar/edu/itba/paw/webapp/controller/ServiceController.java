@@ -92,8 +92,7 @@ public class ServiceController {
         final ModelAndView mav = new ModelAndView("businessesForNewService");
         long userid = securityService.getCurrentUser().get().getUserId();
         User currentUser = us.findById(userid).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList;
-        businessList = bs.findByAdminId(currentUser.getUserId()).orElse(new ArrayList<>());
+        List<Business> businessList = bs.findByAdminId(currentUser.getUserId());
         mav.addObject("user",currentUser);
         mav.addObject("businessList", businessList);
         return mav;

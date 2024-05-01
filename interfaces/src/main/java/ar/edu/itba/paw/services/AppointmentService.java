@@ -11,11 +11,11 @@ public interface AppointmentService {
 
     Optional<Appointment> findById(long id);
 
-    Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid);
+    List<Appointment> getAllUpcomingServiceAppointments(long serviceid);
 
-    Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed);
+    List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed);
 
-    Optional<List<AppointmentInfo>> getAllUpcomingUserAppointments(long userid, Boolean confirmed);
+    List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed);
 
     Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date);
 

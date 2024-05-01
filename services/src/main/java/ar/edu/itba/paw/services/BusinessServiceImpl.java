@@ -31,7 +31,7 @@ public class BusinessServiceImpl implements BusinessService{
     }
 
     @Override
-    public Optional<List<Business>> findByAdminId(long adminId){
+    public List<Business> findByAdminId(long adminId){
         return businessDao.findByAdminId(adminId);
     }
 
@@ -44,11 +44,9 @@ public class BusinessServiceImpl implements BusinessService{
     public void deleteBusiness(long businessid){
 
         final Business business = findById(businessid).get();
-        Optional<List<Service>> servicesList = serviceService.getAllBusinessServices(businessid);
-        if ( servicesList.isPresent())
-            for ( Service service : servicesList.get() )
+        List<Service> servicesList = serviceService.getAllBusinessServices(businessid);
+            for ( Service service : servicesList)
                 serviceService.delete(service, business );
-
         businessDao.deleteBusiness(businessid);
     }
     @Override

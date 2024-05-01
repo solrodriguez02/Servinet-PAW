@@ -76,22 +76,19 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Optional<List<Service>> getAllServices(){
-        final List<Service> list = jdbcTemplate.query("select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ;", ROW_MAPPER);
-        return Optional.of(list);
+    public List<Service> getAllServices(){
+        return jdbcTemplate.query("select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ;", ROW_MAPPER);
 
     }
 
     @Override
-    public Optional<List<Service>> getAllBusinessServices(long businessId){
-        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId}, ROW_MAPPER);
-        return Optional.of(list);
+    public List<Service> getAllBusinessServices(long businessId){
+        return jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid WHERE businessid = ?  group by id" , new Object[] {businessId}, ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<BasicService>> getAllBusinessBasicServices(long businessId){
-        final List<BasicService> list = jdbcTemplate.query("SELECT id, businessid, servicename, location, imageId from services WHERE businessid = ? ", new Object[] {businessId  }, BASIC_SERVICE_ROW_MAPPER);
-        return Optional.of(list);
+    public List<BasicService> getAllBusinessBasicServices(long businessId){
+        return jdbcTemplate.query("SELECT id, businessid, servicename, location, imageId from services WHERE businessid = ? ", new Object[] {businessId  }, BASIC_SERVICE_ROW_MAPPER);
     }
 
     @Override
@@ -109,8 +106,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public List<Service> getServices(int page) {
-        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {page*10}, ROW_MAPPER);
-        return list;
+        return jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id ASC OFFSET ? LIMIT 10", new Object[] {page*10}, ROW_MAPPER);
     }
 
     @Override
@@ -118,7 +114,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addPage(page).addRating(rating);
     String sqlQuery= "select * from " + filterArgument.formSqlSentence("(select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ");
     Object[] values = filterArgument.getValues().toArray();
-    return jdbcTemplate.query(sqlQuery.toString(), values, ROW_MAPPER);
+    return jdbcTemplate.query(sqlQuery, values, ROW_MAPPER);
    }
 
     @Override
@@ -135,8 +131,7 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public List<Service> getRecommendedServices() {
-        final List<Service> list = jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id DESC LIMIT 10", ROW_MAPPER);
-        return list;
+        return jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id DESC LIMIT 10", ROW_MAPPER);
     }
 
 

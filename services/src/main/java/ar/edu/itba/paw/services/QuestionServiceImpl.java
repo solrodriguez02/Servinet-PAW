@@ -22,10 +22,7 @@ public class QuestionServiceImpl implements  QuestionService {
     @Override
     public List<Question> getAllQuestions(long serviceid, int page) {
         List<Question> questions;
-        if(questionDao.getAllQuestions(serviceid, page).isPresent()) {
-            questions = questionDao.getAllQuestions(serviceid, page).get();
-            if(questions.isEmpty()) questions = null;
-        } else questions = null;
+        questions = questionDao.getAllQuestions(serviceid, page);
         return questions;
     }
 

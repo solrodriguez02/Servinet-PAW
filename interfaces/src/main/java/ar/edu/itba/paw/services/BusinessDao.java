@@ -10,7 +10,7 @@ public interface BusinessDao {
 
      Optional<Business> findByBusinessName(String businessName);
 
-     Optional<List<Business>> findByAdminId(long adminId);
+     List<Business> findByAdminId(long adminId);
 
      void changeBusinessEmail(long businessId, String value);
 
