@@ -42,7 +42,7 @@ public class UserController {
         long userid = securityService.getCurrentUser().get().getUserId();
 
         User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList = new ArrayList<>();
+        List<Business> businessList = Collections.emptyList();
         if ( user.isProvider() )
             businessList = businessService.findByAdminId(userid);
         mav.addObject("businessList", businessList);

@@ -34,10 +34,10 @@ public class ServiceController {
     private QuestionService question;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    List<Categories> categories = new ArrayList<>();
-    List<PricingTypes> pricingTypes = new ArrayList<>();
-    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
-    List<Ratings> ratings = new ArrayList<>();
+    List<Categories> categories = Arrays.asList(Categories.values());
+    List<PricingTypes> pricingTypes = Arrays.asList(PricingTypes.values());
+    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
+    List<Ratings> ratings = Arrays.asList(Ratings.values());
 
     @Autowired
     public ServiceController(
@@ -56,10 +56,6 @@ public class ServiceController {
         this.bs = bs;
         this.rating = rating;
         this.question = question;
-        categories.addAll(Arrays.asList(Categories.values()));
-        pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
-        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
-        ratings.addAll(Arrays.asList(Ratings.values()));
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/servicios")

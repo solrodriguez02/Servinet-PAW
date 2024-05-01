@@ -29,8 +29,7 @@ public class BusinessController {
     private final UserService userService;
     private final SecurityService securityService;
 
-    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
-
+    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
     @Autowired
     public BusinessController(@Qualifier("BusinessServiceImpl") final BusinessService businessService,  @Qualifier("serviceServiceImpl") final ServiceService serviceService,
                               @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
@@ -41,7 +40,7 @@ public class BusinessController {
         this.appointmentService = appointmentService;
         this.userService = userService;
         this.securityService = securityService;
-        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+
     }
 
 
@@ -87,8 +86,8 @@ public class BusinessController {
         List<Appointment> appointmentList;
 
         Map<Long, BasicService> serviceMap = new HashMap<>();
-            services.forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed);
+        services.forEach(service -> serviceMap.put(service.getId(), service));
+        appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed);
 
         final ModelAndView mav = new ModelAndView("businessAppointments");
         Map<Long, User> userMap = new HashMap<>();
