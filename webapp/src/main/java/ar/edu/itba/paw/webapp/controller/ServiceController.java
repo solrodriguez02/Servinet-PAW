@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
@@ -62,6 +63,30 @@ public class ServiceController {
         ratings.addAll(Arrays.asList(Ratings.values()));
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/servicios")
+    public ModelAndView services(
+            @RequestParam(name = "categoria", required = false) String category,
+            @RequestParam(name = "ubicacion", required = false) String[] neighbourhoodFilters,
+            @RequestParam(name = "calificacion", required = false) String ratingFilters,
+            @RequestParam(name = "pagina", required = false) Integer page,
+            @RequestParam(name="query",required=false) String query
+    ) {
+        if(page == null) page = 0;
+        final ModelAndView mav = new ModelAndView("services");
+
+        List<Service> serviceList = ss.services(page, category, neighbourhoodFilters, ratingFilters, query);
+        mav.addObject("services", serviceList);
+        mav.addObject("page", page);
+        mav.addObject("isServicesEmpty", serviceList.isEmpty());
+        mav.addObject("category", category);
+        mav.addObject("neighbourhoods", neighbourhoods);
+        mav.addObject("location", neighbourhoodFilters);
+        mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters, ratingFilters, query));
+        mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters, ratingFilters, query));
+        mav.addObject("ratings", ratings);
+        return mav;
+    }
+
     @RequestMapping(method = RequestMethod.GET, path="/crear-servicio")
     public ModelAndView selectBusinessForService() {
         final ModelAndView mav = new ModelAndView("businessesForNewService");
@@ -77,7 +102,7 @@ public class ServiceController {
     @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
     public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
         if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
+            throw new ForbiddenOperation();
         }
         final ModelAndView mav = new ModelAndView("postService");
         mav.addObject("pricingTypes",pricingTypes);

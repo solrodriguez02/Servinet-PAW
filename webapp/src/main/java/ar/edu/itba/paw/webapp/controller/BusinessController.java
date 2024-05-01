@@ -3,18 +3,21 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.BusinessService;
-import ar.edu.itba.paw.services.ServiceService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.services.*;
+import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
+import ar.edu.itba.paw.webapp.form.BusinessForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
@@ -25,24 +28,62 @@ public class BusinessController {
     private final ServiceService serviceService;
     private final AppointmentService appointmentService;
     private final UserService userService;
+    private final SecurityService securityService;
 
-    //todo: autenticar q es el dueño del service
+    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
 
     @Autowired
     public BusinessController(@Qualifier("BusinessServiceImpl") final BusinessService businessService,  @Qualifier("serviceServiceImpl") final ServiceService serviceService,
                               @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
-                              @Qualifier("userServiceImpl") final UserService userService) {
+                              @Qualifier("userServiceImpl") final UserService userService,
+                              @Qualifier("securityServiceImpl") final SecurityService securityService) {
         this.businessService = businessService;
         this.serviceService = serviceService;
         this.appointmentService = appointmentService;
         this.userService = userService;
+        this.securityService = securityService;
+        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+    }
+
+
+    @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
+    public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {
+        final ModelAndView mav = new ModelAndView("postBusiness");
+        mav.addObject("neighbours",neighbourhoods);
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/registrar-negocio")
+    public ModelAndView postBusiness(@ModelAttribute("BusinessForm") @Valid final BusinessForm form, final BindingResult errors
+    ) {
+        if (errors.hasErrors()) {
+            return registerBusiness(form);
+        }
+        ServinetAuthUserDetails userDetails = (ServinetAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
+        if (user == null){
+            return new ModelAndView("redirect:/login");
+        }
+        businessService.createBusiness(form.getBusinessName(),user.getUserId(), form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
+        return new ModelAndView("redirect:/");
+    }
+
+    //todo: autenticar q es el dueño del service
+    private void validateUserIsOwner(long businessId) {
+        Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
+        validateUserIsOwner(business);
+    }
+    private void validateUserIsOwner(Business business) {
+        User user = securityService.getCurrentUser().get();
+        if ( user.getUserId() != business.getUserId())
+            throw new ForbiddenOperation();
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
     public ModelAndView businessesAppointments(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
 
-        final ModelAndView mav = new ModelAndView("businessAppointments");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
+        validateUserIsOwner(business);
         Optional<List<BasicService>> services = serviceService.getAllBusinessBasicServices(businessId);
         List<Appointment> appointmentList = new ArrayList<>();
 
@@ -52,6 +93,7 @@ public class BusinessController {
             appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed).orElse(new ArrayList<>());
         }
 
+        final ModelAndView mav = new ModelAndView("businessAppointments");
         Map<Long, User> userMap = new HashMap<>();
         if (confirmed){
             for (Appointment a : appointmentList){
@@ -89,7 +131,7 @@ public class BusinessController {
                                             @PathVariable(value = "appoinmentId") final long appoinmentId,
                                             @RequestParam(value = "accepted") final boolean accepted,
                                             HttpServletResponse response) throws IOException{
-        // TODO: businessId por si es necesario para auth
+        validateUserIsOwner(businessId);
 
         if ( accepted )
             try {

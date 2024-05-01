@@ -36,14 +36,9 @@ import java.util.*;
 public class HelloWorldController {
 
     private UserService us;
-    private BusinessService bs;
     private ServiceService ss;
-    private AppointmentService appointment;
     private final SecurityService securityService;
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
-    private RatingService rating;
-    private QuestionService question;
-    private ImageService is;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
     List<Categories> categories = new ArrayList<>();
@@ -55,24 +50,14 @@ public class HelloWorldController {
     @Autowired
     public HelloWorldController(
             @Qualifier("userServiceImpl") final UserService us,
-            @Qualifier("imageServiceImpl") final ImageService is,
             @Qualifier("serviceServiceImpl") final ServiceService ss,
-            @Qualifier("appointmentServiceImpl") final AppointmentService appointment,
-            @Qualifier("BusinessServiceImpl") final BusinessService bs,
-            @Qualifier("QuestionServiceImpl") final QuestionService question,
-            @Qualifier("RatingServiceImpl") final RatingService rating,
             @Qualifier("passwordRecoveryCodeServiceImpl") final PasswordRecoveryCodeService passwordRecoveryCodeService,
             @Qualifier("securityServiceImpl") final SecurityService securityService
     ){
         this.us = us;
         this.ss = ss;
-        this.appointment = appointment;
         this.passwordRecoveryCodeService = passwordRecoveryCodeService;
         this.securityService = securityService;
-        this.is=is;
-        this.bs = bs;
-        this.rating = rating;
-        this.question = question;
         categories.addAll(Arrays.asList(Categories.values()));
         pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
         neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
@@ -146,29 +131,6 @@ public class HelloWorldController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/servicios")
-    public ModelAndView services(
-            @RequestParam(name = "categoria", required = false) String category,
-            @RequestParam(name = "ubicacion", required = false) String[] neighbourhoodFilters,
-            @RequestParam(name = "calificacion", required = false) String ratingFilters,
-            @RequestParam(name = "pagina", required = false) Integer page,
-            @RequestParam(name="query",required=false) String query
-    ) {
-        if(page == null) page = 0;
-        final ModelAndView mav = new ModelAndView("services");
-
-        List<Service> serviceList = ss.services(page, category, neighbourhoodFilters, ratingFilters, query);
-        mav.addObject("services", serviceList);
-        mav.addObject("page", page);
-        mav.addObject("isServicesEmpty", serviceList.isEmpty());
-        mav.addObject("category", category);
-        mav.addObject("neighbourhoods", neighbourhoods);
-        mav.addObject("location", neighbourhoodFilters);
-        mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters, ratingFilters, query));
-        mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters, ratingFilters, query));
-        mav.addObject("ratings", ratings);
-        return mav;
-    }
 
     // @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
     // public ModelAndView postForm(@PathVariable("businessId") final long businessId){
@@ -187,36 +149,8 @@ public class HelloWorldController {
         }
         return mav;
     }
-
-    @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
-    public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {
-        final ModelAndView mav = new ModelAndView("postBusiness");
-        mav.addObject("neighbours",neighbourhoods);
-        return mav;
-    }
-    /*
-    @RequestMapping(method = RequestMethod.POST, path = "/{serviceid}/eliminar-servicio")
-    public ModelAndView deleteService(@PathVariable(value = "serviceid") final long serviceid){
-        service.delete(serviceid);
-        return new ModelAndView("redirect:/");
-    }
-    */
-
-    @RequestMapping(method = RequestMethod.POST, path = "/registrar-negocio")
-    public ModelAndView postBusiness(@ModelAttribute("BusinessForm") @Valid final BusinessForm form, final BindingResult errors
-    ) {
-        if (errors.hasErrors()) {
-            return registerBusiness(form);
-        }
-        ServinetAuthUserDetails userDetails = (ServinetAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = us.findByEmail(userDetails.getUsername()).orElse(null);
-        if (user == null){
-            return new ModelAndView("redirect:/login");
-        }
-        bs.createBusiness(form.getBusinessName(),user.getUserId(), form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
-        return new ModelAndView("redirect:/");
-    }
-
+//@RequestMapping(method = RequestMethod.GET, path="/publicar")
+//    public ModelAndView publish() {
 //@RequestParam(value = "nombre-negocio") final String businessName,
 //@RequestParam(value = "email-negocio") final String businessEmail,
 //@RequestParam(value = "telefono-negocio") final String businessTelephone,
