@@ -1,22 +1,22 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value='/resources/logo.png'/>">
     <link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
-    <title></title>
 </head>
 <body>
     <div class="nav-bar page">
         <a href="${pageContext.request.contextPath}/">
             <div class="logo-img-container">
-                <img class="img" src="${pageContext.request.contextPath}/resources/servinet.png" alt="Logo Servinet">
+                <img class="img" src="${pageContext.request.contextPath}/resources/servinet.png" alt="<spring:message code="servinet.logo"/>">
             </div>
         </a>
         <div class="nav-items">
             <div class="dropdown">
-                <p class="nav-item">Categorias</p>
+                <p class="nav-item"><spring:message code="navbar.categories"/></p>
                 <div class="dropdown-content">
                     <c:forEach var="category" items="${categories}">
                         <c:url value="/servicios" var="categoryChange">
@@ -31,11 +31,11 @@
             </div>
 
             <div class="dropdown">
-                <p class="nav-item">Mi cuenta</p>
+                <p class="nav-item"><spring:message code="navbar.account"/></p>
                 <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/perfil">Mi perfil</a>
-                    <a href="${pageContext.request.contextPath}/turnos/?confirmados=true">Mis turnos</a>
-                    <a href="${pageContext.request.contextPath}/negocios">Mis negocios</a>
+                    <a href="${pageContext.request.contextPath}/perfil"><spring:message code="navbar.profile"/></a>
+                    <a href="${pageContext.request.contextPath}/turnos/?confirmados=true"><spring:message code="navbar.appointments"/></a>
+                    <a href="${pageContext.request.contextPath}/negocios"><spring:message code="navbar.businesses"/></a>
                 </div>
             </div>
             <a class="nav-item" href="${pageContext.request.contextPath}/publicar">

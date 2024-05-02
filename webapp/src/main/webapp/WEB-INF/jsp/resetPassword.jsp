@@ -5,7 +5,7 @@
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
-    <title>Restablecer contraseña</title>
+    <title><spring:message code="title.reset-password"/></title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css" />
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

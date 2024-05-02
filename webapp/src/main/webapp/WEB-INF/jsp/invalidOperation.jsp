@@ -1,28 +1,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/noneAppointment.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <title></title>
+    <title><spring:message code="title.invalid"/></title>
 </head>
 <body>
 <div class="page">
     <c:choose>
         <c:when test="${argument == 'servicionoexiste'}">
-            <h2 class="header-text">Este servicio no existe.</h2>
+            <h2 class="header-text"><spring:message code="invalid.service"/></h2>
         </c:when>
         <c:when test="${argument == 'turnonoexiste'}">
-            <h2 class="header-text">Este turno no existe.</h2>
+            <h2 class="header-text"><spring:message code="invalid.appointment"/></h2>
         </c:when>
         <c:when test="${argument == 'turnoyaconfirmado'}">
-            <h2 class="header-text">Esta operacion ya no es valida pues el turno ya se ha confirmado anteriormente.</h2>
+            <h2 class="header-text"><spring:message code="invalid.appointment-confirmed"/>.</h2>
         </c:when>
         <c:when test="${argument == 'operacionprohibida'}">
-            <h2 class="header-text">No tiene permiso para realizar esta operacion</h2>
+            <h2 class="header-text"><spring:message code="invalid.access"/></h2>
         </c:when>
         <c:when test="${argument == 'negocionoexiste'}">
-            <h2 class="header-text">Este negocio no existe.</h2>
+            <h2 class="header-text"><spring:message code="invalid.business"/></h2>
         </c:when>
 
 
@@ -30,7 +31,7 @@
     <div class="align-center">
         <a class="none-decoration" href="${pageContext.request.contextPath}/">
             <button class="btn">
-                <label class="btn-text">Volver al inicio</label>
+                <label class="btn-text"><spring:message code="invalid.back-to-home"/></label>
             </button>
         </a>
     </div>

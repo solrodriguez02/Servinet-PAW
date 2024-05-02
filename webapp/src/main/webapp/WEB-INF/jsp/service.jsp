@@ -7,7 +7,7 @@
     <link href="${pageContext.request.contextPath}/css/service.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title></title>
+    <title><spring:message code="title.service" arguments="${service.name}"/> </title>
 </head>
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
@@ -18,13 +18,13 @@
             <c:if test="${isOwner}">
                 <c:url value="/borrar-servicio/${serviceId}" var="deleteUrl"/>
                 <form:form action="${deleteUrl}" method="post">
-                    <button class="cancelBtn" type="submit">Eliminar servicio</button>
+                    <button class="cancelBtn" type="submit"><spring:message code="service.delete"/></button>
                 </form:form>
             </c:if>
         </div>
         <div class="info-container">
             <div class="img-container">
-                <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
+                <img class="service-img img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="<spring:message code="service.image"/>">
             </div>
             <div class="info-box">
                 <div class="info-text">
@@ -48,14 +48,14 @@
                     <p class="text-with-icon"> <i class="material-icons icon">house</i>
                         <c:choose>
                             <c:when test="${service.homeService}">
-                                A domicilio
+                                <spring:message code="service.at-home"/>
                             </c:when>
                             <c:otherwise>
-                                En el domicilio del profesional
+                                <spring:message code="service.at-professional-house"/>
                             </c:otherwise>
                         </c:choose>
                     </p>
-                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i><c:out value="${service.duration}"/> min</p>
+                    <p class="text-with-icon"> <i class="material-icons icon">schedule</i> <spring:message code="service.time" arguments="${service.duration}"/> </p>
                     <p class="text-with-icon"><i class="material-icons icon">attach_money</i>
                         <c:choose>
                             <c:when test="${service.pricing == TBDPricing}">
@@ -68,12 +68,12 @@
                         </c:choose>
                     </p>
                     <c:if test="${service.additionalCharges}">
-                        <p class="text-with-icon warning-text"><i class="material-icons icon">warning</i>Puede incluir costos adicionales</p>
+                        <p class="text-with-icon warning-text"><i class="material-icons icon">warning</i><spring:message code="service.additional-costs"/></p>
                     </c:if>
 
                     <div class="btn-container">
                         <button class="btn">
-                            <a href="${contratarUrl}" class="none-decoration btn-text">Sacar turno</a>
+                            <a href="${contratarUrl}" class="none-decoration btn-text"><spring:message code="service.new-appointment"/></a>
                         </button>
                     </div>
                 </div>
@@ -92,8 +92,8 @@
         <c:if test="${option==null}">
             <div class="switch-btn-container align-center">
                 <div class="switch-btn">
-                    <button class="btn-basic btn-left btn-selected" id="toggleQuestionsButton" onclick="toggleQuestions()">Preguntas</button>
-                    <button class="btn-basic btn-right" id="toggleReviewsButton" onclick="toggleReviews()">Opiniones</button>
+                    <button class="btn-basic btn-left btn-selected" id="toggleQuestionsButton" onclick="toggleQuestions()"><spring:message code="service.questions"/></button>
+                    <button class="btn-basic btn-right" id="toggleReviewsButton" onclick="toggleReviews()"><spring:message code="service.reviews"/></button>
                 </div>
             </div>
         </c:if>
@@ -102,24 +102,24 @@
 
             <c:if test="${option!='rw'}">
             <div class="rq-info" id="questions">
-                <h3>Preguntas y respuestas</h3>
+                <h3><spring:message code="service.q&r"/></h3>
 
-                <h4>Pregunta lo que queres saber</h4>
+                <h4><spring:message code="service.ask"/></h4>
                 <c:url value="/preguntar/${serviceId}" var="askUrl"/>
                 <form:form action="${askUrl}" method="post" modelAttribute="questionForm">
                     <div class="flex">
                         <form:input path="question" type="text" class="input" placeholder="Escribi una pregunta"/>
-                        <input type="submit" value="Enviar" class="send-btn">
+                        <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                     </div>
                     <form:errors path="question" element="p" cssClass="error"/>
                 </form:form>
 
                 <c:choose>
                     <c:when test="${empty questions}">
-                        <p class="comment">Se el primero en preguntar!</p>
+                        <p class="comment"><spring:message code="service.first-to-ask"/></p>
                     </c:when>
                     <c:otherwise>
-                        <h4>Ultimas realizadas</h4>
+                        <h4><spring:message code="service.last-questions"/></h4>
                         <c:forEach items="${questions}" var="qst">
                             <div class="question-box">
                                 <div class="flex">
@@ -142,7 +142,7 @@
                         <c:when test="${option==null}">
                             <c:if test="${questionsCount > questionPage*10+10}">
                             <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst">
-                                <p class="page-text">Mostrar mas</p>
+                                <p class="page-text"><spring:message code="home.show-more"/></p>
                             </a>
                             </c:if>
                         </c:when>
@@ -150,21 +150,21 @@
                             <c:choose>
                                 <c:when test="${questionPage > 0}">
                                     <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage-1}">
-                                        <p class="page-text">< Anterior</p>
+                                        <p class="page-text"><spring:message code="pagination.previous"/></p>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <p class="none-page-text">< Anterior</p>
+                                    <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
                                 </c:otherwise>
                             </c:choose>
                             <c:choose>
                                 <c:when test="${questionsCount > questionPage*10+10}">
                                     <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage+1}">
-                                        <p class="page-text">Siguiente ></p>
+                                        <p class="page-text"><spring:message code="pagination.next"/></p>
                                     </a>
                                 </c:when>
                                 <c:otherwise>
-                                    <p class="none-page-text">Siguiente ></p>
+                                    <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                                 </c:otherwise>
                             </c:choose>
                         </c:otherwise>
@@ -179,10 +179,10 @@
                     <c:otherwise><div id="reviews" class="rq-info"></c:otherwise>
                 </c:choose>
 
-                <h3>Opiniones</h3>
+                <h3><spring:message code="service.reviews"/></h3>
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
-                        <h4>Tu opinion en <c:out value="${service.name}"/>:</h4>
+                        <h4><spring:message code="service.user-opinion" arguments="${service.name}"/></h4>
                         <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
                         <form action="${rateUrl}" method="post">
                             <c:forEach begin="1" end="5" var="i">
@@ -190,13 +190,13 @@
                             </c:forEach>
                             <input name="rating" type="hidden" id="rating" value="${hasAlreadyRated.rating}"/>
                             <div class="flex">
-                                <input  name="comment" type="text" class="input" placeholder="Escribi una opinion" value="${hasAlreadyRated.comment}"/>
-                                <input type="submit" value="Editar" class="send-btn">
+                                <input  name="comment" type="text" class="input" placeholder="<spring:message code="service.write-review"/>" value="${hasAlreadyRated.comment}"/>
+                                <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                             </div>
                         </form>
                     </c:when>
                     <c:otherwise>
-                        <h4>Agrega tu opinion</h4>
+                        <h4><spring:message code="service.add-review"/></h4>
                         <c:url value="/opinar/${serviceId}" var="rateUrl"/>
                         <form:form action="${rateUrl}" method="post" modelAttribute="reviewForm">
                             <c:forEach begin="1" end="5" var="i">
@@ -205,7 +205,7 @@
                             <form:input path="rating" type="hidden" id="rating" value="0"/>
                             <div class="flex">
                                 <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
-                                <input type="submit" value="Enviar" class="send-btn">
+                                <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                             </div>
                             <form:errors path="rating" element="p" cssClass="error"/>
                         </form:form>
@@ -214,10 +214,10 @@
 
                 <c:choose>
                     <c:when test="${empty reviews}">
-                        <p class="comment">Se el primero en opinar!</p>
+                        <p class="comment"><spring:message code="service.first-to-rate"/></p>
                     </c:when>
                     <c:otherwise>
-                        <h4>Ultimas realizadas</h4>
+                        <h4><spring:message code="service.last-questions"/></h4>
                         <c:forEach items="${reviews}" var="review">
                             <c:set value="${review.rating}" var="rate"/>
                             <div class="question-box">
@@ -243,7 +243,7 @@
                     <c:when test="${option==null}">
                         <c:if test="${reviewsCount > reviewPage*10+10}">
                         <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw">
-                            <p class="page-text">Mostrar mas</p>
+                            <p class="page-text"><spring:message code="home.show-more"/></p>
                         </a>
                         </c:if>
                     </c:when>
@@ -251,21 +251,21 @@
                         <c:choose>
                             <c:when test="${reviewPage > 0}">
                                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage-1}">
-                                    <p class="page-text">< Anterior</p>
+                                    <p class="page-text"><spring:message code="pagination.previous"/></p>
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <p class="none-page-text">< Anterior</p>
+                                <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
                             <c:when test="${reviewsCount > reviewPage*10+10}">
                                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage+1}">
-                                    <p class="page-text">Siguiente ></p>
+                                    <p class="page-text"><spring:message code="pagination.next"/></p>
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <p class="none-page-text">Siguiente ></p>
+                                <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                             </c:otherwise>
                         </c:choose>
                     </c:otherwise>

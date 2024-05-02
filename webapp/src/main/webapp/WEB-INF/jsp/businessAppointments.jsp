@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
@@ -6,7 +7,7 @@
     <link href="${pageContext.request.contextPath}/css/business.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Business</title>
+    <title><spring:message code="title.business-appointments"/></title>
 </head>
 <body>
 <c:set var="isUser" value="false" scope="request" />
@@ -15,9 +16,9 @@
         <h2><c:out value="${business.businessName}"/></h2>
         <div>
             <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=true">
-                <button class="btn-basic btn-left ${confirmed? 'selected':''}" >Proximos</button></a>
+                <button class="btn-basic btn-left ${confirmed? 'selected':''}"><spring:message code="business.next"/></button></a>
             <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false">
-                <button class="btn-basic btn-right ${!confirmed? 'selected':''}" >Solicitudes</button></a>
+                <button class="btn-basic btn-right ${!confirmed? 'selected':''}"><spring:message code="business.requests"/></button></a>
         </div>
     </div>
     <div class="appointments-container">
@@ -30,7 +31,7 @@
             <jsp:include page="appointmentContainer.jsp"/>
         </c:forEach>
         <c:if test="${ empty appointmentList}">
-            <p>No se han encontrado resultados</p>
+            <p><spring:message code="business.no-results"/></p>
         </c:if>
     </div>
 </div>

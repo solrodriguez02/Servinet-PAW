@@ -7,15 +7,15 @@
     <link href="${pageContext.request.contextPath}/css/userQuestions.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title></title>
+    <title><spring:message code="title.questions"/></title>
 </head>
 <body>
 <div class="page">
-    <h2>Consultas</h2>
+    <h2><spring:message code="questions"></h2>
 
     <c:choose>
         <c:when test="${pendingQst!=null}">
-            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_active</i>Tienes preguntas sin responder:</h4>
+            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_active</i><spring:message code="questions.new"/></h4>
             <c:forEach items="${pendingQst}" var="qst">
                 <div class="question-box">
                     <c:url value="/servicio/${qst.key.serviceid}" var="serviceUrl"/>
@@ -29,8 +29,8 @@
                     <c:url value="/responder/${qst.key.id}" var="askUrl"/>
                     <form:form action="${askUrl}" method="post" modelAttribute="responseForm">
                         <div class="flex">
-                            <form:input path="response" type="text" class="input" placeholder="Escribi una respuesta"/>
-                            <input type="submit" value="Enviar" class="send-btn">
+                            <form:input path="response" type="text" class="input" placeholder="<spring:message code="questions.answer"/>"/>
+                            <input type="submit" value="<spring:message code="questions.send"/>" class="send-btn">
                         </div>
                         <form:errors path="response" element="p" cssClass="error"/>
                     </form:form>
@@ -38,11 +38,9 @@
             </c:forEach>
         </c:when>
         <c:otherwise>
-            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_off</i>No tienes preguntas para contestar</h4>
+            <h4 class="notification-header"><i class="material-icons notification-icon">notifications_off</i><spring:message code="questions.none"/></h4>
         </c:otherwise>
     </c:choose>
 </div>
 </body>
 </html>
-
-

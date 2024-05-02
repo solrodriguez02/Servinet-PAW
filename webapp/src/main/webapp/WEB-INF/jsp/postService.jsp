@@ -7,7 +7,7 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <title>Crear un Servicio</title>
+    <title><spring:message code="title.create-service"/></title>
 </head>
 <body>
 <c:url value="/crear-servicio/${businessId}" var="postUrl"/>

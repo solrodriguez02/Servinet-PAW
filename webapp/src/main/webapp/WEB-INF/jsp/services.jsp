@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 
 <html>
@@ -6,7 +7,7 @@
     <link href="${pageContext.request.contextPath}/css/services.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title></title>
+    <title><spring:message code="title.services"/></title>
 </head>
 <body>
 <c:set var="numParameters" value="0"/>
@@ -31,13 +32,13 @@
         <div class="flex">
             <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
                 <div class="search-container">
-                    <input type="text" class="search-box" placeholder="Que estas buscando?" name="query" value="<c:out value="${param.query}"/>"/>
+                    <input type="text" class="search-box" placeholder="<spring:message code="services.search-placeholder"/>" name="query" value="<c:out value="${param.query}"/>"/>
                     <button type="submit" class="search-button"><i class="material-icons">search</i></button>
                 </div>
             </form>
             <div class="align-right">
                 <label>
-                    <p class="filters-text" onclick="toggleFilters()" id="toggleFiltersButton"><i class="material-icons">filter_alt</i>Filtrar por<i class="material-icons" id="filtersIcon">expand_more</i></p>
+                    <p class="filters-text" onclick="toggleFilters()" id="toggleFiltersButton"><i class="material-icons">filter_alt</i><spring:message code="services.filter-by"/> <i class="material-icons" id="filtersIcon">expand_more</i></p>
                 </label>
             </div>
         </div>
@@ -50,7 +51,7 @@
 
         <div class="align-right">
             <div class="filters-box transparent" id="filters">
-                <h3>Calificacion</h3>
+                <h3><spring:message code="services.filter-rate"/></h3>
                 <c:forEach items="${ratings}" var="rate">
                     <c:url value="/servicios" var="ratingChange">
                         <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
@@ -68,7 +69,7 @@
                         </c:if>
                     </a>
                 </c:forEach>
-                <h3>Ubicacion</h3>
+                <h3><spring:message code="services.filter-location"/></h3>
                 <c:forEach items="${neighbourhoods}" var="neighbourhood">
                     <c:url value="/servicios" var="locationChange">
                         <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
@@ -84,7 +85,7 @@
 
         <c:if test="${not empty paramValues.ubicacion or not empty paramValues.calificacion}">
             <div class="filters-selected">
-                <h4>Filtros seleccionados:</h4>
+                <h4><spring:message code="services.selected-filters"/></h4>
                 <c:forEach items="${paramValues.ubicacion}" var="location">
                 <button class="filter-container">
                         <c:out value="${location}"/>
@@ -115,13 +116,13 @@
             </div>
         </c:if>
 
-        <p class="comment">Resultados de busqueda: ${resultsAmount}</p>
+        <p class="comment"> <spring:message code="services.search-results" arguments="${resultsAmount}"/></p>
     </div>
 
     <c:choose>
         <c:when test="${isServicesEmpty}">
             <div class="not-found-page">
-                <p class="not-found-text"><i class="material-icons">search_off</i> No se encontraron resultados de busqueda, lo sentimos.</p>
+                <p class="not-found-text"><i class="material-icons">search_off</i><spring:message code="services.no-search-results"/></p>
             </div>
         </c:when>
         <c:otherwise>
@@ -131,7 +132,7 @@
                         <a class="service-text" href="${pageContext.request.contextPath}/servicio/${item.id}">
                             <div class="service-data-container">
                                 <div class="service-img-container">
-                                    <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="Imagen del servicio">
+                                    <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="<spring:message code="service.image"/>">
                                 </div>
                                 <div class="service-info">
                                     <div class="service-header">
@@ -169,12 +170,12 @@
 
                 <c:choose>
                     <c:when test="${page != 0}">
-                        <a class="page-text" href="${filtersPath}pagina=0"><< Primer pagina</a>
-                        <a class="page-text" href="${filtersPath}pagina=${page-1}">< Anterior</a>
+                        <a class="page-text" href="${filtersPath}pagina=0"><spring:message code="pagination.first"/></a>
+                        <a class="page-text" href="${filtersPath}pagina=${page-1}"><spring:message code="pagination.previous"/></a>
                     </c:when>
                     <c:otherwise>
-                        <label class="none-page-text">Primer pagina</label>
-                        <label class="none-page-text">Anterior</label>
+                        <label class="none-page-text"><spring:message code="pagination.none-first"/></label>
+                        <label class="none-page-text"><spring:message code="pagination.none-previous"/></label>
                     </c:otherwise>
                 </c:choose>
 
@@ -246,19 +247,19 @@
 
                 <c:choose>
                     <c:when test="${page < pageCount-1}">
-                        <a class="page-text" href="${filtersPath}pagina=${page+1}">Siguiente ></a>
+                        <a class="page-text" href="${filtersPath}pagina=${page+1}"><spring:message code="pagination.next"/></a>
                     </c:when>
                     <c:otherwise>
-                        <label class="none-page-text">Siguiente</label>
+                        <label class="none-page-text"><spring:message code="pagination.none-next"/></label>
                     </c:otherwise>
                 </c:choose>
 
                 <c:choose>
                     <c:when test="${page != pageCount-1}">
-                        <a class="page-text" href="${filtersPath}pagina=${pageCount-1}">Ultima pagina >></a>
+                        <a class="page-text" href="${filtersPath}pagina=${pageCount-1}"><spring:message code="pagination.last"/></a>
                     </c:when>
                     <c:otherwise>
-                        <label class="none-page-text">Ultima pagina</label>
+                        <label class="none-page-text"><spring:message code="pagination.none-last"/></label>
                     </c:otherwise>
                 </c:choose>
 

@@ -8,7 +8,7 @@
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Únete a la comunidad de Servinet</title>
+    <title><spring:message code="title.join-servinet"/></title>
 </head>
 <body>
 <c:url value="/registrarse" var="postUrl"/>

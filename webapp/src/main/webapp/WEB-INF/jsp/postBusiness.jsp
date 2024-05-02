@@ -5,7 +5,7 @@
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
-    <title>Registra tu emprendimiento en Servinet</title>
+    <title><spring:message code="title.register-business"/></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/global.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/post.css">

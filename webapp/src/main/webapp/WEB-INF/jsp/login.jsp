@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width; initial-scale=1.0">
         <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
         <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
-        <title>Login</title>
+        <title><spring:message code="login"/></title>
     </head>
     <body>
         <c:url value="/login" var="postPath"/>
@@ -55,4 +55,4 @@
         </form:form>
         </div>
     </body>
-</html  >
+</html>

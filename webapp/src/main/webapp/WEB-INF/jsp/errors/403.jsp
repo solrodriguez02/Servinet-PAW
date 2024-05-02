@@ -2,11 +2,11 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <html>
 <head>
-    <title>Error 403</title>
+    <title><spring:message code="error.pagenotfound"/></title>
 </head>
 <body>
     <h1>
-        <spring:message code="errors.403"/>
+        <spring:message code="error.403"/>
     </h1>
 </body>
 </html>

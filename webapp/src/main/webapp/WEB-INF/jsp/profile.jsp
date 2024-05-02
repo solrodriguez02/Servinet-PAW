@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp"/>
 <html>
 <head>
@@ -6,7 +7,7 @@
 
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Business</title>
+    <title><spring:message code="title.profile"/></title>
 </head>
 <body>
 <c:url value="/logout" var="logout"/>
@@ -22,7 +23,7 @@
         <div class="align-center">
             <a href="${logout}">
                 <button class="cancelBtn">
-                    Cerrar sesion
+                    <spring:message code="profile.logout"/>
                 </button>
             </a>
         </div>
@@ -30,7 +31,7 @@
 
     <c:if test="${user.provider}">
     <div class="header">
-        <h2>Negocios</h2>
+        <h2><spring:message code="profile.businesses"/></h2>
     </div>
 
     <div class="boxes-container">
@@ -44,7 +45,7 @@
         </c:forEach>
         <c:if test="${empty businessList}" >
             <div class="not-found-page">
-                No se han encontrado servicios en este negocio
+                <spring:message code="profile.no-services"/>
             </div>
         </c:if>
     </div>

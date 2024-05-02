@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" type="text/css"/>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" type="text/css"/>
-    <title>Solicitar un restablecimiento de contraseña</title>
+    <title><spring:message code="title.reset-password"/></title>
 </head>
 <c:url value="/olvide-mi-clave" var="postUrl"/>
 <body>

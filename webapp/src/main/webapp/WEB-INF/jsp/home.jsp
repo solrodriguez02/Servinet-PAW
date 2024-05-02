@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
@@ -6,12 +7,12 @@
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/services.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title></title>
+    <title><spring:message code="title.servinet"/></title>
 </head>
 <body>
 <div class="page">
     <div class="header">
-        <h2 class="slogan">Conectando servicios, creando soluciones</h2>
+        <h2 class="slogan"><spring:message code="servinet.slogan"/></h2>
         <div class="align-center">
             <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
                 <div class="search-container">
@@ -21,7 +22,7 @@
             </form>
         </div>
     </div>
-    <h3>Busca por categorias</h3>
+    <h3><spring:message code="home.search-by-category"/></h3>
     <div class="boxes-container" id="someCategories">
         <c:forEach items="${categories}" var="category" varStatus="loop">
             <c:if test="${loop.index < 5}">
@@ -47,10 +48,10 @@
     </div>
 
     <div class="show-btn-container">
-        <button class="show-btn" id="toggleCategoryButton" onclick="toggleCategory()">Mostrar mas</button>
+        <button class="show-btn" id="toggleCategoryButton" onclick="toggleCategory()"><spring:message code="home.show-more"/></button>
     </div>
 
-    <h3 class="container-text">Busca por cercania</h3>
+    <h3 class="container-text"><spring:message code="home.search-by-closeness"/></h3>
     <div class="boxes-container" id="someLocations">
         <c:forEach items="${neighbourhoods}" var="neighbourhood" varStatus="loop">
             <c:if test="${loop.index < 5}">
@@ -74,17 +75,17 @@
     </div>
 
     <div class="show-btn-container">
-        <button class="show-btn" id="toggleLocationButton" onclick="toggleLocation()">Mostrar mas</button>
+        <button class="show-btn" id="toggleLocationButton" onclick="toggleLocation()"><spring:message code="home.show-more"/></button>
     </div>
 
     <div class="recommended-services-containers">
-        <h3 class="container-text">Servicios recomendados</h3>
+        <h3 class="container-text"><spring:message code="home.recommended-services"/></h3>
         <c:forEach items="${recommendedServices}" var="item">
         <div class="service-box">
             <a class="service-text" href="${pageContext.request.contextPath}/servicio/${item.id}">
                 <div class="service-data-container">
                     <div class="service-img-container">
-                        <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="Imagen del servicio">
+                        <img class="img service-img" src="${pageContext.request.contextPath}/images/${item.imageId}" alt="<spring:message code="service.image"/>">
                     </div>
                     <div class="service-info">
                         <div class="service-header">
@@ -118,7 +119,7 @@
 
     <div class="btn-container">
         <button class="btn">
-            <a href="${pageContext.request.contextPath}/servicios" class="none-decoration btn-text">Ver todos los servicios</a>
+            <a href="${pageContext.request.contextPath}/servicios" class="none-decoration btn-text"><spring:message code="home.view-all-services"/></a>
         </button>
     </div>
 </div>
@@ -133,11 +134,11 @@
         if (someCategories.classList.contains('hide')) {
             someCategories.classList.remove('hide');
             allCateogries.classList.add('hide');
-            toggleButton.textContent = 'Mostrar mas';
+            toggleButton.textContent = <spring:message code="home.show-more"/>;
         } else {
             someCategories.classList.add('hide');
             allCateogries.classList.remove('hide');
-            toggleButton.textContent = 'Mostrar menos';
+            toggleButton.textContent = <spring:message code="home.show-less"/>;
 
         }
     }
@@ -150,11 +151,11 @@
         if (someLocations.classList.contains('hide')) {
             someLocations.classList.remove('hide');
             allLocations.classList.add('hide');
-            toggleButton.textContent = 'Mostrar mas';
+            toggleButton.textContent = <spring:message code="home.show-more"/>;
         } else {
             someLocations.classList.add('hide');
             allLocations.classList.remove('hide');
-            toggleButton.textContent = 'Mostrar menos';
+            toggleButton.textContent = <spring:message code="home.show-less"/>;
 
         }
     }

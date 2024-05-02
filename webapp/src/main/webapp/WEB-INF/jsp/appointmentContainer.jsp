@@ -1,18 +1,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/business.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>Appointment container</title>
 </head>
 <body>
 
     <div class="appointment-container" id="${loop.count}">
         <div class="box appointment-box">
             <span class="appointment-field day"><c:out value="${appointment.startDateString}"/></span>
-            <span class="appointment-field time"><i class="material-icons icon">schedule</i>    <c:out value="${appointment.startDateTimeString}"/>
+            <span class="appointment-field time"><i class="material-icons icon">schedule</i> <c:out value="${appointment.startDateTimeString}"/>
                     <c:if test="${appointment.duration}">
                         - <c:out value="${appointment.endDateTimeString}"/>
                     </c:if>
@@ -58,7 +58,7 @@
             </div>
             <c:if test="${isUser}">
                 <a href="${pageContext.request.contextPath}/turno/${appointment.serviceid}/${appointment.id}" class="none-decoration info-access">
-                    <button class=" center-vertically info-btn"><i class="material-icons icon info-icon ">info</i> Info </button>
+                    <button class=" center-vertically info-btn"><i class="material-icons icon info-icon ">info</i> <spring:message code="appointment.info"/> </button>
                 </a>
             </c:if>
         </div>

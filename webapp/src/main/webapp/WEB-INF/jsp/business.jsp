@@ -7,7 +7,7 @@
   <link href="${pageContext.request.contextPath}/css/profile.css" rel="stylesheet" />
   <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <title>Business</title>
+  <title><spring:message code="title.business" arguments="${business.businessName}"/></title>
 </head>
 <body>
 <div class="page">
@@ -20,7 +20,7 @@
       </button>
       <c:if test="${not empty serviceList}" >
         <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
-          <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
+          <button class="btn center-vertically"><i class="material-icons ">calendar_today</i><spring:message code="business.appointments"/></button>
         </a>
       </c:if>
     </div>
@@ -30,14 +30,14 @@
     <c:forEach items="${serviceList}" var="service" varStatus="loop">
       <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${service.id}">
         <div class="box preview-box">
-          <img class="preview-box-img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt="Imagen del servicio">
+          <img class="preview-box-img" src="${pageContext.request.contextPath}/images/${service.imageId}" alt=<spring:message code="business.service-image"/>>
           <p class="preview-box-text"><c:out value="${service.name}"/></p>
         </div>
       </a>
     </c:forEach>
     <c:if test="${empty serviceList}" >
       <div class="not-found-page">
-          No se han encontrado servicios en este negocio
+        <spring:message code="business.not-found"/>
       </div>
     </c:if>
   </div>
