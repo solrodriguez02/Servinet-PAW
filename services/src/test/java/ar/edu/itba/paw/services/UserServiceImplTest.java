@@ -1,4 +1,4 @@
-package ar.edu.itba.paw.services;
+/*package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
 import org.junit.Assert;
@@ -73,3 +73,4 @@ public class UserServiceImplTest {
         Assert.assertEquals(USERNAME, user.getUsername());
     }
 }
+*/

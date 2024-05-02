@@ -17,18 +17,18 @@ public class RatingsQuestionsController {
 
     private final  RatingService rating;
     private final  QuestionService question;
-    private final HelloWorldController helloWorldController;
+    private final ServiceController serviceController;
     private final UserController userController;
     private final SecurityService securityService;
 
     @Autowired
     public RatingsQuestionsController(
-            @Qualifier("HelloWorldController") HelloWorldController helloWorldController,
+            @Qualifier("ServiceController") ServiceController serviceController,
             @Qualifier("userController") final UserController userController,
             @Qualifier("QuestionServiceImpl") final QuestionService question,
             @Qualifier("RatingServiceImpl") final RatingService rating,
             @Qualifier("securityServiceImpl") final SecurityService securityService){
-        this.helloWorldController = helloWorldController;
+        this.serviceController = serviceController;
         this.rating = rating;
         this.question = question;
         this.userController = userController;
@@ -41,7 +41,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return helloWorldController.service(serviceId, form, null, "qst", 0, 0);
+            return serviceController.service(serviceId, form, null, "qst", 0, 0);
         }
         long userid = securityService.getCurrentUser().get().getUserId();
         question.create(serviceId, userid, form.getQuestion());
@@ -55,7 +55,7 @@ public class RatingsQuestionsController {
             @PathVariable("questionId") final long questionId
     ){
         if(errors.hasErrors()) {
-            return userController.userServices(form);
+            return userController.userServicesQuestions(form);
         }
         question.addResponse(questionId, form.getResponse());
         return new ModelAndView("redirect:/negocios/consultas");
@@ -68,7 +68,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return helloWorldController.service(serviceId, null, form, "rw", 0, 0);
+            return serviceController.service(serviceId, null, form, "rw", 0, 0);
         }
         long userid = securityService.getCurrentUser().get().getUserId();
         rating.create(serviceId, userid, form.getRating(), form.getComment());

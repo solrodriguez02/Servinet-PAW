@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.webapp.config;
 
 import ar.edu.itba.paw.model.Categories;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +14,6 @@ import org.springframework.jdbc.datasource.init.DataSourceInitializer;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -104,13 +102,4 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
     }
 
-    @Bean
-    public String emailAccount() {
-        return "paw@itba.edu.ar"; // TODO : read from properties file
-    }
-
-    @Bean
-    public String emailPassword() {
-        return "superSecretVerySecure"; // TODO : read from properties file
-    }
 }

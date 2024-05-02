@@ -9,12 +9,12 @@ public abstract class BasicAppointment {
     private final long serviceid;
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
-    private String location;
+    private final String location;
     private Boolean confirmed;
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE dd MMMM");
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("EEE dd MMMM yyyy, HH:mm");
     private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
-    private String startDateString;
+    private final String startDateString;
     private static final String SERVICE_LOCATION = "=";
 
     public BasicAppointment(long id, long serviceid, LocalDateTime startDate, LocalDateTime endDate, String location, Boolean confirmed) {

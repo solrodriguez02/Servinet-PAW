@@ -115,7 +115,7 @@
                 </form:form>
 
                 <c:choose>
-                    <c:when test="${questions == null}">
+                    <c:when test="${empty questions}">
                         <p class="comment">Se el primero en preguntar!</p>
                     </c:when>
                     <c:otherwise>
@@ -213,7 +213,7 @@
                 </c:choose>
 
                 <c:choose>
-                    <c:when test="${reviews == null}">
+                    <c:when test="${empty reviews}">
                         <p class="comment">Se el primero en opinar!</p>
                     </c:when>
                     <c:otherwise>

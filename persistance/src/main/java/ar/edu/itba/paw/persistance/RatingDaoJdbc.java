@@ -28,9 +28,8 @@ public class RatingDaoJdbc implements RatingDao {
     }
 
     @Override
-    public Optional<List<Rating>> getAllRatings(long serviceid, int page) {
-        final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
-        return Optional.of(list);
+    public List<Rating> getAllRatings(long serviceid, int page) {
+        return jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
     }
 
     @Override

@@ -3,17 +3,17 @@ package ar.edu.itba.paw.persistance;
 import ar.edu.itba.paw.model.ImageModel;
 import ar.edu.itba.paw.services.ImageDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.StreamUtils;
+
 
 
 import javax.sql.DataSource;
-import java.io.IOException;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +23,6 @@ import java.util.Optional;
 
 @Repository
 public class ImageDaoJdbc implements ImageDao {
-
-    @Value("classpath:defaultImg.png")
-    private Resource defaultImage;
 
     private static final RowMapper<ImageModel> ROW_MAPPER = (rs, rowNum) -> new ImageModel(rs.getLong("imageid"),
              rs.getBytes("imageBytes"));
@@ -40,13 +37,6 @@ public class ImageDaoJdbc implements ImageDao {
     }
     @Override
     public Optional<ImageModel> getImageById(long id)  {
-        if(id == 0) {
-            try {
-                return Optional.of(new ImageModel(0, StreamUtils.copyToByteArray(defaultImage.getInputStream())));
-            } catch (IOException e) {
-                throw new RuntimeException(e); //TODO: preguntar como manejar esto mejor
-            }
-        }
         final List<ImageModel> list = jdbcTemplate.query("SELECT * from Images WHERE imageId = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }

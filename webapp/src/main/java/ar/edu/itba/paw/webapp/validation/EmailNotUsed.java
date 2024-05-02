@@ -2,8 +2,6 @@ package ar.edu.itba.paw.webapp.validation;
 
 
 
-import org.hibernate.validator.internal.constraintvalidators.AbstractEmailValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;

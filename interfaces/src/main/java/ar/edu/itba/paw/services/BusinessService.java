@@ -11,7 +11,7 @@ public interface BusinessService {
 
     Optional<Business> findByBusinessName(String businessName);
 
-    Optional<List<Business>> findByAdminId(long adminId);
+    List<Business> findByAdminId(long adminId);
 
     void deleteBusiness(long businessid);
 
@@ -19,8 +19,5 @@ public interface BusinessService {
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);
 
-    Service createService(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, long imageId);
-
-    void deleteService(long serviceId);
     Boolean isBusinessOwner(long businessId, long userId);
 }

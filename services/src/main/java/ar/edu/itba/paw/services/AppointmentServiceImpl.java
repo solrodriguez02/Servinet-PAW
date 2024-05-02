@@ -3,13 +3,11 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
-import ar.edu.itba.paw.model.exceptions.EmailAlreadyUsedException;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -38,17 +36,17 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid) {
+    public List<Appointment> getAllUpcomingServiceAppointments(long serviceid) {
         return appointmentDao.getAllUpcomingServiceAppointments(serviceid);
     }
 
     @Override
-    public Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed) {
+    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed) {
         return appointmentDao.getAllUpcomingServicesAppointments(serviceIds,confirmed);
     }
 
     @Override
-    public Optional<List<AppointmentInfo>> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
         return appointmentDao.getAllUpcomingUserAppointments(userid, confirmed);
     }
 

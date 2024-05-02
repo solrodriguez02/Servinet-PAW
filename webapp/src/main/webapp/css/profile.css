@@ -128,12 +128,13 @@
     border-radius: 20px 0 0 20px;
 }
 .btn-basic {
-    background-color: #dcdcdc;
+    background-color: #b4b4b4;
     border: none;
     padding: 10px 20px;
     font-family: 'Poppins', sans-serif;
     font-weight: bold;
     cursor: pointer;
+    color: white;
 }
 
 .selected {

@@ -2,11 +2,9 @@ package ar.edu.itba.paw.webapp.validation;
 
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.webapp.form.ServiceForm;
-import org.springframework.beans.BeanWrapperImpl;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
 
 public class LocationFormattedValidator implements ConstraintValidator<LocationFormatted, ServiceForm> {
 //    private Neighbourhoods[] neighbourhoods;

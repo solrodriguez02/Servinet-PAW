@@ -7,25 +7,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.TYPE_USE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Documented
-@Constraint(validatedBy = {LocationFormattedValidator.class})
+@Constraint(validatedBy = {ValidImageFileValidator.class})
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
-public @interface LocationFormatted {
-
-    String message() default "Si ingresó una entrega a domicilio, debe seleccionar al menos un barrio. Si tiene un domicilio particular aclare SOLO en que barrio se encuentra";
+public @interface ValidImageFile {
+    String message() default "Formato de archivo invalido";
 
     Class<?>[] groups() default { };
 
     Class<? extends Payload>[] payload() default { };
 
-    @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
-    @Retention(RUNTIME)
-    @Documented
-    @interface List {
-        LocationFormatted[] locations();
-    }
 
 }

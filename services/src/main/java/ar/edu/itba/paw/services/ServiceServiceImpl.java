@@ -1,14 +1,14 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
 
@@ -17,14 +17,19 @@ public class ServiceServiceImpl implements ServiceService {
     private final EmailService emailService;
     private final AppointmentService appointmentService;
     private final UserService userService;
+    private final BusinessDao businessDao;
+    private final ImageService imageService;
 
     @Autowired
     public ServiceServiceImpl(final ServiceDao serviceDao, final EmailService emailService,
-                              final AppointmentService appointmentService, final UserService userService) {
+                              final AppointmentService appointmentService, final UserService userService,
+                              final ImageService imageService, final BusinessDao businessDao) {
         this.serviceDao = serviceDao;
         this.emailService = emailService;
         this.appointmentService = appointmentService;
         this.userService = userService;
+        this.businessDao = businessDao;
+        this.imageService = imageService;
     }
 
     @Override
@@ -38,7 +43,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
 
-    public Service create(Business business, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessId, String name, String description, Boolean homeservice,
+                          Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
+                          PricingTypes pricing, String price, Boolean additionalCharges, MultipartFile image) throws IOException {
+        Business business = businessDao.findById( businessId).orElseThrow(BusinessNotFoundException::new);
+
+        long imageId = image.isEmpty()? 0 : imageService.addImage(image.getBytes()).getImageId();
+
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
             emailService.createdService(service, business);
@@ -54,16 +65,27 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Optional <List<Service>> getAllServices() {
+    public List<Service> getAllServices() {
         return serviceDao.getAllServices();
     }
 
     @Override
+    public void delete(long serviceId) {
+
+        Optional<Service> optionalService = findById(serviceId);
+        if (!optionalService.isPresent())
+            return;
+        final Service service = optionalService.get();
+        final Business business = businessDao.findById(service.getBusinessid()).get();
+
+        delete(service,business);
+    }
+
+        @Override
     public void delete(Service service, Business business) {
 
-        Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
-         if ( appointmentList.isPresent() ){
-             for ( Appointment appointment : appointmentList.get()){
+        List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
+             for ( Appointment appointment : appointmentList){
                  User client = userService.findById( appointment.getUserid()).get();
 
                  try {
@@ -75,7 +97,6 @@ public class ServiceServiceImpl implements ServiceService {
                      throw new RuntimeException(e);
                  }
              }
-         }
         serviceDao.delete(service.getId());
         try {
             emailService.deletedService(service,business);
@@ -106,12 +127,12 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Optional<List<BasicService>> getAllBusinessBasicServices(long businessId) {
+    public List<BasicService> getAllBusinessBasicServices(long businessId) {
         return serviceDao.getAllBusinessBasicServices(businessId);
     }
 
     @Override
-    public Optional<List<Service>> getAllBusinessServices(long businessid){
+    public List<Service> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
     }
 

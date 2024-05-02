@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+        <meta http-equiv="Content-Type" content="multipart/form-data; charset=UTF-8" />
+        <title th:remove="all"  th:text="${subject}" ></title>
+        <style>
+            button {
+                border-radius: 8px;
+                border: none;
+                padding: 10px;
+                margin-bottom: 5px;
+            }
+            .header {
+                color: #585bfa;
+                text-align: center;
+            }
+            .container{
+                margin: 0 auto;
+                border-radius: 24px;
+                width: 100%;
+                max-width: 600px;
+                align-items: center;
+                background: white;
+                padding: 40px;
+            }
+            .bg {
+                font-family: 'Poppins', sans-serif;
+                background: #585bfa;
+                padding: 50px;
+            }
+            button:hover {
+                opacity: 0.7;
+            }
+            .btn {
+                font-weight: bold;
+                font-family: 'Poppins', sans-serif;
+                padding: 10px;
+                color: white;
+                padding-inline: 20px;
+            }
+            .confirm {
+                background-color: #585bfa;
+            }
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                margin-top: 10px;
+            }
+        </style>
+</head>
+<body class="bg">
+<div class="container">
+    <div class="header">
+        <a th:href="${url}" style="text-decoration: none"><h1>servinet .</h1></a>
+    </div>
+    <div>
+        <p>
+            Estimado,
+        </p>
+        <div>
+            El negocio <span th:text="${serviceName}"/> ha sido <span th:switch="${type}">
+                <span th:case="'CREATED'">
+                    creado exitosamente. Su número de identificación es el #<span th:text="${businessId}"></span>.
+                    Ya se encuentra disponible en <a th:href="${url}+'negocio/'+${businessId}" th:text="${url}+'negocio/'+${businessId}"></a>.
+                </span>
+                <span th:case="*">
+                    borrado exitosamente. Todos los servicios y con ello sus turnos solicitados desde nuestra página servinet han sido cancelados.
+                    <p>
+                    Si desea crear un nuevo negocio, haga click <a th:href="${url}+'registrar-negocio'">aqui</a>.
+                    </p>
+                </span>
+            </span>
+
+            <div class="btn-container" th:if="${type == 'CREATED'}">
+                <a th:href="${url}+'negocio/'+${businessId}">
+                    <button class="btn confirm">Ver negocio</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
