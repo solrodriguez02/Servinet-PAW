@@ -159,5 +159,4 @@ public class HelloWorldController {
         return new ModelAndView("redirect:/login");
     }
 
-
 }

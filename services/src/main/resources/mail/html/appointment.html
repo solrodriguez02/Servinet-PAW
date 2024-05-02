@@ -92,16 +92,16 @@
                     <p>Por favor seleccione una opción,</p>
 
                     <div class="btn-container">
-                        <form th:action="${url}+'aceptar-turno/'+ ${appointmentId}" method="post">
+                        <a th:href="${url}+'aceptar-turno/'+ ${appointmentId}">
                             <button class="btn confirm" type="submit">
                             Aceptar
                             </button>
-                        </form>
-                        <form th:action="${url}+'rechazar-turno/'+${appointmentId}" method="post">
-                            <button class="btn deny" type="submit">
+                        </a>
+                        <a th:href="${url}+'rechazar-turno/'+${appointmentId}">
+                            <button class="btn deny">
                             Rechazar
                             </button>
-                        </form>
+                        </a>
                     </div>
                     <p class="align-center">
                         <em>Este mail dejará de ser válido luego de seleccionar una opción</em>

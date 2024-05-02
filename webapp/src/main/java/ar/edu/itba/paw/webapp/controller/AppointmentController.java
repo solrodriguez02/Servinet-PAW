@@ -55,19 +55,30 @@ public class AppointmentController {
             throw new ForbiddenOperation();
     }
 
-    @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
         validateUser(appointmentId);
         final long serviceId = appointmentService.denyAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
-    @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
         validateUser(appointmentId);
         final long serviceId = appointmentService.confirmAppointment(appointmentId);
         return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
+
+    // Para mantener compatibilidad con mails enviados antes que usaban form POST
+    @RequestMapping(method = RequestMethod.POST , path = "/aceptar-turno/{appointmentId:\\d+}")
+    public ModelAndView confirmAppointmentPost(@PathVariable("appointmentId") final long appointmentId) {
+        return confirmAppointment(appointmentId);
+    }
+    @RequestMapping(method = RequestMethod.POST , path = "/rechazar-turno/{appointmentId:\\d+}")
+    public ModelAndView denyAppointmentPost(@PathVariable("appointmentId") final long appointmentId) {
+        return denyAppointment(appointmentId);
+    }
+
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointmentFromMail(@PathVariable("appointmentId") final long appointmentId) {
