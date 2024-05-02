@@ -18,6 +18,9 @@
       <button class="cancelBtn" id="deleteBtn" onclick="deleteBusiness()" >
         <i class="material-icons ">delete</i>
       </button>
+      <a href="${pageContext.request.contextPath}/crear-servicio/${businessId}" class="none-decoration mr">
+        <button class="btn center-vertically"><i class="material-icons ">add</i> Agregar servicio</button>
+      </a>
       <c:if test="${not empty serviceList}" >
         <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
           <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> Turnos</button>
