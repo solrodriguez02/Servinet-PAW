@@ -1,7 +1,5 @@
 package ar.edu.itba.paw.model;
 
-import java.util.Arrays;
-
 public class Service extends BasicService {
 
     private String description;

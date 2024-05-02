@@ -4,7 +4,6 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
-import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
 import ar.edu.itba.paw.webapp.form.BusinessForm;
@@ -30,8 +29,7 @@ public class BusinessController {
     private final UserService userService;
     private final SecurityService securityService;
 
-    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
-
+    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
     @Autowired
     public BusinessController(@Qualifier("BusinessServiceImpl") final BusinessService businessService,  @Qualifier("serviceServiceImpl") final ServiceService serviceService,
                               @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
@@ -42,7 +40,7 @@ public class BusinessController {
         this.appointmentService = appointmentService;
         this.userService = userService;
         this.securityService = securityService;
-        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
+
     }
 
 
@@ -91,14 +89,12 @@ public class BusinessController {
 
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         validateUserIsOwner(business);
-        Optional<List<BasicService>> services = serviceService.getAllBusinessBasicServices(businessId);
-        List<Appointment> appointmentList = new ArrayList<>();
+        List<BasicService> services = serviceService.getAllBusinessBasicServices(businessId);
+        List<Appointment> appointmentList;
 
         Map<Long, BasicService> serviceMap = new HashMap<>();
-        if ( services.isPresent()){
-            services.get().forEach(service -> serviceMap.put(service.getId(), service) );
-            appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed).orElse(new ArrayList<>());
-        }
+        services.forEach(service -> serviceMap.put(service.getId(), service));
+        appointmentList = appointmentService.getAllUpcomingServicesAppointments( serviceMap.keySet(), confirmed);
 
         final ModelAndView mav = new ModelAndView("businessAppointments");
         Map<Long, User> userMap = new HashMap<>();
@@ -155,7 +151,7 @@ public class BusinessController {
     public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId).orElse(new ArrayList<>());
+        List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId);
 
         mav.addObject("business",business);
         mav.addObject("serviceList", serviceList);

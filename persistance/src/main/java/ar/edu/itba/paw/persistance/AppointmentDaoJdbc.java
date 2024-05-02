@@ -42,24 +42,23 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
-    public Optional<List<Appointment>> getAllUpcomingServiceAppointments(long serviceid) {
-        final List<Appointment> list = jdbcTemplate.query("SELECT * from appointments WHERE serviceid = ? and startdate > NOW() ", new Object[] {serviceid }, APPOINTMENT_ROW_MAPPER);
-        return Optional.of(list);
+    public List<Appointment> getAllUpcomingServiceAppointments(long serviceid) {
+        return jdbcTemplate.query("SELECT * from appointments WHERE serviceid = ? and startdate > NOW() ", new Object[] {serviceid }, APPOINTMENT_ROW_MAPPER);
     }
 
     @Override
-    public Optional<List<Appointment>> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed){
+    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed){
 
         List<Object> params = new ArrayList<>(serviceIds);
         params.add(confirmed);
 
         String inSql = String.join(",", Collections.nCopies(serviceIds.size(), "?"));
         final List<Appointment> list = jdbcTemplate.query(String.format("SELECT * from appointments WHERE serviceid in (%s) and startdate > NOW() and confirmed = ? ",inSql), params.toArray(), APPOINTMENT_ROW_MAPPER);
-        return Optional.of(list);
+        return list;
     }
 
     @Override
-    public Optional<List<AppointmentInfo>> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
         final List<AppointmentInfo> list = jdbcTemplate.query(
                 "SELECT info.* , businessemail, businesstelephone\n" +
                         "    FROM business as b RIGHT JOIN\n" +
@@ -70,7 +69,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
                         "                WHERE userid = ? and confirmed= ? and startdate > NOW()) as a\n" +
                         "                ON a.serviceid = s.id) as info\n" +
                         "on info.businessid = b.businessid;", new Object[] {userid, confirmed }, APPOINTMENT_INFO_ROW_MAPPER);
-        return Optional.of(list);
+        return list;
     }
 
 

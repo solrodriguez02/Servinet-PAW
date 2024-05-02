@@ -3,7 +3,6 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.PasswordRecoveryCode;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;

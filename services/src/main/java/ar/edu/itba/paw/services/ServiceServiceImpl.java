@@ -7,11 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @org.springframework.stereotype.Service("serviceServiceImpl")
 
@@ -68,7 +65,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Optional <List<Service>> getAllServices() {
+    public List<Service> getAllServices() {
         return serviceDao.getAllServices();
     }
 
@@ -87,9 +84,8 @@ public class ServiceServiceImpl implements ServiceService {
         @Override
     public void delete(Service service, Business business) {
 
-        Optional<List<Appointment>> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
-         if ( appointmentList.isPresent() ){
-             for ( Appointment appointment : appointmentList.get()){
+        List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
+             for ( Appointment appointment : appointmentList){
                  User client = userService.findById( appointment.getUserid()).get();
 
                  try {
@@ -101,7 +97,6 @@ public class ServiceServiceImpl implements ServiceService {
                      throw new RuntimeException(e);
                  }
              }
-         }
         serviceDao.delete(service.getId());
         try {
             emailService.deletedService(service,business);
@@ -132,12 +127,12 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public Optional<List<BasicService>> getAllBusinessBasicServices(long businessId) {
+    public List<BasicService> getAllBusinessBasicServices(long businessId) {
         return serviceDao.getAllBusinessBasicServices(businessId);
     }
 
     @Override
-    public Optional<List<Service>> getAllBusinessServices(long businessid){
+    public List<Service> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
     }
 

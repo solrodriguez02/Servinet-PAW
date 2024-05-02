@@ -1,33 +1,20 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
-import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.ServiceService;
-import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
 import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.mail.MessagingException;
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -41,10 +28,10 @@ public class HelloWorldController {
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    List<Categories> categories = new ArrayList<>();
-    List<PricingTypes> pricingTypes = new ArrayList<>();
-    List<Neighbourhoods> neighbourhoods = new ArrayList<>();
-    List<Ratings> ratings = new ArrayList<>();
+    List<Categories> categories = Arrays.asList(Categories.values());
+    List<PricingTypes> pricingTypes = Arrays.asList(PricingTypes.values());
+    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
+    List<Ratings> ratings = Arrays.asList(Ratings.values());
 
 
     @Autowired
@@ -58,10 +45,6 @@ public class HelloWorldController {
         this.ss = ss;
         this.passwordRecoveryCodeService = passwordRecoveryCodeService;
         this.securityService = securityService;
-        categories.addAll(Arrays.asList(Categories.values()));
-        pricingTypes.addAll(Arrays.asList(PricingTypes.values()));
-        neighbourhoods.addAll(Arrays.asList(Neighbourhoods.values()));
-        ratings.addAll(Arrays.asList(Ratings.values()));
     }
 
     @RequestMapping(path="/login")

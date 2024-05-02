@@ -18,12 +18,7 @@ public class RatingServiceImpl implements RatingService {
 
     @Override
     public List<Rating> getAllRatings(long serviceid, int page) {
-        List<Rating> ratings;
-        if(ratingDao.getAllRatings(serviceid, page).isPresent()) {
-            ratings = ratingDao.getAllRatings(serviceid, page).get();
-            if(ratings.isEmpty()) ratings = null;
-        } else ratings = null;
-        return ratings;
+        return ratingDao.getAllRatings(serviceid, page);
     }
 
     @Override

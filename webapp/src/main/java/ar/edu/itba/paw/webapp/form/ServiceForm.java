@@ -4,7 +4,6 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.webapp.validation.LocationFormatted;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;

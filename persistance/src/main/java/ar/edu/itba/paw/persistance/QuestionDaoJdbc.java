@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.Question;
-import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.services.QuestionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -29,9 +28,8 @@ public class QuestionDaoJdbc implements QuestionDao {
     }
 
     @Override
-    public Optional<List<Question>> getAllQuestions(long serviceid, int page) {
-        final List<Question> list = jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
-        return Optional.of(list);
+    public List<Question> getAllQuestions(long serviceid, int page) {
+        return jdbcTemplate.query("SELECT * from questions WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
     }
 
     @Override

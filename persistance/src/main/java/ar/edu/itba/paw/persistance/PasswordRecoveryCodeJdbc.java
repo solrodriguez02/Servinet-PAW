@@ -1,7 +1,6 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.PasswordRecoveryCode;
-import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.PasswordRecoveryCodeDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Async;
 public interface EmailService {
 
     void requestAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
-
     void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode) throws MessagingException;
 
     void confirmNewPassword(User user) throws MessagingException;
