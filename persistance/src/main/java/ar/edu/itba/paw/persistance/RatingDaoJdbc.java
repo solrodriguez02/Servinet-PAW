@@ -69,7 +69,7 @@ public class RatingDaoJdbc implements RatingDao {
 
     @Override
     public void edit(long ratingid, int rating, String comment) {
-        jdbcTemplate.update("UPDATE ratings SET rating = ?, comment = ? WHERE ratingid = ?", rating, comment, ratingid);
+        jdbcTemplate.update("UPDATE ratings SET rating = ?, comment = ?, date = ? WHERE ratingid = ?", rating, comment, new Date(), ratingid);
     }
 
 }

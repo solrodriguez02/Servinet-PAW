@@ -103,8 +103,6 @@
             <c:if test="${option!='rw'}">
             <div class="rq-info" id="questions">
                 <h3><spring:message code="service.q&r"/></h3>
-
-                <h4><spring:message code="service.ask"/></h4>
                 <c:url value="/preguntar/${serviceId}" var="askUrl"/>
                 <form:form action="${askUrl}" method="post" modelAttribute="questionForm">
                     <div class="flex">
@@ -182,18 +180,46 @@
                 <h3><spring:message code="service.reviews"/></h3>
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
-                        <h4><spring:message code="service.user-opinion" arguments="${service.name}"/></h4>
                         <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
-                        <form action="${rateUrl}" method="post">
-                            <c:forEach begin="1" end="5" var="i">
-                                <i class="material-icons star" onclick="selectRate(${i})">star</i>
-                            </c:forEach>
-                            <input name="rating" type="hidden" id="rating" value="${hasAlreadyRated.rating}"/>
-                            <div class="flex">
-                                <input  name="comment" type="text" class="input" placeholder="<spring:message code="service.write-review"/>" value="${hasAlreadyRated.comment}"/>
-                                <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
+                        <div class="user-opinion-box">
+
+                            <div id="user-review">
+                                <div class="flex">
+                                    <div class="stars-container">
+                                        <c:forEach begin="1" end="${hasAlreadyRated.rating}" var="i">
+                                            <i class="material-icons yellow-star">star</i>
+                                        </c:forEach>
+                                        <c:forEach begin="${hasAlreadyRated.rating+1}" end="5" var="i">
+                                            <i class="material-icons gray-star">star</i>
+                                        </c:forEach>
+                                    </div>
+                                    <p class="date"><c:out value="${hasAlreadyRated.date}"/></p>
+                                    <div class="align-right">
+                                        <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.edit-review"/></button>
+                                    </div>
+                                </div>
+                                <p class="text"><c:out value="${hasAlreadyRated.comment}"/></p>
                             </div>
-                        </form>
+
+                            <div id="edit-review" class="transparent">
+                                <form action="${rateUrl}" method="post">
+                                    <div class="flex edit-header">
+                                        <c:forEach begin="1" end="5" var="i">
+                                            <i class="material-icons star" onclick="selectRate(${i})">star</i>
+                                        </c:forEach>
+                                        <div class="align-right">
+                                            <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
+                                        </div>
+                                    </div>
+                                    <input name="rating" type="hidden" id="rating" value="${hasAlreadyRated.rating}"/>
+                                    <div class="flex">
+                                        <input  name="comment" type="text" class="input edit-input" placeholder="<spring:message code="service.write-review"/>" value="${hasAlreadyRated.comment}"/>
+                                        <input type="submit" value="<spring:message code="service.edit-review"/>" class="send-btn">
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.add-review"/></h4>
@@ -322,6 +348,19 @@
                 } else {
                     star[i].style.color = "#b9b9b9";
                 }
+            }
+        }
+
+        function toggleUserReview() {
+            var showUserReview = document.getElementById('user-review');
+            var showEditReview = document.getElementById('edit-review');
+
+            if (showUserReview.classList.contains('transparent')) {
+                showUserReview.classList.remove('transparent');
+                showEditReview.classList.add('transparent');
+            } else {
+                showUserReview.classList.add('transparent');
+                showEditReview.classList.remove('transparent');
             }
         }
     </script>

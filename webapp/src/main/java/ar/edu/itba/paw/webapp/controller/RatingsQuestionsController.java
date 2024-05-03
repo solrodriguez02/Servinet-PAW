@@ -71,7 +71,9 @@ public class RatingsQuestionsController {
             return serviceController.service(serviceId, null, form, "rw", 0, 0);
         }
         long userid = securityService.getCurrentUser().get().getUserId();
-        rating.create(serviceId, userid, form.getRating(), form.getComment());
+        if(rating.hasAlreadyRated(userid, serviceId) == null) {
+            rating.create(serviceId, userid, form.getRating(), form.getComment());
+        }
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");
     }
 
