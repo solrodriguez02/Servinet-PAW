@@ -81,7 +81,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 45%;
+    margin-top: 180px;
+    margin-bottom: 50px;
 }
 
 .not-found-text {

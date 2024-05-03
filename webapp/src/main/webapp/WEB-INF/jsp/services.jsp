@@ -124,6 +124,13 @@
             <div class="not-found-page">
                 <p class="not-found-text"><i class="material-icons">search_off</i><spring:message code="services.no-search-results"/></p>
             </div>
+            <div class="align-center">
+                <a class="none-decoration" href="${pageContext.request.contextPath}/">
+                    <button class="btn">
+                        <label class="btn-text"><spring:message code="invalid.back-to-home"/></label>
+                    </button>
+                </a>
+            </div>
         </c:when>
         <c:otherwise>
             <div class="services-container">
