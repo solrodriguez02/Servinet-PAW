@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="page">
-    <h2><spring:message code="questions"></h2>
+    <h2><spring:message code="questions"/></h2>
 
     <c:choose>
         <c:when test="${pendingQst!=null}">
@@ -29,7 +29,7 @@
                     <c:url value="/responder/${qst.key.id}" var="askUrl"/>
                     <form:form action="${askUrl}" method="post" modelAttribute="responseForm">
                         <div class="flex">
-                            <form:input path="response" type="text" class="input" placeholder="<spring:message code="questions.answer"/>"/>
+                            <form:input path="response" type="text" class="input" placeholder=""/>
                             <input type="submit" value="<spring:message code="questions.send"/>" class="send-btn">
                         </div>
                         <form:errors path="response" element="p" cssClass="error"/>
