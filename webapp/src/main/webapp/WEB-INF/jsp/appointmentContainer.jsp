@@ -52,7 +52,7 @@
                     <c:choose>
                         <c:when test="${appointment.homeService}" >
                             <c:out value="${appointment.location}"/></c:when>
-                        <c:otherwise>En el domicilio del profesional</c:otherwise>
+                        <c:otherwise> <spring:message code="service.at-professional-house"/> </c:otherwise>
                     </c:choose>
                 </span>
             </div>
