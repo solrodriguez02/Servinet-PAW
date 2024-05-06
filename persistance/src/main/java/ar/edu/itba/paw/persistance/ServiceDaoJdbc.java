@@ -50,7 +50,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service create(long businessid, String name, String description, Boolean homeservice, String location,Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges,long imageId){
+    public Service create(long businessid, String name, String description, boolean homeservice, String location,Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, boolean additionalCharges,long imageId){
         final Map<String, Object> userData = new HashMap<>();
         userData.put("businessid", businessid);
         userData.put("servicename", name);

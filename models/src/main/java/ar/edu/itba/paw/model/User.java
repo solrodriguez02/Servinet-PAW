@@ -8,7 +8,7 @@ public class User {
     private String surname;
     private String email;
     private String telephone;
-    private Boolean isProvider;
+    private boolean isProvider;
     private long imageId;
     public String getName() {
         return name;
@@ -36,15 +36,15 @@ public class User {
         return telephone;
     }
 
-    public Boolean getProvider() {
+    public boolean getProvider() {
         return isProvider;
     }
 
-    public Boolean isProvider() {
+    public boolean isProvider() {
         return isProvider;
     }
 
-    public User(long userId, String username,String password ,String name, String surname, String email, String telephone, Boolean isProvider) {
+    public User(long userId, String username,String password ,String name, String surname, String email, String telephone, boolean isProvider) {
         this.username = username;
         this.userId = userId;
         this.password=password;

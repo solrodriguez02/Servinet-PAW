@@ -70,7 +70,7 @@ public class BusinessServiceImpl implements BusinessService{
     }
 
     @Override
-    public Boolean isBusinessOwner(long businessId, long userId){
+    public boolean isBusinessOwner(long businessId, long userId){
         Business business = businessDao.findById(businessId).orElse(null);
         if(business == null){
             return false;

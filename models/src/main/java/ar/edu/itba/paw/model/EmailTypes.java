@@ -18,7 +18,7 @@ public enum EmailTypes {
     private final String name;
     private final String subject;
     private final EmailTemplates template;
-    private final Boolean isAboutAppointment;
+    private final boolean isAboutAppointment;
 
     EmailTypes(String name, String subject) {
         this.name = name;

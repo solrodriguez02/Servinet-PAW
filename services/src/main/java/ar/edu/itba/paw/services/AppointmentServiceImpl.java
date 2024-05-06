@@ -41,12 +41,12 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
-    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed) {
+    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, boolean confirmed) {
         return appointmentDao.getAllUpcomingServicesAppointments(serviceIds,confirmed);
     }
 
     @Override
-    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, boolean confirmed) {
         return appointmentDao.getAllUpcomingUserAppointments(userid, confirmed);
     }
 

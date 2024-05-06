@@ -11,7 +11,7 @@ public interface ServiceService {
     List<Service> getAllServices();
     Optional<Service> findById(long id);
     Optional<BasicService> findBasicServiceById(long id);
-    Service create(long businessId, String name, String description, Boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, Boolean additionalCharges, MultipartFile image) throws IOException;
+    Service create(long businessId, String name, String description, boolean homeservice, Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration, PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) throws IOException;
     Service edit(long serviceid, String field, String newvalue);
     void delete(Service service, Business business);
     void delete(long serviceId);

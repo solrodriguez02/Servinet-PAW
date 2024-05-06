@@ -10,14 +10,14 @@ public abstract class BasicAppointment {
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
     private final String location;
-    private Boolean confirmed;
+    private boolean confirmed;
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("EEE dd MMMM");
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("EEE dd MMMM yyyy, HH:mm");
     private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
     private final String startDateString;
     private static final String SERVICE_LOCATION = "=";
 
-    public BasicAppointment(long id, long serviceid, LocalDateTime startDate, LocalDateTime endDate, String location, Boolean confirmed) {
+    public BasicAppointment(long id, long serviceid, LocalDateTime startDate, LocalDateTime endDate, String location, boolean confirmed) {
         this.id = id;
         this.serviceid = serviceid;
         this.startDate = startDate;
@@ -53,7 +53,7 @@ public abstract class BasicAppointment {
         return endDate;
     }
 
-    public Boolean getConfirmed() {
+    public boolean getConfirmed() {
         return confirmed;
     }
     public String getLocation() {
@@ -62,7 +62,7 @@ public abstract class BasicAppointment {
 
     public void setEndDate(){}
 
-    public void setConfirmed(Boolean confirmed) {
+    public void setConfirmed(boolean confirmed) {
         this.confirmed = confirmed;
     }
 

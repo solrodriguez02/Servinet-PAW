@@ -11,5 +11,5 @@ public interface PasswordRecoveryCodeService {
     PasswordRecoveryCode generateCode(long userid);
     void changePassword(UUID code, String newPassword) throws MessagingException;
     void deleteCode(long userid);
-    Boolean validateCode(UUID code);
+    boolean validateCode(UUID code);
 }

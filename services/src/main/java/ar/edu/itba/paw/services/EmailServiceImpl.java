@@ -60,17 +60,17 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException {
+    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) throws MessagingException {
         prepareAndSendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, isServiceDeleted);
     }
 
     @Async
     @Override
-    public void deniedAppointment(Appointment appointment, Service service, Business business, User client,Boolean isServiceDeleted) throws MessagingException {
+    public void deniedAppointment(Appointment appointment, Service service, Business business, User client,boolean isServiceDeleted) throws MessagingException {
         prepareAndSendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, isServiceDeleted);
     }
 
-    private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException {
+    private void prepareAndSendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, boolean isServiceDeleted) throws MessagingException {
         final Context ctx = getContext(appointment,service,isServiceDeleted, client, business);
 
         if (!isServiceDeleted)
@@ -78,7 +78,7 @@ public class EmailServiceImpl implements EmailService{
         sendMailToClient(emailType,client.getEmail(),ctx);
     }
 
-    private Context getContext(Appointment appointment, Service service, Boolean isServiceDeleted, User client, Business business){
+    private Context getContext(Appointment appointment, Service service, boolean isServiceDeleted, User client, Business business){
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("client", client);
         ctx.setVariable("business", business);
