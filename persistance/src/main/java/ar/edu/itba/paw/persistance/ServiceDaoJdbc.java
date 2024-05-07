@@ -36,7 +36,7 @@ public class ServiceDaoJdbc implements ServiceDao {
    @Autowired
    public ServiceDaoJdbc(final DataSource ds){
        jdbcTemplate = new JdbcTemplate(ds);
-       simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("services").usingGeneratedKeyColumns("id");
+       simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("s<ervices").usingGeneratedKeyColumns("id");
    }
     @Override
     public Optional<Service> findById(long id) {

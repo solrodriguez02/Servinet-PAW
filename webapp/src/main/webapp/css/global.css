@@ -189,3 +189,22 @@ body {
 .mr {
     margin-right: 10px;
 }
+
+.column-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 50px;
+    opacity: 0.9;
+}
+
+.no-results-svg {
+    height: 210px;
+    width: 100%;
+}
+
+.no-results-text {
+    margin: auto;
+    margin-top: 70px;
+    margin-bottom: 50px;
+}

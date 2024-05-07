@@ -1,28 +1,28 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<jsp:include page="../navbar.jsp" />
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/noneAppointment.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <title>"error 403"</title>
+    <title><spring:message code="global.no-results"/></title>
 </head>
 <body>
-    <div class="page">
+<div class="column-container">
 
-        <img class="img svg" src="${pageContext.request.contextPath}/resources/403.svg" alt="">
-        <h2 class="header-text"><spring:message code="error.403"/></h2>
+    <img class="img no-results-svg" src="${pageContext.request.contextPath}/resources/noResults.svg" alt=""/>
+    <p class="no-results-text"><spring:message code="global.no-results"/></p>
 
+    <c:if test="${ not empty urlCallToAction }">
         <div class="align-center">
             <a class="none-decoration" href="${pageContext.request.contextPath}/">
                 <button class="btn">
-                    <label class="btn-text"><spring:message code="error.backtohome"/></label>
+                    <label class="btn-text">${textCallToAction}</label>
                 </button>
             </a>
         </div>
-    </div>
-
+    </c:if>
+</div>
 </body>
 </html>

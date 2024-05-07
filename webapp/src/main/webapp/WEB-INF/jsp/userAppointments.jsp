@@ -25,10 +25,12 @@
             <c:set var="loop" value="${loop}" scope="request" />
             <c:set var="serviceName" value="${appointment.serviceName}" scope="request" />
             <c:set var="email" value="${appointment.businessEmail}" scope="request" />
-            <jsp:include page="appointmentContainer.jsp"/>
+            <jsp:include page="components/appointmentContainer.jsp"/>
         </c:forEach>
         <c:if test="${ empty appointmentList}">
-            <p><spring:message code="appointments.no-results"/></p>
+            <c:set var="urlCallToAction" value="${pageContext.request.contextPath}/" scope="request" />
+            <c:set var="textCallToAction" scope="request"><spring:message code="services.look-for-services"/></c:set>
+            <jsp:include page="components/noResults.jsp"/>
         </c:if>
     </div>
 </div>

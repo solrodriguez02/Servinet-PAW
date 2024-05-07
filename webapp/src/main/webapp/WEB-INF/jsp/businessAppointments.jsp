@@ -28,12 +28,12 @@
             <c:set var="serviceName" value="${serviceMap[appointment.serviceid].name}" scope="request" />
             <c:set var="email" value="${userMap[appointment.userid].email}" scope="request" />
             <c:set var="name" value="${userMap[appointment.userid].fullName}" scope="request"/>
-            <jsp:include page="appointmentContainer.jsp"/>
+            <jsp:include page="components/appointmentContainer.jsp"/>
         </c:forEach>
-        <c:if test="${ empty appointmentList}">
-            <p><spring:message code="business.no-results"/></p>
-        </c:if>
     </div>
+    <c:if test="${ empty appointmentList}">
+        <jsp:include page="components/noResults.jsp"/>
+    </c:if>
 </div>
 
 </body>
