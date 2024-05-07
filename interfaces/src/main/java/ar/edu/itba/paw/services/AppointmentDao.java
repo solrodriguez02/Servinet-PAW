@@ -14,9 +14,9 @@ public interface AppointmentDao {
 
     List<Appointment> getAllUpcomingServiceAppointments(long serviceid);
 
-    List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> servicesIds, Boolean confirmed);
+    List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> servicesIds, boolean confirmed);
 
-    List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed);
+    List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, boolean confirmed);
 
     Appointment create(long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location);
 

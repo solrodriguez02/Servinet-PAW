@@ -19,9 +19,9 @@ public interface EmailService {
 
     void confirmedAppointment(Appointment appointment, Service service, Business business, User client) throws MessagingException;
 
-    void cancelledAppointment(Appointment appointment, Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException;
+    void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) throws MessagingException;
 
-    void deniedAppointment(Appointment appointment, Service service, Business business, User client, Boolean isServiceDeleted) throws MessagingException;
+    void deniedAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) throws MessagingException;
 
     void deletedService(Service service, Business business) throws MessagingException;
 

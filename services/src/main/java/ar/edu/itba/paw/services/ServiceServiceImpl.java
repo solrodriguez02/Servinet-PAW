@@ -43,9 +43,9 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
 
-    public Service create(long businessId, String name, String description, Boolean homeservice,
+    public Service create(long businessId, String name, String description, boolean homeservice,
                           Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
-                          PricingTypes pricing, String price, Boolean additionalCharges, MultipartFile image) throws IOException {
+                          PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) throws IOException {
         Business business = businessDao.findById( businessId).orElseThrow(BusinessNotFoundException::new);
 
         long imageId = image.isEmpty()? 0 : imageService.addImage(image.getBytes()).getImageId();

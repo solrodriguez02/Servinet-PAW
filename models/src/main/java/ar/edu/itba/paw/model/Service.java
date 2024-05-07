@@ -3,15 +3,15 @@ package ar.edu.itba.paw.model;
 public class Service extends BasicService {
 
     private String description;
-    private Boolean homeService;
+    private boolean homeService;
     private final String[] neighbourhoodAvailable;
     private int duration;
     private PricingTypes pricing;
     private String price;
     private Categories category;
-    private Boolean additionalCharges;
+    private boolean additionalCharges;
 
-    public Service(long id, long businessid, String name, String description, Boolean homeService, String location,String[] neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, Boolean additionalCharges,long imageId) {
+    public Service(long id, long businessid, String name, String description, boolean homeService, String location,String[] neighbourhoodAvailable, Categories category, int duration, PricingTypes pricingType, String price, boolean additionalCharges,long imageId) {
         super(id, businessid, name, location, imageId);
         this.description = description;
         this.homeService = homeService;
@@ -39,11 +39,11 @@ public class Service extends BasicService {
         this.category = Categories.findByValue(category);
     }
 
-    public Boolean getHomeService() {
+    public boolean getHomeService() {
         return homeService;
     }
 
-    public void setHomeService(Boolean homeService) {
+    public void setHomeService(boolean homeService) {
         this.homeService = homeService;
     }
 
@@ -77,11 +77,11 @@ public class Service extends BasicService {
         this.price = price;
     }
 
-    public Boolean getAdditionalCharges() {
+    public boolean getAdditionalCharges() {
         return additionalCharges;
     }
 
-    public void setAdditionalCharges(Boolean additionalCharges) {
+    public void setAdditionalCharges(boolean additionalCharges) {
         this.additionalCharges = additionalCharges;
     }
 

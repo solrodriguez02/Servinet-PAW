@@ -38,7 +38,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
     }
 
     @Override
-    public Boolean validateCode(UUID code) {
+    public boolean validateCode(UUID code) {
         //User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         PasswordRecoveryCode passwordRecoveryCode = passwordRecoveryCodeDao.getCode(code).orElse(null);
         if (passwordRecoveryCode == null){

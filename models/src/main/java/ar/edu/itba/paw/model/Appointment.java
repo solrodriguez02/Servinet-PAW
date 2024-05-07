@@ -6,7 +6,7 @@ public class Appointment extends BasicAppointment{
 
     private final long userid;
 
-    public Appointment(long id, long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location, Boolean confirmed) {
+    public Appointment(long id, long serviceid, long userid, LocalDateTime startDate, LocalDateTime endDate, String location, boolean confirmed) {
         super(id, serviceid, startDate, endDate, location, confirmed);
         this.userid = userid;
     }

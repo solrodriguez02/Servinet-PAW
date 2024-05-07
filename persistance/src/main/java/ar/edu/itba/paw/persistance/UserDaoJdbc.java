@@ -78,7 +78,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final Boolean isProvider) {
+    public User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final boolean isProvider) {
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
         userData.put("name", name);

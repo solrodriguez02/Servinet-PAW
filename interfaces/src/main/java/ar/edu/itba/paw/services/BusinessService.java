@@ -19,5 +19,5 @@ public interface BusinessService {
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);
 
-    Boolean isBusinessOwner(long businessId, long userId);
+    boolean isBusinessOwner(long businessId, long userId);
 }

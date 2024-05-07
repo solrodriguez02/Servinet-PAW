@@ -47,7 +47,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
-    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, Boolean confirmed){
+    public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, boolean confirmed){
 
         List<Object> params = new ArrayList<>(serviceIds);
         params.add(confirmed);
@@ -58,7 +58,7 @@ public class AppointmentDaoJdbc implements AppointmentDao {
     }
 
     @Override
-    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, Boolean confirmed) {
+    public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, boolean confirmed) {
         final List<AppointmentInfo> list = jdbcTemplate.query(
                 "SELECT info.* , businessemail, businesstelephone\n" +
                         "    FROM business as b RIGHT JOIN\n" +
