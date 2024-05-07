@@ -8,6 +8,7 @@
     <title><spring:message code="title.invalid"/></title>
 </head>
 <body>
+<c:set var="textCallToAction"><spring:message code="invalid.back-to-home"/></c:set>
 <div class="page">
     <c:choose>
         <c:when test="${argument == 'servicionoexiste'}">
@@ -31,7 +32,7 @@
     <div class="align-center">
         <a class="none-decoration" href="${pageContext.request.contextPath}/">
             <button class="btn">
-                <label class="btn-text"><spring:message code="invalid.back-to-home"/></label>
+                <label class="btn-text">${textCallToAction}</label>
             </button>
         </a>
     </div>

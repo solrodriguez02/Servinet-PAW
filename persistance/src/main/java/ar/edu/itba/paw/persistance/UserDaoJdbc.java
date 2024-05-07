@@ -17,6 +17,9 @@ public class UserDaoJdbc implements UserDao {
             rs.getString("username"),rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("email"),
             rs.getString("telephone"), rs.getBoolean("isprovider"));
 
+    private static final RowMapper<Boolean> PROVIDER_MAPPER = (rs, rowNum) -> rs.getBoolean("isprovider");
+
+
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
 
@@ -44,6 +47,12 @@ public class UserDaoJdbc implements UserDao {
     @Override
     public Optional<User> findByUsername(String username) {
         final List<User> list = jdbcTemplate.query("SELECT * from users WHERE username = ?", new Object[] {username}, ROW_MAPPER);
+        return list.stream().findFirst();
+    }
+
+    @Override
+    public Optional<Boolean> isProvider(long userid) {
+        final List<Boolean> list = jdbcTemplate.query("SELECT isprovider from users WHERE userid = ?", new Object[] {userid}, PROVIDER_MAPPER );
         return list.stream().findFirst();
     }
 
@@ -81,26 +90,5 @@ public class UserDaoJdbc implements UserDao {
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
         return new User(generatedId.longValue(), username ,password, name,surname, email, telephone, isProvider);
     }
-
-
-
-
-
-    /*
-    @Override
-    public User create(final String username) {
-        return new User(1, "username");
-    }
-
-
-    @Override
-    public Optional<User> findById(long id) {
-        // nunca se debe concatenar parametros en una query
-        // "SELECT * from users WHERE userID " + id esta mal
-        User u = new User(1, "sol");
-        return Optional.of(u);
-    }
-
-     */
 
 }

@@ -9,12 +9,20 @@
     <title><spring:message code="title.my-businesses"/></title>
 </head>
 <body>
+<c:set var="urlCreateBusiness" value="${pageContext.request.contextPath}/registrar-negocio" />
 <div class="page">
     <div class="header">
         <h2><spring:message code="businesses.my-businesses"/></h2>
-        <a href="${pageContext.request.contextPath}/negocios/consultas" class="none-decoration">
-            <button class="btn center-vertically"><i class="material-icons ">notifications_active</i><spring:message code="businesses.questions"/></button>
-        </a>
+        <div class="flex center-vertically">
+            <c:if test="${not empty businessList}" >
+                <a href="${urlCreateBusiness}" class="none-decoration mr">
+                    <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="businesses.add-business"/></button>
+                </a>
+                <a href="${pageContext.request.contextPath}/negocios/consultas" class="none-decoration">
+                    <button class="btn center-vertically"><i class="material-icons ">notifications_active</i> <spring:message code="businesses.questions"/></button>
+                </a>
+            </c:if>
+        </div>
     </div>
 
     <div class="boxes-container">
@@ -27,6 +35,13 @@
             </a>
         </c:forEach>
     </div>
+
+    <c:if test="${ empty businessList}">
+        <c:set var="urlCallToAction" value="${urlCreateBusiness}" scope="request" />
+        <c:set var="message" scope="request"><spring:message code="businesses.no-results"/></c:set>
+        <c:set var="textCallToAction" scope="request"><spring:message code="business.create"/></c:set>
+        <jsp:include page="components/noResults.jsp"/>
+    </c:if>
 </div>
 </body>
 </html>

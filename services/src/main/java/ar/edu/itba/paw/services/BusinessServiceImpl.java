@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.mail.MessagingException;
@@ -60,12 +61,15 @@ public class BusinessServiceImpl implements BusinessService{
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         Business business = businessDao.createBusiness(businessName,userId,telephone,email,location);
+
         try {
             emailService.createdBusiness(business);
         } catch (MessagingException e){
             throw new RuntimeException(e);
         }
-        userService.changeUserType(userId);
+
+        userService.makeProvider(userId);
+
         return business;
     }
 

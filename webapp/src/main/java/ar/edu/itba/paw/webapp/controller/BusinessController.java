@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
 import ar.edu.itba.paw.webapp.form.BusinessForm;
@@ -47,6 +48,9 @@ public class BusinessController {
     @RequestMapping(method = RequestMethod.GET, path="/registrar-negocio")
     public ModelAndView registerBusiness(@ModelAttribute("BusinessForm") final BusinessForm form) {
         final ModelAndView mav = new ModelAndView("postBusiness");
+        User user = securityService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        form.setBusinessEmail(user.getEmail());
+        form.setBusinessTelephone(user.getTelephone());
         mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
@@ -57,20 +61,23 @@ public class BusinessController {
         if (errors.hasErrors()) {
             return registerBusiness(form);
         }
+        /*
         ServinetAuthUserDetails userDetails = (ServinetAuthUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
         if (user == null){
             return new ModelAndView("redirect:/login");
         }
-        businessService.createBusiness(form.getBusinessName(),user.getUserId(), form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
-        return new ModelAndView("redirect:/");
+         */
+        long userid = securityService.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
+        Business business = businessService.createBusiness(form.getBusinessName(),userid, form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
+        return new ModelAndView("redirect:/negocio/"+ business.getBusinessid());
     }
 
-    @RequestMapping(method = RequestMethod.DELETE , path = "/borrar-negocio/{businessId:\\d+}")
+    @RequestMapping(method = RequestMethod.GET , path = "/borrar-negocio/{businessId:\\d+}")
     public ModelAndView deleteBusiness(@PathVariable("businessId") final long businessId){
         validateUserIsOwner(businessId);
         businessService.deleteBusiness(businessId);
-        return new ModelAndView("redirect:/operacion-invalida/?argumento=negocionoexiste");
+        return new ModelAndView("redirect:/negocios");
     }
 
     //todo: autenticar q es el dueño del service

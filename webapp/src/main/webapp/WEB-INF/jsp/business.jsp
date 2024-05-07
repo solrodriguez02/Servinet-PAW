@@ -10,6 +10,7 @@
   <title><spring:message code="title.business" arguments="${business.businessName}"/></title>
 </head>
 <body>
+<c:set var="urlCreateService" value="${pageContext.request.contextPath}/crear-servicio/${businessId}" />
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
@@ -18,10 +19,10 @@
       <button class="cancelBtn" id="deleteBtn" onclick="deleteBusiness()" >
         <i class="material-icons ">delete</i>
       </button>
-      <a href="${pageContext.request.contextPath}/crear-servicio/${businessId}" class="none-decoration mr">
-        <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="business.add-service"/></button>
-      </a>
       <c:if test="${not empty serviceList}" >
+        <a href="${urlCreateService}" class="none-decoration mr">
+          <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="business.add-service"/></button>
+        </a>
         <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
           <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> <spring:message code="business.appointments"/></button>
         </a>
@@ -38,25 +39,23 @@
         </div>
       </a>
     </c:forEach>
-    <c:if test="${empty serviceList}" >
-      <div class="not-found-page">
-        <spring:message code="business.not-found"/>
-      </div>
+    <c:if test="${ empty serviceList}">
+      <c:set var="urlCallToAction" value="${urlCreateService}" scope="request" />
+      <c:set var="message" scope="request"><spring:message code="business.not-found"/></c:set>
+      <c:set var="textCallToAction" scope="request">+ <spring:message code="business.add-service"/></c:set>
+      <jsp:include page="components/noResults.jsp"/>
     </c:if>
   </div>
 </div>
 </body>
-<script src="${pageContext.request.contextPath}/js/fetch.js"></script>
+
 <script>
 
   function deleteBusiness(){
     if (!confirm('<spring:message code="business.confirm-delete"/>'))
       return
 
-    if (send('${deleteUrl}','DELETE',{}) === 0)
-      window.location.href = "${pageContext.request.contextPath}/negocios";
-      //window.location.href = "${pageContext.request.contextPath}/operacion-invalida/?argumento=negocionoexiste";
-
+    window.location.replace('${deleteUrl}')
   }
 </script>
 </html>

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,18 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
     }
+
+    private Optional<Boolean> isProvider(long userid) {
+        return userDao.isProvider(userid);
+    }
+
+    @Override
+    public void makeProvider(long userid){
+        boolean isProvider = isProvider(userid).orElseThrow(UserNotFoundException::new);
+        if ( !isProvider)
+            changeUserType(userid);
+    }
+
     @Override
     public User create(final String username,final String name, final String surname, final String password, final String email, final String telephone) {
         User user = userDao.findByEmail(email).orElse(null);
@@ -73,4 +86,5 @@ public class UserServiceImpl implements UserService {
     public void changeUserType(long userid){
         userDao.changeUserType(userid);
     }
+
 }
