@@ -33,13 +33,10 @@
             <form:errors path="description" cssClass="error"/>
             <form:input type="text" class="input" path="description" placeholder="${serviceDescription}"/>
         </label>
-        <label id="label">
             <p><spring:message code="service.location"/></p>
-            <label>
                 <form:checkbox id="homeservice" path="homeserv" />
                 <form:errors path="homeserv" cssClass="error"/>
                 <label for="homeservice"><spring:message code="service.home-service"/></label>
-            </label>
             <div class="service-div">
                 <form:select path="neighbourhood" multiple="true" checkboxes="true" class="input" >
                     <c:forEach items="${neighbours}" var="item">
@@ -52,8 +49,6 @@
                 <form:input type="text" class="input" path="location" value="" id="locationInput" placeholder="${serviceLocation}"/>
             </div>
             <form:errors path="" cssClass="error"/>
-        </label>
-
         <label>
             <p class="label"><spring:message code="service.price"/></p>
             <label>
@@ -82,12 +77,18 @@
                 </c:forEach>
             </form:select>
         </label>
-        <label>
             <p class="label"><spring:message code="service.duration"/></p>
             <spring:message code="input.service.duration" var="serviceDuration"/>
             <form:errors path="minimalduration" cssClass="error"/>
-            <form:input type="number" class="input" path="minimalduration" />
-        </label>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <c:forEach var="durType" items="${durationTypes}" varStatus="loop">
+                    <span class="r-pills">
+                        <form:radiobutton hidden="hidden" path="minimalduration" value="${durType.value}" />
+                        <label for="minimalduration${loop.index+1}"><spring:message code="${durType.codeMsg}"/>
+                        </label>
+                    </span>
+                </c:forEach>
+            </div>
         <div class="align-center">
             <input type="submit" value="Publicar" class="btn submit-btn">
         </div>

@@ -49,14 +49,14 @@
             <p class="label"><spring:message code="password"/></p>
             <spring:message code="input.password" var="inputPassword"/>
             <form:errors path="password" cssClass="error" element="p"/>
-            <form:input type="text" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
+            <form:input type="password" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
         </label>
             <form:errors path="" cssClass="error"/>
         <label>
             <p class="label"><spring:message code="repeat-password"/></p>
             <spring:message code="input.repeat-password" var="inputRepeatPassword"/>
             <form:errors path="passwordConfirmation" cssClass="error" element="p"/>
-            <form:input type="text" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}" required="true"/>
+            <form:input type="password" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}" required="true"/>
         </label>
         <p>
             <spring:message code="register.already-registered"/> <a href="<c:url value="/login"/>"><spring:message code="login"/></a>

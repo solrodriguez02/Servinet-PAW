@@ -19,7 +19,7 @@
             <p class="label"><spring:message code="password"/></p>
             <spring:message code="input.recover-password" var="inputPassword"/>
             <form:errors path="password" cssClass="error" element="p"/>
-            <form:input type="text" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
+            <form:input type="password" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
         </label>
         <label>
             <p class="label"><spring:message code="repeat-password"/></p>
