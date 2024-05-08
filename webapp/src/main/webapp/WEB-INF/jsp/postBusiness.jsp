@@ -18,19 +18,19 @@
     <label>
         <p class="label"><spring:message code="business-name"/></p>
         <spring:message code="input.business" var="inputName"/>
-        <form:input type="text" class="input" path="businessName" placeholder="${inputName}" required="true"/>
+        <form:input type="text" class="input" path="businessName" placeholder="${inputName}" />
         <form:errors path="businessName" cssClass="error" element="p"/>
     </label>
     <label>
         <p class="label"><spring:message code="business-email"/></p>
         <spring:message code="input.business-email" var="inputEmail"/>
-        <form:input type="email" class="input" path="businessEmail" placeholder="${inputEmail}" required="true"/>
+        <form:input type="email" class="input" path="businessEmail" placeholder="${inputEmail}" />
         <form:errors path="businessEmail" cssClass="error" element="p"/>
     </label>
     <label>
         <p class="label"><spring:message code="telephone"/></p>
         <spring:message code="input.telephone" var="inputTelephone"/>
-        <form:input type="text" class="input" path="businessTelephone" placeholder="${inputTelephone}" required="true"/>
+        <form:input type="text" class="input" path="businessTelephone" placeholder="${inputTelephone}" />
         <form:errors path="businessTelephone" cssClass="error" element="p"/>
     </label>
     <label>
