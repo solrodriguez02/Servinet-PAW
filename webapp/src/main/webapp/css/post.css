@@ -32,6 +32,8 @@ select.input {
 
 .input {
     width: 100%;
+    height: fit-content;
+    align-self: center;
     border: 1px solid #DADCE0;
     border-radius: 7px;
     font-size: 16px;
@@ -109,4 +111,22 @@ input[type="checkbox"] {
     height: 1.5em;
     width: 1.5em;
     vertical-align: middle;
+}
+
+.r-pills input:checked + label {
+    background-color: #585bfa;
+}
+
+.r-pills {
+    display: inline-block;
+    padding-bottom: 0.25em;
+}
+
+.r-pills label{
+    border-radius: 2em;
+    background-color: #eaeaea;
+    cursor: pointer;
+    border:0 ;
+    display:block;
+    padding:0.25em 0.75em;
 }

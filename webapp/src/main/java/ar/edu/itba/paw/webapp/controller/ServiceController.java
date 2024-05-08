@@ -99,6 +99,7 @@ public class ServiceController {
             throw new ForbiddenOperation();
         }
         final ModelAndView mav = new ModelAndView("postService");
+        mav.addObject("durationTypes",DurationTypes.values());
         mav.addObject("pricingTypes",pricingTypes);
         mav.addObject("neighbours",neighbourhoods);
         return mav;
