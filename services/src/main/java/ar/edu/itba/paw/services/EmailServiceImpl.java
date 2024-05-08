@@ -129,6 +129,9 @@ public class EmailServiceImpl implements EmailService{
         sendMail(business.getEmail(),EmailTypes.DELETED_BUSINESS.getSubject(business.getBusinessName()), ctx, EmailTypes.DELETED_BUSINESS.getTemplate());
     }
 
+    public void answeredQuestion(Service service, Business business, User client, String response) throws MessagingException{
+
+    }
 
     public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
         ctx.setVariable("isClient",true);

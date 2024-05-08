@@ -1,9 +1,11 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Question;
+import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,10 +14,15 @@ import java.util.Optional;
 public class QuestionServiceImpl implements  QuestionService {
 
     private final QuestionDao questionDao;
+    private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
-    public QuestionServiceImpl(final QuestionDao questionDao) {
+    public QuestionServiceImpl(final QuestionDao questionDao, final EmailService emailService,
+                               final UserService userService) {
         this.questionDao = questionDao;
+        this.emailService = emailService;
+        this.userService = userService;
     }
 
     @Override
@@ -38,6 +45,17 @@ public class QuestionServiceImpl implements  QuestionService {
     @Override
     public void addResponse(long id, String response) {
         questionDao.addResponse(id, response);
+        Question question = questionDao.findById(id).get();
+        User user = userService.findById(question.getUserid()).get();
+        // todo
+        /*
+        try {
+            emailService.answeredQuestion(user, response);
+
+        } catch (MessagingException e ){
+            System.err.println(e.getMessage());
+        }
+         */
     }
 
     @Override

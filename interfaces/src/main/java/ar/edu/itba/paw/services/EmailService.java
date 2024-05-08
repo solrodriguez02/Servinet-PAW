@@ -31,4 +31,6 @@ public interface EmailService {
 
     void deletedBusiness(Business business) throws MessagingException;
 
+    void answeredQuestion(Service service, Business business, User client, String response) throws MessagingException;
+
 }
