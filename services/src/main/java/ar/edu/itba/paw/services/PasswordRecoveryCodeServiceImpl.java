@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.PasswordRecoveryCode;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
@@ -22,6 +23,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         this.userService = userService;
     }
 
+    @Transactional
     @Override
     public void sendCode(String email) throws MessagingException {
         User user = userService.findByEmail(email).get();
@@ -29,6 +31,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         emailService.recoverPassword(user, passwordRecoveryCode);
     }
 
+    @Transactional
     @Override
     public PasswordRecoveryCode generateCode(long userid) {
         passwordRecoveryCodeDao.deleteCode(userid);
@@ -37,6 +40,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         return new PasswordRecoveryCode(userid, newCode, LocalDateTime.now().plusHours(1));
     }
 
+    @Transactional
     @Override
     public boolean validateCode(UUID code) {
         //User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -47,6 +51,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         return passwordRecoveryCode.getCode().equals(code);
     }
 
+    @Transactional
     public void changePassword(UUID code, String newPassword) throws MessagingException{
         PasswordRecoveryCode passwordRecoveryCode = passwordRecoveryCodeDao.getCode(code).orElse(null);
         if (passwordRecoveryCode == null){
@@ -58,6 +63,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         emailService.confirmNewPassword(user);
     }
 
+    @Transactional
     @Override
     public void deleteCode(long userid) {
         passwordRecoveryCodeDao.deleteCode(userid);

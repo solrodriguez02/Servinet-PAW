@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -24,26 +25,31 @@ public class BusinessServiceImpl implements BusinessService{
         this.userService = userService;
         this.emailService = emailService;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public Optional<Business> findById(long id) {
         return businessDao.findById(id);
     }
+
+    @Transactional(readOnly = true)
     @Override
     public Optional<Business> findByBusinessName(String businessName) {
         return businessDao.findByBusinessName(businessName);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Business> findByAdminId(long adminId){
         return businessDao.findByAdminId(adminId);
     }
 
+    @Transactional
     @Override
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }
 
+    @Transactional
     @Override
     public void deleteBusiness(long businessid){
 
@@ -58,6 +64,8 @@ public class BusinessServiceImpl implements BusinessService{
         }
         businessDao.deleteBusiness(businessid);
     }
+
+    @Transactional
     @Override
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         Business business = businessDao.createBusiness(businessName,userId,telephone,email,location);
@@ -73,6 +81,7 @@ public class BusinessServiceImpl implements BusinessService{
         return business;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public boolean isBusinessOwner(long businessId, long userId){
         Business business = businessDao.findById(businessId).orElse(null);

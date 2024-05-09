@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +23,19 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findById(long id) {
         return userDao.findById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findByEmail(String email) {
         return userDao.findByEmail(email);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
         return userDao.isProvider(userid);
     }
 
+    @Transactional
     @Override
     public void makeProvider(long userid){
         boolean isProvider = isProvider(userid).orElseThrow(UserNotFoundException::new);
@@ -48,6 +53,7 @@ public class UserServiceImpl implements UserService {
             changeUserType(userid);
     }
 
+    @Transactional
     @Override
     public User create(final String username,final String name, final String surname, final String password, final String email, final String telephone) {
         User user = userDao.findByEmail(email).orElse(null);
@@ -57,10 +63,13 @@ public class UserServiceImpl implements UserService {
         return userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
     }
 
+    @Transactional
     @Override
     public void changeUsername(long userid,String value){
         userDao.changeUsername(userid,value);
     }
+
+    @Transactional
     @Override
     public void changeEmail(long userid,String value){
         userDao.changeEmail(userid,value);
@@ -77,11 +86,13 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Transactional
     @Override
     public void changePassword(String email,String password){
         userDao.changePassword(email,passwordEncoder.encode(password));
     }
 
+    @Transactional
     @Override
     public void changeUserType(long userid){
         userDao.changeUserType(userid);

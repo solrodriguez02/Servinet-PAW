@@ -3,6 +3,8 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.Rating;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -16,21 +18,25 @@ public class RatingServiceImpl implements RatingService {
         this.ratingDao = ratingDao;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Rating> getAllRatings(long serviceid, int page) {
         return ratingDao.getAllRatings(serviceid, page);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Rating> findById(long id) {
         return ratingDao.findById(id);
     }
 
+    @Transactional
     @Override
     public Rating create(long serviceid, long userid, int rating, String comment) {
         return ratingDao.create(serviceid, userid, rating, comment);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public double getRatingsAvg(long serviceid) {
         double avg = ratingDao.getRatingsAvg(serviceid);
@@ -38,11 +44,13 @@ public class RatingServiceImpl implements RatingService {
         return avg;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public int getRatingsCount(long serviceid) {
         return ratingDao.getRatingsCount(serviceid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Rating hasAlreadyRated(long userid, long serviceid) {
         Rating rating;
@@ -52,6 +60,7 @@ public class RatingServiceImpl implements RatingService {
         return rating;
     }
 
+    @Transactional
     @Override
     public void edit(long ratingid, int rating, String comment) {
         ratingDao.edit(ratingid, rating, comment);
