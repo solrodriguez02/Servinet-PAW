@@ -28,10 +28,6 @@ public class HelloWorldController {
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    List<Categories> categories = Arrays.asList(Categories.values());
-    List<PricingTypes> pricingTypes = Arrays.asList(PricingTypes.values());
-    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
-    List<Ratings> ratings = Arrays.asList(Ratings.values());
 
 
     @Autowired
@@ -107,8 +103,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        mav.addObject("categories", categories);
-        mav.addObject("neighbourhoods", neighbourhoods);
+
         mav.addObject("TBDPricing", TBDPricing);
         mav.addObject("recommendedServices", ss.getRecommendedServices());
         return mav;

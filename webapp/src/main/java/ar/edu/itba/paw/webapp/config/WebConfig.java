@@ -52,9 +52,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
-        Map<String,Object> attributes =new HashMap<>();
-        attributes.put("categories", Categories.values());
-        viewResolver.setAttributesMap(attributes);
         return viewResolver;
     }
 

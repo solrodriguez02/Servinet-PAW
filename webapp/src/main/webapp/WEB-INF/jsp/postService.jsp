@@ -39,8 +39,8 @@
                 <label for="homeservice"><spring:message code="service.home-service"/></label>
             <div class="service-div">
                 <form:select path="neighbourhood" multiple="true" checkboxes="true" class="input" >
-                    <c:forEach items="${neighbours}" var="item">
-                        <form:option value="${item}">${item.value}</form:option>
+                    <c:forEach items="${neighbourhoods}" var="item">
+                        <form:option value="${item}"><c:out value="${item.value}"/></form:option>
                     </c:forEach>
                 </form:select>
                 <form:errors path="neighbourhood" cssClass="error"/>
