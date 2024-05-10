@@ -53,14 +53,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/negocios")
     public ModelAndView business() {
         final ModelAndView mav = new ModelAndView("userBusiness");
-        long userid = securityService.getCurrentUser().get().getUserId();
-        User currentUser = userService.findById(userid).orElseThrow(UserNotFoundException::new);
 
-        List<Business> businessList;
-        if ( currentUser.isProvider() )
-            businessList = businessService.findByAdminId(currentUser.getUserId());
-        else
-            return new ModelAndView("redirect:/registrar-negocio");
+        User currentUser = securityService.getCurrentUser().orElseThrow(UserNotFoundException::new);
+        List<Business> businessList= businessService.findByAdminId(currentUser.getUserId());
 
         mav.addObject("user",currentUser);
         mav.addObject("businessList", businessList);
@@ -70,7 +65,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/negocios/consultas")
     public ModelAndView userServicesQuestions(@ModelAttribute("responseForm") final ResponseForm responseForm) {
         final ModelAndView mav = new ModelAndView("userQuestions");
-        long userid = securityService.getCurrentUser().get().getUserId();
+        long userid = securityService.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
 
         mav.addObject("pendingQst", questionService.getQuestionsToRespond(userid));
         return mav;

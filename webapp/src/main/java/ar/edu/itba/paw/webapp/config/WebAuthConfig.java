@@ -41,11 +41,12 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
                 .antMatchers("/login", "/registrarse", "/olvide-mi-clave", "/restablecer-clave/**").anonymous()
-                .antMatchers("/").permitAll()
-                .antMatchers("/servinet/**").permitAll()
+                .antMatchers("/negocio/{businessID}/**").access("@BusinessServiceImpl.isBusinessOwner(#businessID,@securityServiceImpl.currentUser.get().userId)")
+                .antMatchers("/borrar-negocio/{businessId}").access("@BusinessServiceImpl.isBusinessOwner(#businessId,@userServiceImpl.findByUsername(authentication.name))")
+                .antMatchers("/negocios","/negocios/consultas").hasRole("BUSINESS")
                 .antMatchers("/servicios/**").permitAll()
                 .antMatchers("/servicio/**").permitAll()
-                .antMatchers("/usuario/**").permitAll()
+                .antMatchers("/").permitAll()
 //              .antMatchers("/cancelar-turno/**").access("hasRole('ROLE_USER') and @turnoServiceImpl.canCancelTurno(authentication, #id)")
                 // TODO: ver endpoints para restringir el acceso
                 .antMatchers("/**").authenticated().and()
@@ -59,11 +60,17 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeParameter("remember-me").key(rememberMeKey)
                 .tokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(6)).and()
             .logout().logoutUrl("/logout").logoutSuccessUrl("/login").and()
-                .exceptionHandling().accessDeniedPage("/403") .and()
+                .exceptionHandling().accessDeniedHandler((request,response,accessDeniedException) ->{
+                    if (request.getServletPath().startsWith("/negocios")) {
+                        response.sendRedirect(request.getContextPath()+"/registrar-negocio");
+                    }else {
+                        response.sendRedirect(request.getContextPath()+"/403");
+                    }
+                }).and()
             .csrf().disable();
     }
     @Override
     public void configure(final WebSecurity web) {
-        web.ignoring().antMatchers("/resources/**", "/images/**","/css/**", "/js/**", "/img/**", "/favicon.ico");
+        web.ignoring().antMatchers("/resources/**", "/images/**","/css/**", "/js/**", "/img/**", "/favicon.ico","/404","/403","/500");
     }
 }

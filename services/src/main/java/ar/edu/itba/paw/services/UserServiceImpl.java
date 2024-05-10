@@ -25,6 +25,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     @Override
+    public boolean isProvider(long userid){
+        return userDao.isProvider(userid);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
     public Optional<User> findById(long id) {
         return userDao.findById(id);
     }
@@ -41,16 +47,14 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
-    private Optional<Boolean> isProvider(long userid) {
-        return userDao.isProvider(userid);
-    }
 
     @Transactional
     @Override
     public void makeProvider(long userid){
-        boolean isProvider = isProvider(userid).orElseThrow(UserNotFoundException::new);
+        boolean isProvider = isProvider(userid);
         if ( !isProvider)
             changeUserType(userid);
+
     }
 
     @Transactional
