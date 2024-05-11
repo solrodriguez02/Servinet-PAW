@@ -72,14 +72,14 @@ public class RatingsDaoJdbcTest {
 
     @Test
     public void testFindById() {
-        Rating rating = ratingDao.create(SERVICEID, USERID, RATING1, COMMENT);
-        Rating ratingFound = ratingDao.findById(rating.getId()).get();
+        jdbcTemplate.execute(String.format("insert into ratings (ratingid, serviceid, userid, rating, comment) values (1, %d, %d, %d, '%s')", SERVICEID, USERID, RATING5, COMMENT));
+        Rating ratingFound = ratingDao.findById(1).get();
 
         Assert.assertNotNull(ratingFound);
         Assert.assertEquals(SERVICEID, ratingFound.getServiceid());
         Assert.assertEquals(USERID, ratingFound.getUserid());
         Assert.assertEquals(COMMENT, ratingFound.getComment());
-        Assert.assertEquals(RATING1, ratingFound.getRating());
+        Assert.assertEquals(RATING5, ratingFound.getRating());
     }
 
     @Test
