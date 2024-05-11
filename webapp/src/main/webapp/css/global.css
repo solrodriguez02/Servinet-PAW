@@ -209,3 +209,21 @@ body {
     margin-top: 70px;
     margin-bottom: 50px;
 }
+
+.cancelBtn {
+    padding: 10px 25px;
+    border: none;
+    background-color: #ffcccc;
+    color: #ff4d4d;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    margin-right: 15px;
+}
+
+.cancelBtn:hover {
+    background-color: #ffb2b2;
+    transform: translateY(-2px);
+}
