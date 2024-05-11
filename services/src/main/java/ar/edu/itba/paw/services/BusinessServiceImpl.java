@@ -40,6 +40,11 @@ public class BusinessServiceImpl implements BusinessService{
     }
 
     @Override
+    public Optional<String> getBusinessEmail(long businessid) {
+        return businessDao.getBusinessEmail(businessid);
+    }
+
+    @Override
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }

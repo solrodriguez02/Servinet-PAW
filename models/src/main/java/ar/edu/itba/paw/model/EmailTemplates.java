@@ -5,7 +5,8 @@ public enum EmailTemplates {
     SERVICE_TEMPLATE("html/service.html"),
     BUSINESS_TEMPLATE("html/business.html"),
     RECOVER_PASSWORD_TEMPLATE("html/recoverPassword.html"),
-    CONFIRM_NEW_PASSWORD_TEMPLATE("html/confirmNewPassword.html");
+    CONFIRM_NEW_PASSWORD_TEMPLATE("html/confirmNewPassword.html"),
+    QUESTION_TEMPLATE("html/question.html");
 
     private final String template;
 

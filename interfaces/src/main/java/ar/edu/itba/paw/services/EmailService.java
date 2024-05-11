@@ -1,13 +1,9 @@
 package ar.edu.itba.paw.services;
 
-import ar.edu.itba.paw.model.Appointment;
+import ar.edu.itba.paw.model.*;
 
 import javax.mail.MessagingException;
 
-import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.PasswordRecoveryCode;
-import ar.edu.itba.paw.model.Service;
-import ar.edu.itba.paw.model.User;
 import org.springframework.scheduling.annotation.Async;
 
 public interface EmailService {
@@ -31,6 +27,7 @@ public interface EmailService {
 
     void deletedBusiness(Business business) throws MessagingException;
 
-    void answeredQuestion(Service service, Business business, User client, String response) throws MessagingException;
+    void askedQuestion(BasicService service, String businessEmail, User client, String question)  throws MessagingException;
+    void answeredQuestion(BasicService service, User client, String question, String response) throws MessagingException;
 
 }

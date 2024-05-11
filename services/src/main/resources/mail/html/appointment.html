@@ -68,7 +68,7 @@
     </div>
     <div>
         <p>
-            Estimado<span th:if="${isClient}" th:text="' '+${client.getName()}+' '+${client.getSurname()}"></span>,
+            Estimado<span th:if="${isClient}" th:text="' '+${client.getFullName()}"/>,
         </p>
         <div th:switch="${type}">
             <div th:case="'WAITING'">
@@ -79,9 +79,6 @@
                     <span th:text="${#temporals.dayOfWeekName(startdate)}"/>
                     <span th:text="${#temporals.day(startdate)}"/> de <span th:text="${#temporals.monthName(startdate)}"/>
                     a las <span th:text="${#temporals.format(startdate, 'HH:mm')}"/>
-                    <!--span th:if="${service.duration > 0 }">
-                     con una duración de ..
-                    </span-->
                 </span>
                 ha sido solicitado.
                 Más tarde será notificado si fue aceptado o no.

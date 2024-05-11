@@ -70,7 +70,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public MessageSource messageSource() {
         final ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
 
-        ms.addBasenames("classpath:i18n/messages");
+        ms.addBasenames("classpath:i18n/messages", "classpath:mail/i18n/email-messages");
         ms.setDefaultEncoding(StandardCharsets.UTF_8.name());
         ms.setCacheSeconds((int) TimeUnit.MINUTES.toSeconds(5));
 

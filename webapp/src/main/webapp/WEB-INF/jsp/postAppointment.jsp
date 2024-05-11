@@ -7,7 +7,7 @@
 <head>
     <link href="${pageContext.request.contextPath}/css/post.css" rel="stylesheet" />
     <link href="${pageContext.request.contextPath}/css/global.css" rel="stylesheet" />
-    <title><spring:message code="title.reserve-appointment"></title>
+    <title><spring:message code="title.reserve-appointment"/></title>
 </head>
 <body>
 <c:url value="/contratar-servicio/${serviceId}" var="postUrl"/>

@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -30,6 +31,9 @@ public class EmailConfig {
     @Autowired
     private Environment env;
 
+    @Autowired
+    private MessageSource messageSource;
+
 
     @Bean
     public JavaMailSender mailSender() throws IOException {
@@ -58,9 +62,8 @@ public class EmailConfig {
         // Resolver for HTML emails (except the editable one)
         templateEngine.addTemplateResolver(TemplateResolver());
 
-        /* Message source, internationalization specific to emails
-        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
-        */
+        templateEngine.setTemplateEngineMessageSource(messageSource);
+
 
         return templateEngine;
     }

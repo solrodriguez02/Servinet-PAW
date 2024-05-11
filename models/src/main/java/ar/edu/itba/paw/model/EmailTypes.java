@@ -3,17 +3,19 @@ package ar.edu.itba.paw.model;
 import static ar.edu.itba.paw.model.EmailTemplates.*;
 
 public enum EmailTypes {
-    WAITING("WAITING","Creación de solicitud del turno"),
-    REQUEST("REQUEST", "Solicitud del turno"),
-    CANCELLED("CANCELLED","Cancelación del turno"),
-    ACCEPTED("ACCEPTED", "Aceptación del turno"),
-    DENIED("DENIED", "Rechazo del turno"),
-    CREATED_SERVICE("CREATED", "Creación del servicio", SERVICE_TEMPLATE),
-    DELETED_SERVICE("DELETED", "Eliminación del servicio", SERVICE_TEMPLATE),
-    CREATED_BUSINESS("CREATED", "Creación del negocio", BUSINESS_TEMPLATE),
-    DELETED_BUSINESS("DELETED", "Eliminación del negocio", BUSINESS_TEMPLATE),
-    PASSWORD_RECOVER("RECOVER_PASSWORD", "Recuperación de contraseña", RECOVER_PASSWORD_TEMPLATE),
-    CONFIRM_NEW_PASSWORD("CONFIRM_NEW_PASSWORD", "Nueva contraseña definida con éxito", CONFIRM_NEW_PASSWORD_TEMPLATE);
+    WAITING("WAITING","subject.appointment.waiting"),
+    REQUEST("REQUEST", "subject.appointment.request"),
+    CANCELLED("CANCELLED","subject.appointment.cancelled"),
+    ACCEPTED("ACCEPTED", "subject.appointment.accepted"),
+    DENIED("DENIED", "subject.appointment.denied"),
+    CREATED_SERVICE("CREATED", "subject.service.created", SERVICE_TEMPLATE),
+    DELETED_SERVICE("DELETED", "subject.service.deleted", SERVICE_TEMPLATE),
+    CREATED_BUSINESS("CREATED", "subject.business.created", BUSINESS_TEMPLATE),
+    DELETED_BUSINESS("DELETED", "subject.business.deleted", BUSINESS_TEMPLATE),
+    PASSWORD_RECOVER("RECOVER_PASSWORD", "subject.password.recover", RECOVER_PASSWORD_TEMPLATE),
+    CONFIRM_NEW_PASSWORD("CONFIRM_NEW_PASSWORD", "subject.password.confirm", CONFIRM_NEW_PASSWORD_TEMPLATE),
+    ASKED_QUESTION("ASKED","subject.asked-question",QUESTION_TEMPLATE),
+    ANSWERED_QUESTION("ANSWERED","subject.answered-question",QUESTION_TEMPLATE);
 
     private final String name;
     private final String subject;
@@ -36,16 +38,12 @@ public enum EmailTypes {
 
     public String getType(){ return name; }
 
-    public String getSubject(String name ){
-        return subject + " " + name;
+    public String getSubject(){
+        return  subject;
     }
 
     public String getTemplate(){
         return template.toString();
-    }
-
-    public String getSubject(long id, String nameService ){
-        return subject + " #" + id + " para " + nameService;
     }
 
     public boolean isAboutAppointment(){ return isAboutAppointment; }
