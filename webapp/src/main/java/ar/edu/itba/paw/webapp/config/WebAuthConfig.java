@@ -44,7 +44,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/perfil","/contratar-servicio/{serviceId}","/preguntar/**","/editar-opinion/**","/opinar/**").hasRole("USER")
                 .antMatchers("/negocio/{businessID}/**","/borrar-negocio/{businessID}","/crear-servicio/{businessID}").access(" hasRole('BUSINESS') && @BusinessServiceImpl.isBusinessOwner(#businessID,@securityServiceImpl.currentUser.get().userId)")
                 .antMatchers("/rechazar-turno/{appointmentId}","/turno/{serviceId}/{appointmentId}","/aceptar-turno/{appointmentId}","/cancelar-turno/{appointmentId}").access("hasRole('USER') && @securityServiceImpl.isUserAppointment(#appointmentId)")
-                .antMatchers("/negocios/**","/publicar","/crear-servicio").hasRole("BUSINESS")
+                .antMatchers("/negocios/**").hasRole("BUSINESS")
                 .antMatchers("/servicios/**").permitAll()
                 .antMatchers("/servicio/**").permitAll()
                 .antMatchers("/").permitAll()
