@@ -2,6 +2,8 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +22,7 @@ public class ServiceServiceImpl implements ServiceService {
     private final UserService userService;
     private final BusinessDao businessDao;
     private final ImageService imageService;
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceServiceImpl.class);
     @Autowired
     public ServiceServiceImpl(final ServiceDao serviceDao, final EmailService emailService,
                               final AppointmentService appointmentService, final UserService userService,
@@ -48,10 +50,19 @@ public class ServiceServiceImpl implements ServiceService {
     @Transactional
     public Service create(long businessId, String name, String description, boolean homeservice,
                           Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
-                          PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) throws IOException {
+                          PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) {
         Business business = businessDao.findById( businessId).orElseThrow(BusinessNotFoundException::new);
 
-        long imageId = image.isEmpty()? 0 : imageService.addImage(image.getBytes()).getImageId();
+        long imageId=0;
+        if(!image.isEmpty()){
+            try{
+                imageId=imageService.addImage(image.getBytes()).getImageId();
+            }
+            catch (IOException e){
+                LOGGER.warn("Error while uploading image for service with businessId {}",businessId);
+            }
+        }
+
 
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
