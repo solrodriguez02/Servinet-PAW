@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
@@ -71,11 +72,9 @@ public class UserServiceImpl implements UserService {
         }
 
         user= userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
-        List<GrantedAuthority> authorities= List.of(new SimpleGrantedAuthority("ROLE_USER"));
-        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
-        SecurityContext sec =SecurityContextHolder.getContext();
-        sec.setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
-        SecurityContextHolder.setContext(sec);
+        Set<GrantedAuthority> authorities= Set.of(new SimpleGrantedAuthority("ROLE_USER"));
+        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
         return user;
 
     }
