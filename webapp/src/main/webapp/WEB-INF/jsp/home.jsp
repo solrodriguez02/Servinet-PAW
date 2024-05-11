@@ -126,6 +126,9 @@
 
 
 <script>
+    var showMoreText = "<spring:message code='home.show-more'/>";
+    var showLessText = "<spring:message code='home.show-less'/>";
+
     function toggleCategory() {
         var someCategories = document.getElementById('someCategories');
         var allCateogries = document.getElementById('allCateogries');
@@ -134,11 +137,11 @@
         if (someCategories.classList.contains('hide')) {
             someCategories.classList.remove('hide');
             allCateogries.classList.add('hide');
-            toggleButton.textContent = <spring:message code="home.show-more"/>;
+            toggleButton.textContent = showMoreText;
         } else {
             someCategories.classList.add('hide');
             allCateogries.classList.remove('hide');
-            toggleButton.textContent = <spring:message code="home.show-less"/>;
+            toggleButton.textContent = showLessText;
 
         }
     }
@@ -151,11 +154,11 @@
         if (someLocations.classList.contains('hide')) {
             someLocations.classList.remove('hide');
             allLocations.classList.add('hide');
-            toggleButton.textContent = <spring:message code="home.show-more"/>;
+            toggleButton.textContent = showMoreText;
         } else {
             someLocations.classList.add('hide');
             allLocations.classList.remove('hide');
-            toggleButton.textContent = <spring:message code="home.show-less"/>;
+            toggleButton.textContent = showLessText;
 
         }
     }
