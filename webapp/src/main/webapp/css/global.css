@@ -197,17 +197,18 @@ body {
     width: 100%;
     margin-top: 50px;
     opacity: 0.9;
-}
-
-.no-results-svg {
-    height: 180px;
-    width: 100%;
+    align-items: center;
 }
 
 .no-results-text {
     margin: auto;
     margin-top: 70px;
     margin-bottom: 50px;
+}
+
+.no-result-img-container {
+    width: 200px;
+    height: 200px;
 }
 
 .cancelBtn {

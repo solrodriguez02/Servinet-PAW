@@ -11,17 +11,17 @@
 </head>
 <body>
 
-<spring:message code="popup.business.title" var="title" />
-<spring:message code="popup.business.message" var="message" />
-<spring:message code="popup.delete" var="action" />
-<%@ include file="popUp.jsp" %>
+<c:set var="title" scope="request"><spring:message code="popup.business.title"/></c:set>
+<c:set var="message" scope="request"><spring:message code="popup.business.message"/></c:set>
+<c:set var="action" scope="request"><spring:message code="popup.delete"/></c:set>
+<jsp:include page="components/popUp.jsp" />
 
 <c:set var="urlCreateService" value="${pageContext.request.contextPath}/crear-servicio/${businessId}" />
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
     <div class="flex center-vertically">
-      <button class="cancelBtn" id="deleteBtn" onclick="showPopUp('<%= request.getContextPath() %>', ${businessId})" >
+      <button class="cancelBtn" id="deleteBtn" onclick="showPopUp('${pageContext.request.contextPath}', ${businessId})" >
         <i class="material-icons ">delete</i>
       </button>
       <c:if test="${not empty serviceList}" >
