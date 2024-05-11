@@ -179,5 +179,9 @@ p {
 
 .filters-column {
     margin-left: 20px;
-    width: 70%;
+    width: 30%;
+}
+
+.content {
+    width: 100%;
 }
