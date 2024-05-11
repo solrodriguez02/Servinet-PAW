@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface SecurityService {
     Optional<String> getCurrentUserEmail();
     Optional<User> getCurrentUser();
+    boolean isUserAppointment(long appointmentId);
 }

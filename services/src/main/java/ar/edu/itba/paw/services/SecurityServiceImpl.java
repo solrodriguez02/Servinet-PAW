@@ -1,5 +1,8 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.model.Appointment;
+import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
@@ -12,8 +15,16 @@ import java.util.Optional;
 @Service("securityServiceImpl")
 public class SecurityServiceImpl implements SecurityService{
 
+    private final UserService userService;
+    private final AppointmentService appointmentService;
+    private final BusinessService businessService;
+
     @Autowired
-    private UserDao userDao;
+    public SecurityServiceImpl(AppointmentService appointmentService, UserService userService, BusinessService businessService) {
+        this.appointmentService = appointmentService;
+        this.userService = userService;
+        this.businessService = businessService;
+    }
 
     @Transactional
     @Override
@@ -26,6 +37,14 @@ public class SecurityServiceImpl implements SecurityService{
         return Optional.empty();
     }
 
+    @Transactional
+    @Override
+    public boolean isUserAppointment(long appointmentId){
+        User user =getCurrentUser().orElseThrow(UserNotFoundException::new);
+        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(AppointmentNonExistentException::new);
+        return user.getUserId() == appointment.getUserid() && businessService.isBusinessOwner(user.getUserId(), appointment.getUserid());
+    }
+
     @Transactional(readOnly = true)
     @Override
     public Optional<User> getCurrentUser() {
@@ -33,7 +52,7 @@ public class SecurityServiceImpl implements SecurityService{
         if (!mayBeEmail.isPresent()){
             return Optional.empty();
         }
-        return userDao.findByEmail(mayBeEmail.get());
+        return userService.findByEmail(mayBeEmail.get());
     }
 
 }

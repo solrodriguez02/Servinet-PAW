@@ -47,24 +47,16 @@ public class AppointmentController {
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
-    private void validateUser(long appointmentId) {
-        User user = securityService.getCurrentUser().get();
-        Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(AppointmentNonExistentException::new);
-        // todo business find admin
-        if ( user.getUserId() != appointment.getUserid() || !businessService.isBusinessOwner(user.getUserId(), appointment.getUserid()) )
-            throw new ForbiddenOperation();
-    }
+
 
     @RequestMapping(method = RequestMethod.GET , path = "/rechazar-turno/{appointmentId:\\d+}")
     public ModelAndView denyAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        validateUser(appointmentId);
         final long serviceId = appointmentService.denyAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
     @RequestMapping(method = RequestMethod.GET , path = "/aceptar-turno/{appointmentId:\\d+}")
     public ModelAndView confirmAppointment(@PathVariable("appointmentId") final long appointmentId) {
-        validateUser(appointmentId);
         final long serviceId = appointmentService.confirmAppointment(appointmentId);
         return new ModelAndView("redirect:/turno/"+serviceId+"/"+appointmentId);
     }
@@ -82,15 +74,13 @@ public class AppointmentController {
 
     @RequestMapping(method = RequestMethod.POST , path = "/cancelar-turno/{appointmentId:\\d+}")
     public ModelAndView cancelAppointmentFromMail(@PathVariable("appointmentId") final long appointmentId) {
-        validateUser(appointmentId);
         final long serviceId = appointmentService.cancelAppointment(appointmentId);
         return new ModelAndView("redirect:/sinturno/" + serviceId + "/?argumento=cancelado");
     }
 
     @RequestMapping(method = RequestMethod.DELETE , path = "/cancelar-turno/{appointmentId:\\d+}")
     public void cancelAppointment(@PathVariable("appointmentId") final long appointmentId,
-                                  HttpServletResponse response) throws IOException{
-        validateUser(appointmentId);
+                                  HttpServletResponse response){
         try {
             appointmentService.cancelAppointment(appointmentId);
         } catch (Exception e) {
@@ -120,8 +110,6 @@ public class AppointmentController {
 
         Appointment app = appointmentService.findById(appointmentId).get();
         User user = securityService.getCurrentUser().get();
-        if ( app.getUserid() != user.getUserId() )
-            throw new ForbiddenOperation();
 
         Service service = serviceService.findById(app.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final ModelAndView mav = new ModelAndView("appointment");
