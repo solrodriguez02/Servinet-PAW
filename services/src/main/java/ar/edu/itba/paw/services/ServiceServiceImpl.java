@@ -55,14 +55,8 @@ public class ServiceServiceImpl implements ServiceService {
 
         long imageId=0;
         if(!image.isEmpty()){
-            try{
-                imageId=imageService.addImage(image.getBytes()).getImageId();
-            }
-            catch (IOException e){
-                LOGGER.warn("Error while uploading image for service with businessId {}",businessId);
-            }
+                imageId=imageService.addImage(image).getImageId();
         }
-
 
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         try {
