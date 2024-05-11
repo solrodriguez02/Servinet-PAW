@@ -56,11 +56,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void makeProvider(long userid){
-        boolean isProvider = isProvider(userid);
-        if ( !isProvider)
-            changeUserType(userid);
-
+    public void makeProvider(User user){
+        boolean isProvider = isProvider(user.getUserId());
+        if ( !isProvider) {
+            changeUserType(user.getUserId());
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"),new SimpleGrantedAuthority("ROLE_BUSINESS"));
+            org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+        }
     }
 
     @Transactional

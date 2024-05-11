@@ -80,10 +80,7 @@ public class BusinessServiceImpl implements BusinessService{
             throw new RuntimeException(e);
         }
         User user= userService.findById(userId).orElseThrow(UserNotFoundException::new);
-        userService.makeProvider(userId);
-        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"),new SimpleGrantedAuthority("ROLE_BUSINESS"));
-        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+        userService.makeProvider(user);
         return business;
     }
 

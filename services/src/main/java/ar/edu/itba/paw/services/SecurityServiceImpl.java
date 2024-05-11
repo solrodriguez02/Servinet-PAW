@@ -17,13 +17,11 @@ public class SecurityServiceImpl implements SecurityService{
 
     private final UserService userService;
     private final AppointmentService appointmentService;
-    private final BusinessService businessService;
 
     @Autowired
-    public SecurityServiceImpl(AppointmentService appointmentService, UserService userService, BusinessService businessService) {
+    public SecurityServiceImpl(AppointmentService appointmentService, UserService userService){
         this.appointmentService = appointmentService;
         this.userService = userService;
-        this.businessService = businessService;
     }
 
     @Transactional
@@ -37,12 +35,12 @@ public class SecurityServiceImpl implements SecurityService{
         return Optional.empty();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public boolean isUserAppointment(long appointmentId){
         User user =getCurrentUser().orElseThrow(UserNotFoundException::new);
         Appointment appointment = appointmentService.findById(appointmentId).orElseThrow(AppointmentNonExistentException::new);
-        return user.getUserId() == appointment.getUserid() && businessService.isBusinessOwner(user.getUserId(), appointment.getUserid());
+        return user.getUserId() == appointment.getUserid();
     }
 
     @Transactional(readOnly = true)
