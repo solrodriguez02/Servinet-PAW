@@ -120,22 +120,6 @@
     padding-right: 5px ;
 }
 
-.btn-right {
-    border-radius: 0 20px 20px 0;
-}
-.btn-left {
-    border-radius: 20px 0 0 20px;
-}
-.btn-basic {
-    background-color: #b4b4b4;
-    border: none;
-    padding: 10px 20px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-}
-
 .selected {
     background-color: #6c6fff;
 }

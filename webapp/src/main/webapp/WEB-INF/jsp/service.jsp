@@ -96,7 +96,7 @@
         </form-->
 
         <c:if test="${option==null}">
-            <div class="switch-btn-container align-center">
+            <div class="align-center">
                 <div class="switch-btn">
                     <button class="btn-basic btn-left btn-selected" id="toggleQuestionsButton" onclick="toggleQuestions()"><spring:message code="service.questions"/></button>
                     <button class="btn-basic btn-right" id="toggleReviewsButton" onclick="toggleReviews()"><spring:message code="service.reviews"/></button>
