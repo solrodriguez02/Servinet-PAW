@@ -3,6 +3,10 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
@@ -75,9 +79,8 @@ public class BusinessServiceImpl implements BusinessService{
         } catch (MessagingException e){
             throw new RuntimeException(e);
         }
-
-        userService.makeProvider(userId);
-
+        User user= userService.findById(userId).orElseThrow(UserNotFoundException::new);
+        userService.makeProvider(user);
         return business;
     }
 

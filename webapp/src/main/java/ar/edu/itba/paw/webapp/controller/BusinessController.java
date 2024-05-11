@@ -75,27 +75,16 @@ public class BusinessController {
 
     @RequestMapping(method = RequestMethod.GET , path = "/borrar-negocio/{businessId:\\d+}")
     public ModelAndView deleteBusiness(@PathVariable("businessId") final long businessId){
-        validateUserIsOwner(businessId);
         businessService.deleteBusiness(businessId);
         return new ModelAndView("redirect:/negocios");
     }
 
-    //todo: autenticar q es el dueño del service
-    private void validateUserIsOwner(long businessId) {
-        Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        validateUserIsOwner(business);
-    }
-    private void validateUserIsOwner(Business business) {
-        User user = securityService.getCurrentUser().get();
-        if ( user.getUserId() != business.getUserId())
-            throw new ForbiddenOperation();
-    }
+
 
     @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
     public ModelAndView businessesAppointments(@PathVariable("businessId") final long businessId, @RequestParam(name = "confirmados") final boolean confirmed) {
 
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
-        validateUserIsOwner(business);
         List<BasicService> services = serviceService.getAllBusinessBasicServices(businessId);
         List<Appointment> appointmentList;
 
@@ -141,8 +130,6 @@ public class BusinessController {
                                             @PathVariable(value = "appoinmentId") final long appoinmentId,
                                             @RequestParam(value = "accepted") final boolean accepted,
                                             HttpServletResponse response) throws IOException{
-        validateUserIsOwner(businessId);
-
         if ( accepted )
             try {
                 appointmentService.confirmAppointment(appoinmentId);

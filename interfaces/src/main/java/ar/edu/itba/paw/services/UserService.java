@@ -9,11 +9,11 @@ public interface UserService {
     Optional<User> findById(long id);
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
-    void makeProvider(long userid);
+    void makeProvider(User user);
     User create(String username, String name,String surname, String password, String email, String telephone);
     void changeUsername(long userid,String value);
     void changeUserType(long userid);
-
+    boolean isProvider(long userid);
     void changeEmail(long userid,String value);
     void changePassword(String email,String value);
 }

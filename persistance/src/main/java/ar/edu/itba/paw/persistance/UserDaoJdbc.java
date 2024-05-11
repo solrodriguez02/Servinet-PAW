@@ -51,9 +51,9 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public Optional<Boolean> isProvider(long userid) {
+    public boolean isProvider(long userid) {
         final List<Boolean> list = jdbcTemplate.query("SELECT isprovider from users WHERE userid = ?", new Object[] {userid}, PROVIDER_MAPPER );
-        return list.stream().findFirst();
+        return list.stream().findFirst().isPresent() ? list.stream().findFirst().get() : false;
     }
 
     @Override

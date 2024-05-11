@@ -39,9 +39,8 @@ public class ServinetUserDetailsService implements UserDetailsService {
         //TODO: agregar roles
         final Collection<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_BUSINESS"));
-
+        if(us.isProvider(user.getUserId()))
+            authorities.add(new SimpleGrantedAuthority("ROLE_BUSINESS"));
         return new ServinetAuthUserDetails(user.getEmail(), user.getPassword(), authorities);
     }
 

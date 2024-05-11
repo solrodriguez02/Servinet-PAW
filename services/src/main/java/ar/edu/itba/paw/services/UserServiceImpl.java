@@ -3,6 +3,11 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service("userServiceImpl")
 public class UserServiceImpl implements UserService {
@@ -21,6 +27,12 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(final UserDao userDao, final PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public boolean isProvider(long userid){
+        return userDao.isProvider(userid);
     }
 
     @Transactional(readOnly = true)
@@ -41,16 +53,17 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
-    private Optional<Boolean> isProvider(long userid) {
-        return userDao.isProvider(userid);
-    }
 
     @Transactional
     @Override
-    public void makeProvider(long userid){
-        boolean isProvider = isProvider(userid).orElseThrow(UserNotFoundException::new);
-        if ( !isProvider)
-            changeUserType(userid);
+    public void makeProvider(User user){
+        boolean isProvider = isProvider(user.getUserId());
+        if ( !isProvider) {
+            changeUserType(user.getUserId());
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"),new SimpleGrantedAuthority("ROLE_BUSINESS"));
+            org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+        }
     }
 
     @Transactional
@@ -60,7 +73,13 @@ public class UserServiceImpl implements UserService {
         if (user!= null){
             throw new IllegalArgumentException("User already exists");
         }
-        return userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
+
+        user= userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
+        Set<GrantedAuthority> authorities= Set.of(new SimpleGrantedAuthority("ROLE_USER"));
+        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+        return user;
+
     }
 
     @Transactional
