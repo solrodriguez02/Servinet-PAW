@@ -10,13 +10,18 @@
   <title><spring:message code="title.business" arguments="${business.businessName}"/></title>
 </head>
 <body>
+
+<spring:message code="popup.business.title" var="title" />
+<spring:message code="popup.business.message" var="message" />
+<spring:message code="popup.delete" var="action" />
+<%@ include file="popUp.jsp" %>
+
 <c:set var="urlCreateService" value="${pageContext.request.contextPath}/crear-servicio/${businessId}" />
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
-    <c:url value="/borrar-negocio/${businessId}" var="deleteUrl"/>
     <div class="flex center-vertically">
-      <button class="cancelBtn" id="deleteBtn" onclick="deleteBusiness()" >
+      <button class="cancelBtn" id="deleteBtn" onclick="showPopUp('<%= request.getContextPath() %>', ${businessId})" >
         <i class="material-icons ">delete</i>
       </button>
       <c:if test="${not empty serviceList}" >
@@ -50,12 +55,9 @@
 </body>
 
 <script>
-
-  function deleteBusiness(){
-    if (!confirm('<spring:message code="business.confirm-delete"/>'))
-      return
-
-    window.location.replace('${deleteUrl}')
+  function showPopUp(context, id) {
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("url").setAttribute("href", context+"/borrar-negocio/"+id);
   }
 </script>
 </html>
