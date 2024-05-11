@@ -39,13 +39,12 @@
     border-radius: 8px;
     border-color: transparent;
     margin-top: auto ;
-
 }
 
 .preview-box {
     height: 180px;
     border-radius: 15px;
-    padding: 10px;
+    padding: 25px;
     width: 190px;
     margin: 25px;
     display: flex;
@@ -152,4 +151,42 @@
     font-weight: bold;
     font-family: 'Poppins', sans-serif;
     margin-right: 15px;
+}
+
+.new-service {
+    width: 190px;
+    background-color: #585bfa;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 15px 15px;
+    height: 40px;
+    padding: 0 25px;
+}
+
+.service-container {
+    height: 200px;
+    width: 190px;
+    margin: 25px;
+}
+
+.service-box {
+    padding: 0 25px;
+    border-radius: 15px 15px 0 0;
+    height: 180px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-box:hover {
+    background-color: #efefef;
+}
+
+.new-service:hover {
+    background-color: #7475ff;
+    font-weight: bold;
+    transform: translateY(-2px);
 }

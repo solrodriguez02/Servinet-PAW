@@ -16,10 +16,10 @@
         <div class="flex center-vertically">
             <c:if test="${not empty businessList}" >
                 <a href="${urlCreateBusiness}" class="none-decoration mr">
-                    <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="businesses.add-business"/></button>
+                    <button class="btn center-vertically"><i class="material-icons">storefront</i> <spring:message code="businesses.add-business"/></button>
                 </a>
                 <a href="${pageContext.request.contextPath}/negocios/consultas" class="none-decoration">
-                    <button class="btn center-vertically"><i class="material-icons ">notifications_active</i> <spring:message code="businesses.questions"/></button>
+                    <button class="btn center-vertically"><i class="material-icons">notifications_active</i> <spring:message code="businesses.questions"/></button>
                 </a>
             </c:if>
         </div>
@@ -27,12 +27,20 @@
 
     <div class="boxes-container">
         <c:forEach items="${businessList}" var="business" varStatus="loop">
-            <a class="none-decoration" href="${pageContext.request.contextPath}/negocio/${business.businessid}">
-                <div class="box preview-box">
-                    <!--img class="preview-box-img" src="${pageContext.request.contextPath}/images/{business.imageId}" alt="Imagen del servicio"-->
-                    <p class="preview-box-text"><c:out value="${business.businessName}"/></p>
-                </div>
-            </a>
+            <div class="service-container">
+                <a class="none-decoration" href="${pageContext.request.contextPath}/negocio/${business.businessid}">
+                    <div class="service-box box">
+                        <!--img class="preview-box-img" src="${pageContext.request.contextPath}/images/{business.imageId}" alt="Imagen del servicio"-->
+                        <p class="preview-box-text"><c:out value="${business.businessName}"/></p>
+                    </div>
+                </a>
+                <a class="none-decoration" href="${pageContext.request.contextPath}/crear-servicio/${business.businessid}">
+                    <div class="new-service">
+                        <i class="material-icons">add</i>
+                        <spring:message code="business.add-service"/>
+                    </div>
+                </a>
+            </div>
         </c:forEach>
     </div>
 

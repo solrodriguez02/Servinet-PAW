@@ -118,15 +118,6 @@ public class HelloWorldController {
     //     return mav;
     // }
 
-    @RequestMapping(method = RequestMethod.GET, path="/publicar")
-    public ModelAndView publish() {
-        final ModelAndView mav = new ModelAndView("publish");
-        User currentUser = securityService.getCurrentUser().get();
-        if(!currentUser.isProvider()) {
-            return new ModelAndView("redirect:/registrar-negocio");
-        }
-        return mav;
-    }
 //@RequestMapping(method = RequestMethod.GET, path="/publicar")
 //    public ModelAndView publish() {
 //@RequestParam(value = "nombre-negocio") final String businessName,

@@ -77,17 +77,6 @@ public class ServiceController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio")
-    public ModelAndView selectBusinessForService() {
-        final ModelAndView mav = new ModelAndView("businessesForNewService");
-        long userid = securityService.getCurrentUser().get().getUserId();
-        User currentUser = us.findById(userid).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList = bs.findByAdminId(currentUser.getUserId());
-        mav.addObject("user",currentUser);
-        mav.addObject("businessList", businessList);
-        return mav;
-    }
-
     @RequestMapping(method = RequestMethod.GET, path="/crear-servicio/{businessId:\\d+}")
     public ModelAndView registerService(@PathVariable("businessId")long businessId, @ModelAttribute("serviceForm") final ServiceForm form) {
         if(!bs.isBusinessOwner(businessId, securityService.getCurrentUser().get().getUserId())){

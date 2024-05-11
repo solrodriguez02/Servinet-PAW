@@ -38,10 +38,6 @@
                     <a href="${pageContext.request.contextPath}/negocios"><spring:message code="navbar.businesses"/></a>
                 </div>
             </div>
-            <a class="nav-item" href="${pageContext.request.contextPath}/publicar">
-                <button class="btn navbar-btn"><label class="btn-text">Publicar</label></button>
-            </a>
-
         </div>
     </div>
 </body>
