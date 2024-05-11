@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,18 +52,18 @@ public class AppointmentServiceImplTest {
     private AppointmentDao appointmentDao;
     @Mock
     private ServiceDao serviceDao;
+    @Mock
+    private EmailService emailService;
+
     @Test
     public void testCreate() {
         // 1. Precondiciones
 
-        Mockito.when(appointmentDao.create(Mockito.eq(SERVICEID),Mockito.eq(USERID),
-                Mockito.eq(STARTDATE),Mockito.eq(ENDDATE), Mockito.eq(LOCATION))).thenReturn(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,"f",false));
+        Mockito.when(userService.findByEmail(Mockito.eq(EMAIL))).thenReturn(Optional.of(new User(USERID,USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE,true)));
+        Mockito.when(appointmentDao.create(Mockito.eq(SERVICEID),Mockito.eq(USERID),Mockito.eq(STARTDATE),Mockito.any(),Mockito.eq(LOCATION))).thenReturn(createAppointment());
+        Mockito.when(businessDao.findById(Mockito.eq(BUSINESSID))).thenReturn(Optional.of(createBusiness()));
 
-        Mockito.when(userService.findByEmail(Mockito.eq(EMAIL))).thenReturn(Optional.of(new User(USERID,USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE,false)));
-
-       Mockito.when(businessDao.findById(Mockito.eq(BUSINESSID))).thenReturn(Optional.of(new Business(BUSINESSID,BUSINESSNAME,USERID,TELEPHONE,EMAIL,LOCATION)));
-
-        Mockito.when(serviceDao.findById(Mockito.eq(SERVICEID))).thenReturn(Optional.of(new Service(SERVICEID,BUSINESSID,NAME,DESCRIPTION,HOMESERVICE,LOCATION, Arrays.stream(NEIGHBOURHOODS).map(Enum::name).toArray(String[]::new),CATEGORY,DURATION,PRICING,PRICE,ADDITIONALCHARGES,0)));
+        Mockito.when(serviceDao.findById(Mockito.eq(SERVICEID))).thenReturn(Optional.of(createService()));
         // 2. Ejecuta la class under test (una sola)
         Appointment appointment = appointmentService.create(SERVICEID,NAME,SURNAME,EMAIL,LOCATION,TELEPHONE,STARTDATE.toString());
 
@@ -70,8 +71,25 @@ public class AppointmentServiceImplTest {
         Assert.assertNotNull(appointment);
         Assert.assertEquals(APPOINTMENTID, appointment.getId());
         Assert.assertEquals(ENDDATE, appointment.getEndDate());
+    }
+    @Test(expected= AppointmentAlreadyConfirmed.class)
+    public void testCreateExisting(){
+        Mockito.when(appointmentService.findById(Mockito.eq(APPOINTMENTID))).thenReturn(Optional.of(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,LOCATION,true)));
+        Mockito.when(serviceDao.findById(Mockito.eq(SERVICEID))).thenReturn(Optional.of(createService()));
+        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(Optional.of(new User(USERID,USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE,true)));
 
+        appointmentService.confirmAppointment(APPOINTMENTID);
+        Assert.fail();
+    }
+    private static Service createService(){
+        return new Service(SERVICEID,BUSINESSID,NAME,DESCRIPTION,HOMESERVICE,LOCATION, Arrays.stream(NEIGHBOURHOODS).map(Enum::name).toArray(String[]::new),CATEGORY,DURATION,PRICING,PRICE,ADDITIONALCHARGES,0);
+    }
 
+    private static Business createBusiness(){
+        return new Business(BUSINESSID,BUSINESSNAME,USERID,TELEPHONE,EMAIL,LOCATION);
+    }
+    private static Appointment createAppointment(){
+        return new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,LOCATION,false);
     }
 }
 
