@@ -62,7 +62,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds((int) TimeUnit.HOURS.toSeconds(6)).and()
             .logout().logoutUrl("/logout").logoutSuccessUrl("/login").and()
                 .exceptionHandling().accessDeniedHandler((request,response,accessDeniedException) ->{
-                    if (request.getServletPath().startsWith("/negocios")) {
+                    if (request.getServletPath().contains("/negocios")) {
                         response.sendRedirect(request.getContextPath()+"/registrar-negocio");
                     }else {
                         response.sendRedirect(request.getContextPath()+"/403");
