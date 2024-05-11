@@ -73,7 +73,7 @@ public class BusinessController {
         return new ModelAndView("redirect:/negocio/"+ business.getBusinessid());
     }
 
-    @RequestMapping(method = RequestMethod.GET , path = "/borrar-negocio/{businessId:\\d+}")
+    @RequestMapping(method = RequestMethod.POST , path = "/borrar-negocio/{businessId:\\d+}")
     public ModelAndView deleteBusiness(@PathVariable("businessId") final long businessId){
         businessService.deleteBusiness(businessId);
         return new ModelAndView("redirect:/negocios");

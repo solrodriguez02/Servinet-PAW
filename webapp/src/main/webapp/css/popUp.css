@@ -43,13 +43,15 @@
     transform: translateY(-2px);
 }
 
-.popup-btn {
-    margin: 30px 20px;
-}
-
 .btns-box {
     display: flex;
     width: 100%;
     align-items: center;
     justify-content: center;
+    margin: 20px 0;
+}
+
+.form {
+    margin: 0;
+    padding: 0;
 }

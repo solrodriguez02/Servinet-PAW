@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <head>
     <link href="${pageContext.request.contextPath}/css/popUp.css" rel="stylesheet" />
@@ -11,11 +12,12 @@
     <div class="popup">
         <h2>${title}</h2>
         <p>${message}</p>
+
         <div class="btns-box">
             <button class="cancelLinedBtn" onclick="closePopup()"><spring:message code="popup.cancel"/></button>
-            <a id="url" href="">
-                <button class="cancelBtn">${action}</button>
-            </a>
+            <form:form action="${url}" method="post" class="form">
+                <button class="cancelBtn" type="submit">${action}</button>
+            </form:form>
         </div>
     </div>
 </div>

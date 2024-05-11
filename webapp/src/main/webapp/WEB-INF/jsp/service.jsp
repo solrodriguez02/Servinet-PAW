@@ -11,15 +11,21 @@
 </head>
 <c:url value="/contratar-servicio/${serviceId}" var="contratarUrl"/>
 <body>
+
+    <c:url value="/borrar-servicio/${serviceId}" var="deleteUrl"/>
+
+    <c:set var="title" scope="request"><spring:message code="popup.service.title"/></c:set>
+    <c:set var="message" scope="request"><spring:message code="popup.service.message"/></c:set>
+    <c:set var="action" scope="request"><spring:message code="popup.delete"/></c:set>
+    <c:set var="url" value="${deleteUrl}" scope="request"/>
+    <jsp:include page="components/popUp.jsp" />
+
     <div class="page">
         <c:if test="${option==null}">
         <div class="header">
             <h2><c:out value="${service.name}"/></h2>
             <c:if test="${isOwner}">
-                <c:url value="/borrar-servicio/${serviceId}" var="deleteUrl"/>
-                <form:form action="${deleteUrl}" method="post">
-                    <button class="cancelBtn" type="submit"><spring:message code="service.delete"/></button>
-                </form:form>
+                <button class="cancelBtn" onclick="showPopUp()"><spring:message code="service.delete"/></button>
             </c:if>
         </div>
         <div class="info-container">
@@ -362,6 +368,10 @@
                 showUserReview.classList.add('transparent');
                 showEditReview.classList.remove('transparent');
             }
+        }
+
+        function showPopUp() {
+            document.getElementById("popup").style.display = "block";
         }
     </script>
 </body>
