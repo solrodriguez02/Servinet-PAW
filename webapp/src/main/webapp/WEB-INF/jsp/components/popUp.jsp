@@ -15,7 +15,7 @@
 
         <div class="btns-box">
             <button class="cancelLinedBtn" onclick="closePopup()"><spring:message code="popup.cancel"/></button>
-            <form:form action="${url}" method="post" class="form">
+            <form:form action="${url}" method="${method}" class="form" id="popUpForm">
                 <button class="cancelBtn" type="submit">${action}</button>
             </form:form>
         </div>

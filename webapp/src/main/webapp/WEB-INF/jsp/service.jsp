@@ -17,6 +17,7 @@
     <c:set var="title" scope="request"><spring:message code="popup.service.title"/></c:set>
     <c:set var="message" scope="request"><spring:message code="popup.service.message"/></c:set>
     <c:set var="action" scope="request"><spring:message code="popup.delete"/></c:set>
+    <c:set var="method" value="post" scope="request"/>
     <c:set var="url" value="${deleteUrl}" scope="request"/>
     <jsp:include page="components/popUp.jsp" />
 

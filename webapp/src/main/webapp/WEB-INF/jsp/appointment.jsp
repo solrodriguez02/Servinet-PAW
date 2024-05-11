@@ -65,12 +65,25 @@
         </div>
 
         <c:url value="/cancelar-turno/${appointment.id}" var="cancelUrl" />
+        <c:set var="title" scope="request"><spring:message code="popup.appointment.title"/></c:set>
+        <c:set var="message" scope="request"><spring:message code="popup.appointment.message"/></c:set>
+        <c:set var="action" scope="request"><spring:message code="popup.appointment.cancel"/></c:set>
+        <c:set var="method" value="post" scope="request"/>
+        <c:set var="url" value="${cancelUrl}" scope="request"/>
+
+
         <div class="align-center">
-            <form action="${cancelUrl}" method="post">
-                <button type="submit" class="cancelBtn appointment-cancelBtn">Cancelar turno</button>
-            </form>
+            <button onclick="showPopUp()" class="cancelBtn appointment-cancelBtn"><spring:message code="appointment.cancel"/></button>
+            <jsp:include page="components/popUp.jsp" />
         </div>
     </div>
 </div>
 </body>
+
+<script>
+    function showPopUp() {
+        document.getElementById("popup").style.display = "block";
+    }
+</script>
+
 </html>
