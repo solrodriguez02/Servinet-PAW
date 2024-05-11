@@ -3,6 +3,11 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,7 +69,15 @@ public class UserServiceImpl implements UserService {
         if (user!= null){
             throw new IllegalArgumentException("User already exists");
         }
-        return userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
+
+        user= userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
+        List<GrantedAuthority> authorities= List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), authorities);
+        SecurityContext sec =SecurityContextHolder.getContext();
+        sec.setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+        SecurityContextHolder.setContext(sec);
+        return user;
+
     }
 
     @Transactional

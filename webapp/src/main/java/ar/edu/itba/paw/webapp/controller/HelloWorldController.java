@@ -151,7 +151,7 @@ public class HelloWorldController {
             return registerUser(form);
         }
         us.create(form.getUsername(),form.getName(),form.getSurname(),form.getPassword(),form.getEmail(),form.getTelephone());
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/");
     }
 
 }

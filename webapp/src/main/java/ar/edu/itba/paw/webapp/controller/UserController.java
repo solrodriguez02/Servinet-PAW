@@ -38,13 +38,11 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET, path = "/perfil")
     public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");
-        //TODO:agregar regla para casos anonymous
-        long userid = securityService.getCurrentUser().get().getUserId();
+        User user = securityService.getCurrentUser().orElseThrow(UserNotFoundException::new);
 
-        User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
         List<Business> businessList = Collections.emptyList();
         if ( user.isProvider() )
-            businessList = businessService.findByAdminId(userid);
+            businessList = businessService.findByAdminId(user.getUserId());
         mav.addObject("businessList", businessList);
         mav.addObject("user", user);
         return mav;
