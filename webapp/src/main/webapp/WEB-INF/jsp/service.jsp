@@ -217,7 +217,7 @@
                                             <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
                                         </div>
                                     </div>
-                                    <input name="rating" type="hidden" id="rating" value="${hasAlreadyRated.rating}"/>
+                                    <input name="rating" type="hidden" id="rating" value="<c:out value="${hasAlreadyRated.comment}"/>"/>
                                     <div class="flex">
                                         <input  name="comment" type="text" class="input edit-input" placeholder="<spring:message code="service.write-review"/>" value="${hasAlreadyRated.comment}"/>
                                         <input type="submit" value="<spring:message code="service.edit-review"/>" class="send-btn">
