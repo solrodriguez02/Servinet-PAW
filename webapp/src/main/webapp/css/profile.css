@@ -39,13 +39,12 @@
     border-radius: 8px;
     border-color: transparent;
     margin-top: auto ;
-
 }
 
 .preview-box {
     height: 180px;
     border-radius: 15px;
-    padding: 10px;
+    padding: 25px;
     width: 190px;
     margin: 25px;
     display: flex;
@@ -121,35 +120,42 @@
     padding-right: 5px ;
 }
 
-.btn-right {
-    border-radius: 0 20px 20px 0;
-}
-.btn-left {
-    border-radius: 20px 0 0 20px;
-}
-.btn-basic {
-    background-color: #b4b4b4;
-    border: none;
-    padding: 10px 20px;
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-    cursor: pointer;
-    color: white;
-}
-
 .selected {
     background-color: #6c6fff;
 }
 
-.cancelBtn {
-    padding: 10px 25px;
-    border: none;
-    background-color: #ffcccc;
-    color: #ff4d4d;
-    border-radius: 25px;
-    cursor: pointer;
-    font-size: 15px;
+.new-service {
+    width: 190px;
+    background-color: #585bfa;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 0 15px 15px;
+    height: 40px;
+    padding: 0 25px;
+}
+
+.service-container {
+    height: 200px;
+    margin-right: 40px;
+}
+
+.service-box {
+    border-radius: 15px 15px 0 0;
+    height: 180px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.service-box:hover {
+    background-color: #efefef;
+}
+
+.new-service:hover {
+    background-color: #7475ff;
     font-weight: bold;
-    font-family: 'Poppins', sans-serif;
-    margin-right: 15px;
+    transform: translateY(-2px);
 }

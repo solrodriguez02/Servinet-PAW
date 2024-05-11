@@ -5,6 +5,7 @@ import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
@@ -36,37 +37,38 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Appointment> getAllUpcomingServiceAppointments(long serviceid) {
         return appointmentDao.getAllUpcomingServiceAppointments(serviceid);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<Appointment> getAllUpcomingServicesAppointments(Collection<Long> serviceIds, boolean confirmed) {
         return appointmentDao.getAllUpcomingServicesAppointments(serviceIds,confirmed);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<AppointmentInfo> getAllUpcomingUserAppointments(long userid, boolean confirmed) {
         return appointmentDao.getAllUpcomingUserAppointments(userid, confirmed);
     }
-
+    @Transactional
     @Override
-    public Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date){
+    public Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date) {
         Service service = serviceDao.findById(serviceid).orElseThrow(ServiceNotFoundException::new);
         User newuser = userService.findByEmail(email).orElse(null);
         LocalDateTime startDate = LocalDateTime.parse(date);
         Appointment appointment = appointmentDao.create(service.getId(), newuser.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
-        Business business = businessDao.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById(service.getBusinessid()).get();
         try {
             //* si ya tiene el Service => ya lo paso x param
-            emailService.requestAppointment(appointment, service,business,newuser);
+            emailService.requestAppointment(appointment, service, business, newuser);
 
-        } catch (MessagingException e ){
+        } catch (MessagingException e) {
             System.err.println(e.getMessage());
         }
         return appointment;
     }
-
+    @Transactional
     @Override
     public long confirmAppointment(long appointmentid) {
         Optional<Appointment> optionalAppointment = findById(appointmentid);
@@ -89,7 +91,7 @@ public class AppointmentServiceImpl implements AppointmentService{
         }
         return service.getId();
     }
-
+    @Transactional
     @Override
     public long denyAppointment(long appointmentid) {
         Optional<Appointment> optionalAppointment = findById(appointmentid);
@@ -112,7 +114,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
         return service.getId();
     }
-
+    @Transactional
     @Override
     public long cancelAppointment(long appointmentid) {
         Optional<Appointment> optionalAppointment = findById(appointmentid);

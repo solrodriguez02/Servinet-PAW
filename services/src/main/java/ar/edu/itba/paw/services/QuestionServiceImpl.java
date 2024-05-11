@@ -9,6 +9,7 @@ import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.List;
@@ -35,6 +36,7 @@ public class QuestionServiceImpl implements  QuestionService {
         this.businessService = businessService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Question> getAllQuestions(long serviceid, int page) {
         List<Question> questions;
@@ -42,11 +44,13 @@ public class QuestionServiceImpl implements  QuestionService {
         return questions;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Question> findById(long id) {
         return questionDao.findById(id);
     }
 
+    @Transactional
     @Override
     public Question create(long serviceid, long userid, String questionString) {
         Question question = questionDao.create(serviceid, userid, questionString);
@@ -61,6 +65,7 @@ public class QuestionServiceImpl implements  QuestionService {
         return question;
     }
 
+    @Transactional
     @Override
     public void addResponse(long id, String response) {
         questionDao.addResponse(id, response);
@@ -77,11 +82,13 @@ public class QuestionServiceImpl implements  QuestionService {
 
     }
 
+    @Transactional(readOnly = true)
     @Override
     public int getQuestionsCount(long serviceid) {
         return questionDao.getQuestionsCount(serviceid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Map<Question, String> getQuestionsToRespond(long userid) {
         Map<Question, String> questions;

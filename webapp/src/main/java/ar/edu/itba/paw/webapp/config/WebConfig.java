@@ -16,6 +16,7 @@ import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -51,9 +52,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         viewResolver.setViewClass(JstlView.class);
         viewResolver.setPrefix("/WEB-INF/jsp/");
         viewResolver.setSuffix(".jsp");
-        Map<String,Object> attributes =new HashMap<>();
-        attributes.put("categories", Categories.values());
-        viewResolver.setAttributesMap(attributes);
         return viewResolver;
     }
 
@@ -65,6 +63,13 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         ds.setUsername("root");
         ds.setPassword("root");
         return ds;
+    }
+    @Bean
+    public CharacterEncodingFilter characterEncodingFilter(){
+        CharacterEncodingFilter cef = new CharacterEncodingFilter();
+        cef.setEncoding("UTF-8");
+        cef.setForceEncoding(true);
+        return cef;
     }
     @Bean
     public MessageSource messageSource() {

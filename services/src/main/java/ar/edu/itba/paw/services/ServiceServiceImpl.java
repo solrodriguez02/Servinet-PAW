@@ -3,6 +3,7 @@ package ar.edu.itba.paw.services;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
@@ -32,17 +33,19 @@ public class ServiceServiceImpl implements ServiceService {
         this.imageService = imageService;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Service> findById(long id) {
         return serviceDao.findById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<BasicService> findBasicServiceById(long id) {
         return serviceDao.findBasicServiceById(id);
     }
 
-
+    @Transactional
     public Service create(long businessId, String name, String description, boolean homeservice,
                           Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
                           PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) throws IOException {
@@ -59,16 +62,19 @@ public class ServiceServiceImpl implements ServiceService {
         return service;
     }
 
+    @Transactional
     @Override
     public Service edit(long serviceid, String field, String newvalue) {
         return serviceDao.edit(serviceid, field, newvalue);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Service> getAllServices() {
         return serviceDao.getAllServices();
     }
 
+    @Transactional
     @Override
     public void delete(long serviceId) {
 
@@ -81,7 +87,8 @@ public class ServiceServiceImpl implements ServiceService {
         delete(service,business);
     }
 
-        @Override
+    @Transactional
+    @Override
     public void delete(Service service, Business business) {
 
         List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
@@ -106,18 +113,21 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
 
+    @Transactional(readOnly = true)
     @Override
     public List<Service> services(int page, String category, String[] location, String rating, String query) {
         int ratingNum = Ratings.getMinValueByName(rating);
         return serviceDao.getServicesFilteredBy(page, category, location, ratingNum, query);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public int getServiceCount(String category, String[] location, String rating, String searchQuery) {
         int ratingNum = Ratings.getMinValueByName(rating);
         return serviceDao.getServiceCount(category, location, ratingNum, searchQuery);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public int getPageCount(String category, String[] location, String rating, String searchQuery) {
         int serviceCount = getServiceCount(category, location, rating, searchQuery);
@@ -126,16 +136,19 @@ public class ServiceServiceImpl implements ServiceService {
         return pageCount;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<BasicService> getAllBusinessBasicServices(long businessId) {
         return serviceDao.getAllBusinessBasicServices(businessId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Service> getAllBusinessServices(long businessid){
         return serviceDao.getAllBusinessServices(businessid);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<Service> getRecommendedServices() {
         return serviceDao.getRecommendedServices();

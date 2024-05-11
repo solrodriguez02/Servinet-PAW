@@ -12,7 +12,9 @@
 <c:set var="noResults"><spring:message code="global.no-results"/></c:set>
 <div class="column-container">
 
-    <img class="img no-results-svg" src="${pageContext.request.contextPath}/resources/noResults.svg" alt=""/>
+    <div class="no-result-img-container">
+        <img class="img" src="${pageContext.request.contextPath}/resources/noResults.svg" alt=""/>
+    </div>
     <p class="no-results-text">${not empty message? message:noResults}</p>
 
     <c:if test="${ not empty urlCallToAction }">

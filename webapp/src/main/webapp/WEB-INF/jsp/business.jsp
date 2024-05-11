@@ -10,13 +10,22 @@
   <title><spring:message code="title.business" arguments="${business.businessName}"/></title>
 </head>
 <body>
+
+<c:url value="/borrar-negocio/${businessId}" var="deleteUrl"/>
+
+<c:set var="title" scope="request"><spring:message code="popup.business.title"/></c:set>
+<c:set var="message" scope="request"><spring:message code="popup.business.message"/></c:set>
+<c:set var="action" scope="request"><spring:message code="popup.delete"/></c:set>
+<c:set var="url" value="${deleteUrl}" scope="request"/>
+
+<jsp:include page="components/popUp.jsp" />
+
 <c:set var="urlCreateService" value="${pageContext.request.contextPath}/crear-servicio/${businessId}" />
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
-    <c:url value="/borrar-negocio/${businessId}" var="deleteUrl"/>
     <div class="flex center-vertically">
-      <button class="cancelBtn" id="deleteBtn" onclick="deleteBusiness()" >
+      <button class="cancelBtn" id="deleteBtn" onclick="showPopUp()" >
         <i class="material-icons ">delete</i>
       </button>
       <c:if test="${not empty serviceList}" >
@@ -50,12 +59,8 @@
 </body>
 
 <script>
-
-  function deleteBusiness(){
-    if (!confirm('<spring:message code="business.confirm-delete"/>'))
-      return
-
-    window.location.replace('${deleteUrl}')
+  function showPopUp() {
+    document.getElementById("popup").style.display = "block";
   }
 </script>
 </html>

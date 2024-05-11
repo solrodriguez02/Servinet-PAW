@@ -28,10 +28,6 @@ public class HelloWorldController {
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    List<Categories> categories = Arrays.asList(Categories.values());
-    List<PricingTypes> pricingTypes = Arrays.asList(PricingTypes.values());
-    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
-    List<Ratings> ratings = Arrays.asList(Ratings.values());
 
 
     @Autowired
@@ -107,8 +103,7 @@ public class HelloWorldController {
     @RequestMapping(method = RequestMethod.GET, path = "/")
     public ModelAndView home() {
         final ModelAndView mav = new ModelAndView("home");
-        mav.addObject("categories", categories);
-        mav.addObject("neighbourhoods", neighbourhoods);
+
         mav.addObject("TBDPricing", TBDPricing);
         mav.addObject("recommendedServices", ss.getRecommendedServices());
         return mav;
@@ -123,15 +118,6 @@ public class HelloWorldController {
     //     return mav;
     // }
 
-    @RequestMapping(method = RequestMethod.GET, path="/publicar")
-    public ModelAndView publish() {
-        final ModelAndView mav = new ModelAndView("publish");
-        User currentUser = securityService.getCurrentUser().get();
-        if(!currentUser.isProvider()) {
-            return new ModelAndView("redirect:/registrar-negocio");
-        }
-        return mav;
-    }
 //@RequestMapping(method = RequestMethod.GET, path="/publicar")
 //    public ModelAndView publish() {
 //@RequestParam(value = "nombre-negocio") final String businessName,
@@ -156,7 +142,7 @@ public class HelloWorldController {
             return registerUser(form);
         }
         us.create(form.getUsername(),form.getName(),form.getSurname(),form.getPassword(),form.getEmail(),form.getTelephone());
-        return new ModelAndView("redirect:/login");
+        return new ModelAndView("redirect:/perfil");
     }
 
 }

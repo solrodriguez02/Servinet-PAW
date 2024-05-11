@@ -34,10 +34,7 @@ public class ServiceController {
     private QuestionService question;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    List<Categories> categories = Arrays.asList(Categories.values());
-    List<PricingTypes> pricingTypes = Arrays.asList(PricingTypes.values());
-    List<Neighbourhoods> neighbourhoods = Arrays.asList(Neighbourhoods.values());
-    List<Ratings> ratings = Arrays.asList(Ratings.values());
+
 
     @Autowired
     public ServiceController(
@@ -74,22 +71,9 @@ public class ServiceController {
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
         mav.addObject("category", category);
-        mav.addObject("neighbourhoods", neighbourhoods);
         mav.addObject("location", neighbourhoodFilters);
         mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters, ratingFilters, query));
         mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters, ratingFilters, query));
-        mav.addObject("ratings", ratings);
-        return mav;
-    }
-
-    @RequestMapping(method = RequestMethod.GET, path="/crear-servicio")
-    public ModelAndView selectBusinessForService() {
-        final ModelAndView mav = new ModelAndView("businessesForNewService");
-        long userid = securityService.getCurrentUser().get().getUserId();
-        User currentUser = us.findById(userid).orElseThrow(UserNotFoundException::new);
-        List<Business> businessList = bs.findByAdminId(currentUser.getUserId());
-        mav.addObject("user",currentUser);
-        mav.addObject("businessList", businessList);
         return mav;
     }
 
@@ -100,8 +84,6 @@ public class ServiceController {
         }
         final ModelAndView mav = new ModelAndView("postService");
         mav.addObject("durationTypes",DurationTypes.values());
-        mav.addObject("pricingTypes",pricingTypes);
-        mav.addObject("neighbours",neighbourhoods);
         return mav;
     }
 

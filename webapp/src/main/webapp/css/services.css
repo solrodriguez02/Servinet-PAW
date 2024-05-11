@@ -1,9 +1,5 @@
 
 .services-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 .service-box {
@@ -39,7 +35,6 @@
     width: 72%;
     height: 80%;
     overflow: hidden;
-    white-space: nowrap;
     text-overflow: ellipsis;
 }
 
@@ -62,6 +57,7 @@ p {
     margin-bottom: 20px;
     display: flex;
     align-items: center;
+    line-height: 1.7;
 }
 
 .page-manage-box {
@@ -122,8 +118,8 @@ p {
     border-radius: 20px;
     border: none;
     padding: 8px 20px;
-    margin-top: 5px;
     font-family: 'Poppins', sans-serif;
+    margin: 5px;
 }
 
 .close-filter-icon {
@@ -143,12 +139,7 @@ p {
     background-color: #e1e1e1;
     padding: 15px 20px;
     border-radius: 20px;
-    width: 30%;
-    position: absolute;
-    top: 78%;
-    right: 100px;
-    transform: translateY(-50%);
-    z-index: 9999;
+    width: 100%;
 }
 
 .filters-text {
@@ -180,4 +171,17 @@ p {
     color: gray;
     font-style: italic;
     margin: 0 6px;
+}
+
+.info {
+    display: flex;
+}
+
+.filters-column {
+    margin-left: 20px;
+    width: 30%;
+}
+
+.content {
+    width: 100%;
 }

@@ -15,6 +15,7 @@
     text-decoration: none;
     color: black;
     margin-left: 25px;
+    cursor: pointer;
 }
 
 .nav-item:hover {

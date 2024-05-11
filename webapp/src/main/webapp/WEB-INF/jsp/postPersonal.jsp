@@ -31,7 +31,7 @@
             <p class="label"><spring:message code="email"/></p>
             <spring:message code="input.email" var="inputEmail"/>
             <form:errors path="email" cssClass="error" element="p"/>
-            <form:input type="email" id="email" cssClass="input" path="email" placeholder="${inputEmail}" required="true"/>
+            <form:input id="email" cssClass="input" path="email" placeholder="${inputEmail}"/>
         </label>
         <label>
             <p class="label"><spring:message code="telephone"/></p>

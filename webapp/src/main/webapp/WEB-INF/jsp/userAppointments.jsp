@@ -12,11 +12,11 @@
 <div class="page">
     <div class="header">
         <h2><spring:message code="appointments.my-appointments"/></h2>
-        <div>
+        <div class="switch-btn">
             <a href="${pageContext.request.contextPath}/turnos/?confirmados=true">
-                <button class="btn-basic btn-left ${confirmed? 'selected':''}" ><spring:message code="appointments.next"/></button></a>
+                <button class="btn-basic btn-left ${confirmed? 'btn-selected':''}" ><spring:message code="appointments.next"/></button></a>
             <a href="${pageContext.request.contextPath}/turnos/?confirmados=false">
-                <button class="btn-basic btn-right ${!confirmed? 'selected':''}" ><spring:message code="appointments.requested"/></button></a>
+                <button class="btn-basic btn-right ${!confirmed? 'btn-selected':''}" ><spring:message code="appointments.requested"/></button></a>
         </div>
     </div>
     <div class="appointments-container">
