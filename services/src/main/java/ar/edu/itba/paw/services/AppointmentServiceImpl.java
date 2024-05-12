@@ -1,15 +1,13 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
-import ar.edu.itba.paw.model.exceptions.AppointmentAlreadyConfirmed;
-import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
-import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
+import ar.edu.itba.paw.model.exceptions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
+
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -59,10 +57,10 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public Appointment create(long serviceid, String name, String surname, String email, String location, String telephone, String date) {
         Service service = serviceDao.findById(serviceid).orElseThrow(ServiceNotFoundException::new);
-        User newuser = userService.findByEmail(email).orElse(null);
+        User newuser = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
         LocalDateTime startDate = LocalDateTime.parse(date);
         Appointment appointment = appointmentDao.create(service.getId(), newuser.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
-        Business business = businessDao.findById(service.getBusinessid()).get();
+        Business business = businessDao.findById(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
             //* si ya tiene el Service => ya lo paso x param
         emailService.requestAppointment(appointment, service, business, newuser);
         LOGGER.info("Appointment request email sent successfully.");
@@ -75,13 +73,13 @@ public class AppointmentServiceImpl implements AppointmentService{
         if (!optionalAppointment.isPresent())
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
-        final Service service = serviceDao.findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
         if (appointment.getConfirmed())
             throw new AppointmentAlreadyConfirmed();
 
-        Business business = businessDao.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.confirmAppointment(appointment.getId());
         emailService.confirmedAppointment(appointment, service, business, client);
         LOGGER.info("Appointment confirmation email sent successfully.");
@@ -94,13 +92,13 @@ public class AppointmentServiceImpl implements AppointmentService{
         if (!optionalAppointment.isPresent())
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
-        final Service service = serviceDao.findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
         if (appointment.getConfirmed())
             throw new AppointmentAlreadyConfirmed();
 
-        Business business = businessDao.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.cancelAppointment(appointment.getId());
         emailService.deniedAppointment(appointment, service, business, client,false);
         LOGGER.info("Denied appointment email sent successfully.");
@@ -114,10 +112,10 @@ public class AppointmentServiceImpl implements AppointmentService{
         if (!optionalAppointment.isPresent())
             throw new AppointmentNonExistentException();
         Appointment appointment = optionalAppointment.get();
-        final Service service = serviceDao.findById(appointment.getServiceid()).get();
-        final User client = userService.findById( appointment.getUserid()).get();
+        final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
-        Business business = businessDao.findById( service.getBusinessid()).get();
+        Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.cancelAppointment(appointment.getId());
         emailService.cancelledAppointment(appointment, service,business, client,false);
         LOGGER.info("Cancel Appointment email sent successfully.");

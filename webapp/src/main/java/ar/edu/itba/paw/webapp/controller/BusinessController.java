@@ -3,15 +3,14 @@ package ar.edu.itba.paw.webapp.controller;
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
-import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
+
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
-import ar.edu.itba.paw.webapp.auth.ServinetAuthUserDetails;
+
 import ar.edu.itba.paw.webapp.form.BusinessForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -98,7 +97,7 @@ public class BusinessController {
         if (confirmed){
             for (Appointment a : appointmentList){
                 if (!userMap.containsKey(a.getUserid()))
-                    userMap.put(a.getUserid(),userService.findById(a.getUserid()).get());
+                    userMap.put(a.getUserid(),userService.findById(a.getUserid()).orElseThrow(UserNotFoundException::new));
             }
             mav.addObject("userMap", userMap );
         }

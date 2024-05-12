@@ -1,5 +1,6 @@
 package ar.edu.itba.paw.webapp.controller;
 
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
 import ar.edu.itba.paw.webapp.form.EditReviewForm;
@@ -46,7 +47,7 @@ public class RatingsQuestionsController {
         if(errors.hasErrors()) {
             return serviceController.service(serviceId, form, null, null, "qst", 0, 0);
         }
-        long userid = authControl.getCurrentUser().get().getUserId();
+        long userid = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
         question.create(serviceId, userid, form.getQuestion());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=qst");
     }
@@ -73,7 +74,7 @@ public class RatingsQuestionsController {
         if(errors.hasErrors()) {
             return serviceController.service(serviceId, null, form, null,"rw", 0, 0);
         }
-        long userid = authControl.getCurrentUser().get().getUserId();
+        long userid = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
         if(rating.hasAlreadyRated(userid, serviceId) == null) {
             rating.create(serviceId, userid, form.getRating(), form.getComment());
         }

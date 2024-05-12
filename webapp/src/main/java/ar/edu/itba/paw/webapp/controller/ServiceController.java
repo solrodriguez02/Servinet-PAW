@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
@@ -84,7 +85,6 @@ public class ServiceController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
     public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
-
         if (errors.hasErrors()) {
             return registerService(businessId, form);
         }
@@ -106,21 +106,17 @@ public class ServiceController {
             @ModelAttribute("reviewForm") final ReviewsForm reviewForm,
             @ModelAttribute("editReviewForm") final EditReviewForm editReviewForm,
             @RequestParam(value = "opcion", required = false) final String option,
-            @RequestParam(value = "qstPag", required = false) Integer questionPage,
-            @RequestParam(value = "rwPag", required = false) Integer reviewPage
+            @RequestParam(value = "qstPag", required = false, defaultValue = "0") Integer questionPage,
+            @RequestParam(value = "rwPag", required = false, defaultValue = "0") Integer reviewPage
     ) {
         final ModelAndView mav = new ModelAndView("service");
         Optional<User> currentUser = authControl.getCurrentUser();
         Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
         Service serv;
-        if(questionPage == null) questionPage = 0;
-        if(reviewPage == null) reviewPage = 0;
-        try {
-            serv = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-        } catch (ServiceNotFoundException e) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-        Business business = bs.findById(serv.getBusinessid()).get();
+
+
+        serv = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        Business business = bs.findById(serv.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         boolean isOwner = userId != null && business.getUserId()==userId;
 
         mav.addObject("isOwner", isOwner);
@@ -137,19 +133,4 @@ public class ServiceController {
         mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
         return mav;
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
-
-        final ModelAndView mav = new ModelAndView("postAppointment");
-        try {
-            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-            mav.addObject("service",service);
-        } catch (ServiceNotFoundException ex) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-
-        return mav;
-    }
-
 }

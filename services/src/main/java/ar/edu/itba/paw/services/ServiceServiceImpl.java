@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,9 @@ public class ServiceServiceImpl implements ServiceService {
     private final UserService userService;
     private final BusinessDao businessDao;
     private final ImageService imageService;
-    private final Logger LOGGER = LoggerFactory.getLogger(ServiceServiceImpl.class);
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceServiceImpl.class);
     @Autowired
     public ServiceServiceImpl(final ServiceDao serviceDao, final EmailService emailService,
                               final AppointmentService appointmentService, final UserService userService,
@@ -51,10 +53,13 @@ public class ServiceServiceImpl implements ServiceService {
     @Transactional
     public Service create(long businessId, String name, String description, boolean homeservice,
                           Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
-                          PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) throws IOException {
+                          PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) {
         Business business = businessDao.findById( businessId).orElseThrow(BusinessNotFoundException::new);
 
-        long imageId = image.isEmpty()? 0 : imageService.addImage(image.getBytes()).getImageId();
+        long imageId=0;
+        if(!image.isEmpty()){
+                imageId=imageService.addImage(image).getImageId();
+        }
 
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
         emailService.createdService(service, business);
@@ -81,7 +86,7 @@ public class ServiceServiceImpl implements ServiceService {
         if (!optionalService.isPresent())
             return;
         final Service service = optionalService.get();
-        final Business business = businessDao.findById(service.getBusinessid()).get();
+        final Business business = businessDao.findById(service.getBusinessid()).orElseThrow(UserNotFoundException::new);
 
         delete(service,business);
     }
@@ -92,7 +97,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
              for ( Appointment appointment : appointmentList){
-                 User client = userService.findById( appointment.getUserid()).get();
+                 User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
                 if (appointment.getConfirmed())
                     emailService.cancelledAppointment(appointment,service,business,client,true);

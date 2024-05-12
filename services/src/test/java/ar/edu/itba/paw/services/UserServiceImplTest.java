@@ -1,4 +1,4 @@
-/*package ar.edu.itba.paw.services;
+package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
 import org.junit.Assert;
@@ -27,6 +27,7 @@ public class UserServiceImplTest {
     // Los Mocks hacen el constructor automaticamente (no necesito hacer un Before setup)
     @InjectMocks
     private UserServiceImpl userService;
+
 
     @Mock
     private UserDao userDao;
@@ -58,19 +59,4 @@ public class UserServiceImplTest {
 
 
     }
-
-    @Test
-    public void testCreate() {
-        // 1. Precondiciones
-        Mockito.when(userDao.create(Mockito.eq(USERNAME),Mockito.eq(NAME),Mockito.eq(PASSWORD),
-                Mockito.eq(SURNAME), Mockito.eq(EMAIL),Mockito.eq(TELEPHONE),Mockito.eq(false))).thenReturn(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false));
-
-        // 2. Ejecuta la class under test (una sola)
-        User user = userService.create(USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE);
-
-        // 3. Postcondiciones - assertions (todas las que sean necesarias)
-        Assert.assertNotNull(user);
-        Assert.assertEquals(USERNAME, user.getUsername());
-    }
 }
-*/

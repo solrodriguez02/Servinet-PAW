@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 
 public class QuestionForm {
 
-    @NotEmpty(message = "La pregunta no puede estar vacía")
+    @NotEmpty
     @Size(max=255)
     private String question;
 

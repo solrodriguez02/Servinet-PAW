@@ -19,13 +19,13 @@
             <p class="label"><spring:message code="name"/></p>
             <spring:message code="input.name" var="inputName"/>
             <form:errors path="name" cssClass="error" element="p"/>
-            <form:input type="text" cssClass="input" path="name" placeholder="${inputName}" required="true"/>
+            <form:input type="text" cssClass="input" path="name" placeholder="${inputName}"/>
         </label>
         <label>
             <p class="label"><spring:message code="lastname"/></p>
             <spring:message code="input.lastname" var="inputLastname"/>
             <form:errors path="surname" cssClass="error" element="p"/>
-            <form:input type="text" cssClass="input" path="surname" placeholder="${inputLastname}" required="true"/>
+            <form:input type="text" cssClass="input" path="surname" placeholder="${inputLastname}"/>
         </label>
         <label>
             <p class="label"><spring:message code="email"/></p>
@@ -37,26 +37,26 @@
             <p class="label"><spring:message code="telephone"/></p>
             <spring:message code="input.telephone" var="inputTelephone"/>
             <form:errors path="telephone" cssClass="error" element="p"/>
-            <form:input type="text" cssClass="input" path="telephone" placeholder="${inputTelephone}" required="true"/>
+            <form:input type="text" cssClass="input" path="telephone" placeholder="${inputTelephone}"/>
         </label>
         <label>
             <p class="label"><spring:message code="username"/></p>
             <spring:message code="input.username" var="inputUsername"/>
             <form:errors path="username" cssClass="error" element="p"/>
-            <form:input type="text" cssClass="input" path="username" placeholder="${inputUsername}" required="true"/>
+            <form:input type="text" cssClass="input" path="username" placeholder="${inputUsername}"/>
         </label>
         <label>
             <p class="label"><spring:message code="password"/></p>
             <spring:message code="input.password" var="inputPassword"/>
             <form:errors path="password" cssClass="error" element="p"/>
-            <form:input type="password" id="password" cssClass="input" path="password" placeholder="${inputPassword}" required="true"/>
+            <form:input type="password" id="password" cssClass="input" path="password" placeholder="${inputPassword}"/>
         </label>
             <form:errors path="" cssClass="error"/>
         <label>
             <p class="label"><spring:message code="repeat-password"/></p>
             <spring:message code="input.repeat-password" var="inputRepeatPassword"/>
             <form:errors path="passwordConfirmation" cssClass="error" element="p"/>
-            <form:input type="password" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}" required="true"/>
+            <form:input type="password" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}"/>
         </label>
         <p>
             <spring:message code="register.already-registered"/> <a href="<c:url value="/login"/>"><spring:message code="login"/></a>
