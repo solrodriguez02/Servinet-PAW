@@ -84,7 +84,6 @@ public class ServiceController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
     public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
-
         if (errors.hasErrors()) {
             return registerService(businessId, form);
         }
@@ -139,7 +138,10 @@ public class ServiceController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
+    public ModelAndView hireService(
+            @PathVariable("serviceId") final long serviceId,
+            @ModelAttribute("appointmentForm") final AppointmentForm form
+    ) {
 
         final ModelAndView mav = new ModelAndView("postAppointment");
         try {
@@ -148,7 +150,6 @@ public class ServiceController {
         } catch (ServiceNotFoundException ex) {
             return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
         }
-
         return mav;
     }
 

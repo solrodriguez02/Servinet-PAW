@@ -7,31 +7,43 @@ import ar.edu.itba.paw.webapp.validation.UsernameNotUsed;
 import javax.validation.constraints.*;
 @FieldsValueMatch(field = "password", fieldMatch = "passwordConfirmation", message = "Las contraseñas no coinciden")
 public class RegisterUserForm {
-   @NotEmpty(message = "Debe ingresar su nombre")
-   @NotNull(message = "Debe ingresar su nombre")
+   @NotEmpty
+   @NotNull
+   @Size(max=255)
    private String name;
-   @NotNull(message = "Debe ingresar su apellido")
-   @NotEmpty(message = "Debe ingresar su apellido")
+
+   @NotNull
+   @NotEmpty
+   @Size(max=255)
    private String surname;
-   @NotNull(message = "Debe ingresar un email")
-   @NotEmpty(message = "Debe ingresar un email")
-   @Email(message = "El email no es válido.")
-   @EmailNotUsed(message = "El email ingresado ya está en uso. Use otro email o si es el propietario de la cuenta inicie sesión")
+
+   @NotNull
+   @NotEmpty
+   @Email
+   @EmailNotUsed
+   @Size(max=255)
    private String email;
-   @NotNull(message = "Debe ingresar un nombre de usuario")
-   @NotEmpty(message = "Debe ingresar un nombre de usuario ")
-   @UsernameNotUsed(message = "El nombre de usuario ingresado ya está en uso. Use otro nombre de usuario o si es el propietario de la cuenta inicie sesión")
+
+   @NotNull
+   @NotEmpty
+   @UsernameNotUsed
+   @Size(max=255)
    private String username;
-   @NotNull(message = "Debe ingresar una contraseña")
-   @NotEmpty(message = "Debe ingresar alguna contraseña de al menos 8 caracteres")
-   @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
+
+   @NotNull
+   @NotEmpty
+   @Size(max=255, min = 8)
    private String password;
-   @NotNull(message = "Debe ingresar la confirmación de la contraseña")
-   @NotEmpty(message = "Debe ingresar la confirmación de la contraseña")
-   @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
+
+   @NotNull
+   @NotEmpty
+   @Size(max=255, min = 8)
    private String passwordConfirmation;
-   @NotNull(message = "Debe ingresar un número de teléfono")
-   @NotEmpty(message = "Debe ingresar un número de teléfono")
+
+   @NotNull
+   @NotEmpty
+   @Size(max=255)
+   @Pattern(regexp = "^\\+(\\d{1,3})?\\s?9?\\s?(\\d{1,4})?\\s?(\\d{6,8})$")
    private String telephone;
 
    public String getUsername(){

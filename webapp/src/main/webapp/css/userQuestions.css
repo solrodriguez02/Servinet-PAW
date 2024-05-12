@@ -10,6 +10,7 @@
 .qst {
     padding: 0;
     margin: 0;
+    word-wrap: break-word;
 }
 
 .qst-service {
@@ -59,7 +60,6 @@
 }
 
 .qst-date-box {
-    display: flex;
     align-items: center;
     margin-bottom: 10px;
 }

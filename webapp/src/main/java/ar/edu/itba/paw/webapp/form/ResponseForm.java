@@ -4,7 +4,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class ResponseForm {
-    @NotEmpty(message = "La respuesta no puede estar vacía")
+    @NotEmpty
     @Size(max=255)
     private String response;
 
