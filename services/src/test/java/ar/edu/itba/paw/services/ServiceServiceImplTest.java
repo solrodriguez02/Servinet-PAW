@@ -68,7 +68,7 @@ public class ServiceServiceImplTest {
     private static ImageService imageService;
 
     @Test
-    public void testCreate() throws IOException {
+    public void testCreate() {
        User user = createUser();
        MultipartFile image = Mockito.mock(MultipartFile.class);
        Mockito.when(businessDao.findById(BUSINESSID)).thenReturn(Optional.of(createBusiness()));
