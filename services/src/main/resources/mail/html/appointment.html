@@ -39,11 +39,9 @@
             color: white;
             padding-inline: 20px;
         }
-
         .btn-container {
-            display: flex;
-            justify-content: center;
-            margin: 0 auto;
+            text-align: center;
+            margin: auto;
         }
         .confirm {
             background-color: #585bfa;
@@ -53,12 +51,9 @@
             background-color: #de2121;
             margin-left: 20px;
         }
-        /*
-        .align-center {
+        .align-center{
             text-align: center;
-            opacity: 0.8;
-        }*/
-
+        }
     </style>
 </head>
 <body class="bg">
@@ -67,9 +62,8 @@
         <a th:href="${url}" style="text-decoration: none"><h1>servinet .</h1></a>
     </div>
     <div>
-        <p>
-            Estimado<span th:if="${isClient}" th:text="' '+${client.getFullName()}"/>,
-        </p>
+        <p> <span th:text="#{template.greeting}"/><span th:if="${isClient}" th:text="' '+${client.getFullName()}"/>,</p>
+
         <div th:switch="${type}">
             <div th:case="'WAITING'">
                 Su
