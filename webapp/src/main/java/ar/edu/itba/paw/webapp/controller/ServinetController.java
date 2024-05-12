@@ -1,10 +1,7 @@
 package ar.edu.itba.paw.webapp.controller;
 
-import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.services.*;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
 import ar.edu.itba.paw.webapp.form.*;
@@ -16,14 +13,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import javax.mail.MessagingException;
+
 import javax.validation.Valid;
 import java.util.*;
 
 
 @Controller
 @Qualifier("HelloWorldController")
-public class HelloWorldController {
+public class ServinetController {
 
     private UserService us;
     private ServiceService ss;
@@ -31,10 +28,10 @@ public class HelloWorldController {
     private final PasswordRecoveryCodeService passwordRecoveryCodeService;
     private static final String TBDPricing = PricingTypes.TBD.getValue();
 
-    private Logger LOGGER = LoggerFactory.getLogger(HelloWorldController.class);
+    private Logger LOGGER = LoggerFactory.getLogger(ServinetController.class);
 
     @Autowired
-    public HelloWorldController(
+    public ServinetController(
             @Qualifier("userServiceImpl") final UserService us,
             @Qualifier("serviceServiceImpl") final ServiceService ss,
             @Qualifier("passwordRecoveryCodeServiceImpl") final PasswordRecoveryCodeService passwordRecoveryCodeService,
