@@ -136,21 +136,4 @@ public class ServiceController {
         mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
         return mav;
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView hireService(
-            @PathVariable("serviceId") final long serviceId,
-            @ModelAttribute("appointmentForm") final AppointmentForm form
-    ) {
-
-        final ModelAndView mav = new ModelAndView("postAppointment");
-        try {
-            Service service = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
-            mav.addObject("service",service);
-        } catch (ServiceNotFoundException ex) {
-            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
-        }
-        return mav;
-    }
-
 }

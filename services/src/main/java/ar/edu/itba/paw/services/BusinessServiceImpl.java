@@ -70,8 +70,10 @@ public class BusinessServiceImpl implements BusinessService{
             for ( Service service : servicesList)
                 serviceService.delete(service, business );
 
-        emailService.deletedBusiness(business);
         businessDao.deleteBusiness(businessid);
+        emailService.deletedBusiness(business);
+        User user = userService.findById(business.getUserId()).orElseThrow(UserNotFoundException::new);
+        userService.revokeProviderRole(user);
     }
 
     @Transactional

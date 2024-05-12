@@ -35,16 +35,31 @@ public class AppointmentController {
         this.authControl= authControl;
     }
 
+    @RequestMapping(method = RequestMethod.GET, path = "/contratar-servicio/{serviceId:\\d+}")
+    public ModelAndView hireService(@PathVariable("serviceId") final long serviceId, @ModelAttribute("appointmentForm") final AppointmentForm form) {
+
+        final ModelAndView mav = new ModelAndView("postAppointment");
+        try {
+            Service service = serviceService.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+            mav.addObject("service",service);
+        } catch (ServiceNotFoundException ex) {
+            return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+        }
+
+        return mav;
+    }
+
     @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
     public ModelAndView appointment(
             @PathVariable("serviceId") final long serviceId,
             @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors
-    ) {
+    ){
+        //todo: manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
+
         User user = authControl.getCurrentUser().get();
         Appointment createdAppointment = appointmentService.create(serviceId,user.getName(),user.getSurname(),user.getEmail(),form.getLocation(),user.getEmail(), form.getDate().toString());
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
-
 
 
     @RequestMapping(method = RequestMethod.GET , path = "/rechazar-turno/{appointmentId:\\d+}")
