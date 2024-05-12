@@ -110,6 +110,7 @@
     margin-bottom: 10px;
     align-self: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .info-access {
