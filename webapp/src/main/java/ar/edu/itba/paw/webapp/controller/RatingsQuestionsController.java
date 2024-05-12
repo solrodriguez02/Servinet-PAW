@@ -2,6 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
+import ar.edu.itba.paw.webapp.form.EditReviewForm;
 import ar.edu.itba.paw.webapp.form.QuestionForm;
 import ar.edu.itba.paw.webapp.form.ResponseForm;
 import ar.edu.itba.paw.webapp.form.ReviewsForm;
@@ -43,7 +44,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return serviceController.service(serviceId, form, null, "qst", 0, 0);
+            return serviceController.service(serviceId, form, null, null, "qst", 0, 0);
         }
         long userid = authControl.getCurrentUser().get().getUserId();
         question.create(serviceId, userid, form.getQuestion());
@@ -70,7 +71,7 @@ public class RatingsQuestionsController {
             @PathVariable("serviceId") final long serviceId
     ){
         if(errors.hasErrors()) {
-            return serviceController.service(serviceId, null, form, "rw", 0, 0);
+            return serviceController.service(serviceId, null, form, null,"rw", 0, 0);
         }
         long userid = authControl.getCurrentUser().get().getUserId();
         if(rating.hasAlreadyRated(userid, serviceId) == null) {
@@ -82,13 +83,14 @@ public class RatingsQuestionsController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/editar-opinion/{serviceId:\\d+}/{ratingId:\\d+}")
     public ModelAndView editReview (
+            @Valid @ModelAttribute("editReviewForm") EditReviewForm form, final BindingResult errors,
             @PathVariable("ratingId") final long ratingId,
-            @PathVariable("serviceId") final long serviceId,
-            @RequestParam("comment") final String newComment,
-            @RequestParam("rating") final int newRating
+            @PathVariable("serviceId") final long serviceId
     ){
-
-        rating.edit(ratingId, newRating, newComment);
+        if(errors.hasErrors()) {
+            return serviceController.service(serviceId, null, null, form, "rw", 0, 0);
+        }
+        rating.edit(ratingId, form.getEditedRating(), form.getEditedComment());
         return new ModelAndView("redirect:/servicio/" + serviceId + "/?opcion=rw");
     }
 

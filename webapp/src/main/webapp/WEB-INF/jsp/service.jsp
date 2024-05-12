@@ -207,9 +207,8 @@
                                 </div>
                                 <p class="text"><c:out value="${hasAlreadyRated.comment}"/></p>
                             </div>
-
-                            <div id="edit-review" class="transparent">
-                                <form action="${rateUrl}" method="post">
+                            <form:form action="${rateUrl}" method="post" modelAttribute="editReviewForm">
+                                <div id="edit-review" class="transparent">
                                     <div class="flex edit-header">
                                         <c:forEach begin="1" end="5" var="i">
                                             <i class="material-icons star" onclick="selectRate(${i})">star</i>
@@ -218,15 +217,17 @@
                                             <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
                                         </div>
                                     </div>
-                                    <input name="rating" type="hidden" id="rating" value="<c:out value="${hasAlreadyRated.comment}"/>"/>
+                                    <form:input path="editedRating" type="hidden" id="rating" value="${hasAlreadyRated.comment}"/>
                                     <div class="flex">
-                                        <input  name="comment" type="text" class="input edit-input" placeholder="<spring:message code="service.write-review"/>" value="${hasAlreadyRated.comment}"/>
+                                        <form:input  path="editedComment" type="text" class="input edit-input" placeholder="" value="${hasAlreadyRated.comment}"/>
                                         <input type="submit" value="<spring:message code="service.edit-review"/>" class="send-btn">
                                     </div>
-                                </form>
-                            </div>
-
+                                </div>
+                                <form:errors path="editedRating" element="p" cssClass="error"/>
+                                <form:errors path="editedComment" element="p" cssClass="error"/>
+                            </form:form>
                         </div>
+
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.add-review"/></h4>
@@ -241,6 +242,7 @@
                                 <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                             </div>
                             <form:errors path="rating" element="p" cssClass="error"/>
+                            <form:errors path="comment" element="p" cssClass="error"/>
                         </form:form>
                     </c:otherwise>
                 </c:choose>
