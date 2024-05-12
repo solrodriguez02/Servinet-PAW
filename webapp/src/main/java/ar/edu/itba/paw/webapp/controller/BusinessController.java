@@ -70,7 +70,7 @@ public class BusinessController {
         }
          */
         long userid = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
-        Business business = businessService.createBusiness(form.getBusinessName(),userid, form.getBusinessEmail(),form.getBusinessTelephone(),form.getBusinessLocation());
+        Business business = businessService.createBusiness(form.getBusinessName(),userid, form.getBusinessTelephone(), form.getBusinessEmail(),form.getBusinessLocation());
         return new ModelAndView("redirect:/negocio/"+ business.getBusinessid());
     }
 
