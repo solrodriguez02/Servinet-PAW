@@ -25,8 +25,8 @@ public class EmailServiceImpl implements EmailService{
     private final TemplateEngine templateEngine;
     private final MessageSource messageSource;
     private final static String SERVINET_EMAIL = "servinet.servinet.servinet@gmail.com";
-    //temp
-    private final Locale LOCALE = LocaleContextHolder.getLocale();  //Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
+
+    private final Locale LOCALE = LocaleContextHolder.getLocale(); //Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
     private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
     private final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
