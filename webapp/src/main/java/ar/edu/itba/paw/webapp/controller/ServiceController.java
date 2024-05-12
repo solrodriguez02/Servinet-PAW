@@ -6,10 +6,7 @@ import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
-import ar.edu.itba.paw.webapp.form.AppointmentForm;
-import ar.edu.itba.paw.webapp.form.QuestionForm;
-import ar.edu.itba.paw.webapp.form.ReviewsForm;
-import ar.edu.itba.paw.webapp.form.ServiceForm;
+import ar.edu.itba.paw.webapp.form.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -107,6 +104,7 @@ public class ServiceController {
             @PathVariable("serviceId") final long serviceId,
             @ModelAttribute("questionForm") final QuestionForm questionForm,
             @ModelAttribute("reviewForm") final ReviewsForm reviewForm,
+            @ModelAttribute("editReviewForm") final EditReviewForm editReviewForm,
             @RequestParam(value = "opcion", required = false) final String option,
             @RequestParam(value = "qstPag", required = false) Integer questionPage,
             @RequestParam(value = "rwPag", required = false) Integer reviewPage
