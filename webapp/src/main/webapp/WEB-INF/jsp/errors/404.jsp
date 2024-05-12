@@ -12,7 +12,7 @@
 <body>
 <div class="page">
 
-    <img class="img svg" src="${pageContext.request.contextPath}/resources/404.svg" alt="">
+    <img class="svg" src="${pageContext.request.contextPath}/resources/404.svg" alt="">
     <h2 class="header-text"><spring:message code="error.pagenotfound"/></h2>
 
     <div class="align-center">
