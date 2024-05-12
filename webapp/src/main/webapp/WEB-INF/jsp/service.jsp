@@ -127,9 +127,9 @@
                         <h4><spring:message code="service.last-questions"/></h4>
                         <c:forEach items="${questions}" var="qst">
                             <div class="question-box">
-                                <div class="flex">
-                                    <p class="text"><c:out value="${qst.question}"/></p>
-                                    <p class="date"><c:out value="${qst.date}"/></p>
+                                <div class="qst-text">
+                                    <label class="text"><c:out value="${qst.question}"/></label>
+                                    <label class="date"><c:out value="${qst.date}"/></label>
                                 </div>
                                 <c:if test="${qst.response != null}">
                                     <div class="response-container">
