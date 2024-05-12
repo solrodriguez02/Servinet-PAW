@@ -76,7 +76,7 @@ public class UserController {
 
         final ModelAndView mav = new ModelAndView("userAppointments");
 
-        long userid = authControl.getCurrentUser().get().getUserId();
+        long userid = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
 
         List<AppointmentInfo> appointmentList = appointmentService.getAllUpcomingUserAppointments(userid,confirmed);
 

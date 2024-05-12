@@ -9,25 +9,37 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 
 @LocationFormatted
 public class ServiceForm {
-   @NotEmpty(message = "El servicio debe tener un nombre")
-   @NotNull(message = "El servicio debe tener un nombre")
+
+   @Size(max=255)
+   @NotEmpty
+   @NotNull
    private String title;
+
+   @Size(max=255)
    private String description;
-   @NotNull(message = "El servicio debe tener una categoría")
+
+   @NotNull
    private boolean homeserv;
 
+   @Size(max=255)
    private String location;
+
    private Categories category;
+
    private MultipartFile image;
+
    private Neighbourhoods[] neighbourhoods;
+
    private PricingTypes pricingtype;
 
+   @Size(max=255)
    private String price;
 
-   @Positive(message = "La duración mínima del servicio debe ser un número positivo")
+   @Positive
    private int minimalduration;
 
    private boolean additionalCharges;

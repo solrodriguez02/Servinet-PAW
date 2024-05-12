@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.services.ServiceDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,7 +104,7 @@ public class ServiceDaoJdbc implements ServiceDao {
     @Override
     public Service edit(long serviceid, String field, String newvalue) {
            jdbcTemplate.update(String.format("update services set  %s  = ? where id= ? ", field), newvalue, serviceid);
-           return findById(serviceid).get();
+           return findById(serviceid).orElseThrow(ServiceNotFoundException::new);
     }
 
     @Override

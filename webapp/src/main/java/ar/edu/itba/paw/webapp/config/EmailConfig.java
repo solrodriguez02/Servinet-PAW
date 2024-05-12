@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -14,8 +15,11 @@ import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Properties;
 
 @EnableAsync
@@ -24,7 +28,6 @@ public class EmailConfig {
     private static final String JAVA_MAIL_FILE = "classpath:mail/javamail.properties";
 
     /* en prop */
-
 
     private static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
 
@@ -59,12 +62,8 @@ public class EmailConfig {
     @Bean
     public TemplateEngine emailTemplateEngine() {
         final SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-        // Resolver for HTML emails (except the editable one)
         templateEngine.addTemplateResolver(TemplateResolver());
-
         templateEngine.setTemplateEngineMessageSource(messageSource);
-
-
         return templateEngine;
     }
 

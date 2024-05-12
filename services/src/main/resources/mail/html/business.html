@@ -42,9 +42,8 @@
                 background-color: #585bfa;
             }
             .btn-container {
-                display: flex;
-                justify-content: center;
-                margin-top: 10px;
+                text-align: center;
+                margin-top: 30px;
             }
         </style>
 </head>
@@ -54,28 +53,31 @@
         <a th:href="${url}" style="text-decoration: none"><h1>servinet .</h1></a>
     </div>
     <div>
-        <p>
-            Estimado,
-        </p>
+        <p th:text="#{template.greeting}+','"/>
+
         <div>
-            El negocio <span th:text="${serviceName}"/> ha sido <span th:switch="${type}">
+            <span th:text="#{template.business(${businessName})}"/> <span th:switch="${type}">
                 <span th:case="'CREATED'">
-                    creado exitosamente. Su número de identificación es el #<span th:text="${businessId}"></span>.
-                    Ya se encuentra disponible en <a th:href="${url}+'negocio/'+${businessId}" th:text="${url}+'negocio/'+${businessId}"></a>.
+                    <span th:text="#{template.operation(#{template.created})}"/>. <span th:text="#{template.id(${businessId})}"/>
+                    <span th:text="#{template.business.url}"/> <a th:href="${url}+'negocio/'+${businessId}" th:text="${url}+'negocio/'+${businessId}"/>.
                 </span>
                 <span th:case="*">
-                    borrado exitosamente. Todos los servicios y con ello sus turnos solicitados desde nuestra página servinet han sido cancelados.
-                    <p>
-                    Si desea crear un nuevo negocio, haga click <a th:href="${url}+'registrar-negocio'">aqui</a>.
-                    </p>
+                    <span th:text="#{template.operation(#{template.deleted})}"/>. <span th:text="#{template.business.deleted-services}"/>
                 </span>
             </span>
 
-            <div class="btn-container" th:if="${type == 'CREATED'}">
-                <a th:href="${url}+'negocio/'+${businessId}">
-                    <button class="btn confirm">Ver negocio</button>
-                </a>
+            <div th:switch="${type}">
+                <div class="btn-container" th:case="'CREATED'">
+                    <a th:href="${url}+'negocio/'+${businessId}">
+                        <button class="btn confirm" th:text="#{template.business.view-btn}"/>
+                    </a>
+                </div>
+                <p th:case="*">
+                    <span th:text="#{template.business.url.create}"/> <a th:href="${url}+'registrar-negocio'" th:text="#{template.here}"/>.
+                </p>
             </div>
+
+
         </div>
     </div>
 </div>

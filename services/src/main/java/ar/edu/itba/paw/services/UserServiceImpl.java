@@ -1,18 +1,16 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -59,7 +57,7 @@ public class UserServiceImpl implements UserService {
     public void makeProvider(User user){
         boolean isProvider = isProvider(user.getUserId());
         if ( !isProvider) {
-            changeUserType(user.getUserId());
+            userDao.changeUserType(user.getUserId());
             List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"),new SimpleGrantedAuthority("ROLE_BUSINESS"));
             org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
@@ -102,16 +100,6 @@ public class UserServiceImpl implements UserService {
         userDao.changeEmail(userid,value);
     }
 
-    public List<User> getUsers(List<Long> ids) {
-        List<User> users = new ArrayList<>();
-        for (long id : ids) {
-            if (findById(id).isPresent()) {
-                users.add(findById(id).get());
-            }
-            else users.add(null);
-        }
-        return users;
-    }
 
     @Transactional
     @Override
@@ -119,10 +107,5 @@ public class UserServiceImpl implements UserService {
         userDao.changePassword(email,passwordEncoder.encode(password));
     }
 
-    @Transactional
-    @Override
-    public void changeUserType(long userid){
-        userDao.changeUserType(userid);
-    }
 
 }

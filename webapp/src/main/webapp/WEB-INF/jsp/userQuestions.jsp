@@ -23,8 +23,8 @@
                         <p class="qst-service">En <c:out value="${qst.value}"/></p>
                     </a>
                     <div class="qst-date-box">
-                        <p class="qst"><c:out value="${qst.key.question}"/></p>
-                        <p class="qst-date"><c:out value="${qst.key.date}"/></p>
+                        <label class="qst"><c:out value="${qst.key.question}"/></label>
+                        <label class="qst-date"><c:out value="${qst.key.date}"/></label>
                     </div>
                     <c:url value="/responder/${qst.key.id}" var="askUrl"/>
                     <form:form action="${askUrl}" method="post" modelAttribute="responseForm">

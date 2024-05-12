@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Neighbourhoods;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ public class AppointmentForm {
     //acá no toma not empty
     //armo custom?
     private Neighbourhoods neighbourhood;
+
     @NotEmpty
     @Size(max = 255)
     private String location;
@@ -18,6 +20,7 @@ public class AppointmentForm {
     //no funciona @Future
     //armar conversor para el formato de fecha
     //formato que se acepta 'YYYY-MM-DDTHH:MM'
+    @NotNull
     private LocalDateTime date;
 
     public Neighbourhoods getNeighbourhood() {

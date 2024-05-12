@@ -6,8 +6,8 @@ import javax.validation.constraints.Size;
 
 public class EditReviewForm {
 
-    @Min(value=1, message = "Debe seleccionar una calificacion")
-    @Max(value=5, message = "Debe seleccionar una calificacion")
+    @Min(value=1)
+    @Max(value=5)
     private int editedRating;
 
     @Size(max=255)

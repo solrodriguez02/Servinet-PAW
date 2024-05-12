@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.persistance;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +26,7 @@ public class UserDaoJdbc implements UserDao {
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private Logger LOGGER = LoggerFactory.getLogger(UserDaoJdbc.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(UserDaoJdbc.class);
 
     @Autowired
     public UserDaoJdbc(final DataSource ds) {
@@ -70,7 +71,7 @@ public class UserDaoJdbc implements UserDao {
     }
     @Override
     public void changePassword(String email,String value){
-        changeField("password",findByEmail(email).get().getUserId(),value);
+        changeField("password",findByEmail(email).orElseThrow(UserNotFoundException::new).getUserId(),value);
     }
     @Override
     public void changeUserType(long userid){

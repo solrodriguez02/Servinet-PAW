@@ -3,11 +3,14 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.webapp.validation.EmailRegistered;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class RequestPasswordRecoveryForm {
-   @NotNull(message="Debe ingresar un email para restablecer su contraseña")
-   @EmailRegistered(message="El email ingresado no está registrado en el sistema")
+   @NotNull
+   @EmailRegistered
+   @Size(max=255)
    String email;
+
    public String getEmail() {
          return email;
    }

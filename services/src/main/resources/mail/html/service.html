@@ -42,9 +42,8 @@
                 background-color: #585bfa;
             }
             .btn-container {
-                display: flex;
-                justify-content: center;
-                margin-top: 10px;
+                text-align: center;
+                margin-top: 30px;
             }
         </style>
 </head>
@@ -54,9 +53,7 @@
         <a th:href="${url}" style="text-decoration: none"><h1>servinet .</h1></a>
     </div>
     <div>
-        <p>
-            Estimado,
-        </p>
+        <p th:text="#{template.greeting}+','"/>
         <div>
             El servicio <span th:text="${serviceName}"/> ha sido <span th:switch="${type}">
                 <span th:case="'CREATED'">

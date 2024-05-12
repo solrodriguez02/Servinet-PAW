@@ -5,13 +5,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PasswordResetForm {
-    @NotNull(message = "Debe ingresar su nueva contraseña")
-    @NotEmpty(message = "Debe ingresar su nueva contraseña")
-    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
+    @NotNull
+    @NotEmpty
+    @Size(min = 8, max=255)
     private String password;
-    @NotNull(message = "Debe ingresar su nueva contraseña")
-    @NotEmpty(message = "Debe ingresar su nueva contraseña")
-    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres.")
+    @NotNull
+    @NotEmpty
+    @Size(min = 8, max=255)
     private String passwordConfirmation;
 
     public String getPassword() {

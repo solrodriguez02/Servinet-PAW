@@ -25,8 +25,8 @@ public class EmailServiceImpl implements EmailService{
     private final TemplateEngine templateEngine;
     private final MessageSource messageSource;
     private final static String SERVINET_EMAIL = "servinet.servinet.servinet@gmail.com";
-    //temp
-    private final Locale LOCALE = LocaleContextHolder.getLocale();  //Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
+
+    private final Locale LOCALE = LocaleContextHolder.getLocale(); //Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
     private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
     private final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
@@ -163,6 +163,7 @@ public class EmailServiceImpl implements EmailService{
     @Async
     public void createdBusiness(Business business) {
         Context ctx = new Context(LOCALE);
+        ctx.setVariable("type", EmailTypes.CREATED_BUSINESS.getType());
         ctx.setVariable("businessId",business.getBusinessid());
         ctx.setVariable("businessName",business.getName());
         LOGGER.info("Preparing business creation notification mail for business owner");
@@ -177,6 +178,7 @@ public class EmailServiceImpl implements EmailService{
     @Async
     public void deletedBusiness(Business business) {
         Context ctx = new Context(LOCALE);
+        ctx.setVariable("type", EmailTypes.DELETED_BUSINESS.getType());
         ctx.setVariable("businessId",business.getBusinessid());
         ctx.setVariable("businessName",business.getName());
         LOGGER.info("Preparing business deletion notification mail for business owner");
@@ -227,7 +229,7 @@ public class EmailServiceImpl implements EmailService{
         prepareAndSendMail(emailType,businessMail,false,ctx);
     }
 
-    private void prepareAndSendMail(EmailTypes emailType, String businessMail, boolean isClient, Context ctx) throws MessagingException {
+    private void prepareAndSendMail(EmailTypes emailType, String mail, boolean isClient, Context ctx) throws MessagingException {
         ctx.setVariable("isClient",isClient);
         ctx.setVariable("type", emailType.getType());
         // Preparo subject
@@ -237,7 +239,7 @@ public class EmailServiceImpl implements EmailService{
             subject = getSubjectWithId(emailType,(Long ) ctx.getVariable("appointmentId"), serviceName );
         else
             subject = getSubject(emailType, serviceName);
-        sendMail(businessMail, subject,ctx, emailType.getTemplate());
+        sendMail(mail, subject,ctx, emailType.getTemplate());
     }
 
     private void sendMail( final String recipientEmail, String subject, final Context ctx, String template) throws MessagingException {

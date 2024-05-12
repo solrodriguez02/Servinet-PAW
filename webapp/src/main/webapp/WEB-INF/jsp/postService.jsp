@@ -18,7 +18,7 @@
            <p> <spring:message code="service-name"/> </p>
             <spring:message code="input.service.name" var="serviceName"/>
             <form:errors path="title" cssClass="error"/>
-            <form:input type="text" class="input" path="title" placeholder="${serviceName}" required="true"/>
+            <form:input type="text" class="input" path="title" placeholder="${serviceName}"/>
         </label>
       <div class="service-div">
         <label>

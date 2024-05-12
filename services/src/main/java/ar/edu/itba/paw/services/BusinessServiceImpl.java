@@ -1,17 +1,14 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -65,7 +62,7 @@ public class BusinessServiceImpl implements BusinessService{
     @Override
     public void deleteBusiness(long businessid){
 
-        final Business business = findById(businessid).get();
+        final Business business = findById(businessid).orElseThrow(BusinessNotFoundException::new);
         List<Service> servicesList = serviceService.getAllBusinessServices(businessid);
             for ( Service service : servicesList)
                 serviceService.delete(service, business );
