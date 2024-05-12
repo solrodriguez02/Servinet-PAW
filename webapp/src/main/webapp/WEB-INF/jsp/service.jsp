@@ -254,21 +254,23 @@
                     <c:otherwise>
                         <h4><spring:message code="service.last-questions"/></h4>
                         <c:forEach items="${reviews}" var="review">
-                            <c:set value="${review.rating}" var="rate"/>
-                            <div class="question-box">
-                                <div class="flex">
-                                    <div class="stars-container">
-                                        <c:forEach begin="1" end="${rate}" var="i">
-                                            <i class="material-icons yellow-star">star</i>
-                                        </c:forEach>
-                                        <c:forEach begin="${rate+1}" end="5" var="i">
-                                            <i class="material-icons gray-star">star</i>
-                                        </c:forEach>
+                            <c:if test="${review.id != hasAlreadyRated.id}">
+                                <c:set value="${review.rating}" var="rate"/>
+                                <div class="question-box">
+                                    <div class="flex">
+                                        <div class="stars-container">
+                                            <c:forEach begin="1" end="${rate}" var="i">
+                                                <i class="material-icons yellow-star">star</i>
+                                            </c:forEach>
+                                            <c:forEach begin="${rate+1}" end="5" var="i">
+                                                <i class="material-icons gray-star">star</i>
+                                            </c:forEach>
+                                        </div>
+                                        <p class="date"><c:out value="${review.date}"/></p>
                                     </div>
-                                    <p class="date"><c:out value="${review.date}"/></p>
+                                    <p class="text"><c:out value="${review.comment}"/></p>
                                 </div>
-                                <p class="text"><c:out value="${review.comment}"/></p>
-                            </div>
+                            </c:if>
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
