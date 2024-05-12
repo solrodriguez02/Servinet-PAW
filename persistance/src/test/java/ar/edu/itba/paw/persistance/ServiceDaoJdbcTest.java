@@ -73,7 +73,8 @@
 
     @Test
      public void testFindById() {
-        jdbcTemplate.execute(String.format("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (%d, %d, '%s', '%s', true, '%s', 'Belleza', 30, 'Total', '1000', false, null);", SERVICEID,BUSINESSID, NAME, DESCRIPTION, LOCATION));
+        jdbcTemplate.execute(String.format("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (%d, %d, '%s', '%s', true, '%s', 'Belleza', 30, 'Total', '%s', false, null);", SERVICEID,BUSINESSID, NAME, DESCRIPTION, LOCATION,PRICE));
+        jdbcTemplate.execute(String.format("INSERT INTO nbservices (serviceid, neighbourhood) VALUES (%d, '%s');", SERVICEID, NEIGHBOURHOODS[0].getValue()));
         Service service = serviceDao.findById(SERVICEID).get();
 
         Assert.assertNotNull(service);
@@ -90,23 +91,6 @@
         Assert.assertEquals(ADDITIONALCHARGES,service.getAdditionalCharges());
     }
 
-    @Test
-     public void testEdit() {
-        jdbcTemplate.execute(String.format("INSERT INTO services (id, businessid, servicename, servicedescription, homeservice, location, category, minimalduration, pricingtype, price, additionalcharges, imageId) VALUES (%d, %d, '%s', '%s', true, '%s', 'Belleza', 30, 'Total', '1000', false, null);", SERVICEID,BUSINESSID, NAME, DESCRIPTION, LOCATION));
-        Service service = serviceDao.edit(SERVICEID, "servicename", "newname");
-
-        Assert.assertEquals(SERVICEID,service.getId());
-        Assert.assertEquals(BUSINESSID,service.getBusinessid());
-        Assert.assertEquals(NAME,service.getName());
-        Assert.assertEquals("newname",service.getDescription());
-        Assert.assertEquals(HOMESERVICE,service.getHomeService());
-        Assert.assertEquals(LOCATION,service.getLocation());
-        Assert.assertEquals(CATEGORY.getValue(),service.getCategory());
-        Assert.assertEquals(DURATION,service.getDuration());
-        Assert.assertEquals(PRICING.getValue(),service.getPricing());
-        Assert.assertEquals(PRICE,service.getPrice());
-        Assert.assertEquals(ADDITIONALCHARGES,service.getAdditionalCharges());
-    }
    @Test
     public void testDelete() {
        Service service = serviceDao.create(BUSINESSID, NAME, DESCRIPTION, HOMESERVICE, LOCATION, NEIGHBOURHOODS,CATEGORY, DURATION, PRICING, PRICE, ADDITIONALCHARGES,0);

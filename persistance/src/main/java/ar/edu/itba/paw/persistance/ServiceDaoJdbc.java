@@ -17,13 +17,17 @@ import java.util.Arrays;
 
 @Repository
 public class ServiceDaoJdbc implements ServiceDao {
-    private static final RowMapper<Service> ROW_MAPPER = (rs, rowNum) -> new Service(rs.getLong("id"),
+    private static final RowMapper<Service> ROW_MAPPER = (rs, rowNum) ->{
+        Object[] neighbourhoods = (Object[])rs.getArray("neighbourhoods").getArray();
+        String[] neighbourhoodsArray = Arrays.copyOf(neighbourhoods, neighbourhoods.length, String[].class);
+        return new Service(rs.getLong("id"),
             rs.getLong("businessid"), rs.getString("servicename"),
             rs.getString("servicedescription"), rs.getBoolean("homeservice"),
-            rs.getString("location"),(String[])rs.getArray("neighbourhoods").getArray(),
+            rs.getString("location"),neighbourhoodsArray,
             Categories.findByValue(rs.getString("category")), rs.getInt("minimalduration"),
             PricingTypes.findByValue(rs.getString("pricingtype")), rs.getString("price"),
             rs.getBoolean("additionalcharges"),rs.getLong("imageId"));
+    };
 
     private static final RowMapper<BasicService> BASIC_SERVICE_ROW_MAPPER = (rs, rowNum) -> new BasicService(rs.getLong("id"),
             rs.getLong("businessid"), rs.getString("servicename"),
