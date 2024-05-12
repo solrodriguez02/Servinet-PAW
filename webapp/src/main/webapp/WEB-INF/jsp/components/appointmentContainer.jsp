@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
+<c:set var="popUpId" value="-${loop.count}"/>
 
     <div class="appointment-container" id="${loop.count}">
         <div class="box appointment-box">
@@ -25,11 +26,11 @@
             <div class="decision-container appointment-field">
                 <c:choose>
                     <c:when test="${confirmed || isUser}">
-                        <button onclick="cancelAppointment(${appointment.id},${loop.count})" class="decision-btn accept-btn" ><i class="material-icons  icon cancel-icon">delete</i></button>
+                        <button onclick="showPopUpApp(${popUpId})" class="decision-btn accept-btn" ><i class="material-icons  icon cancel-icon">delete</i></button>
                     </c:when>
                     <c:otherwise>
                         <button onclick="acceptAppointment(${appointment.id},true,${loop.count})" class="decision-btn accept-btn" ><i class="material-icons  icon accept-icon">check</i></button>
-                        <button onclick="acceptAppointment(${appointment.id},false,${loop.count})" class="decision-btn decision-btn"><i class="material-icons  deny-icon">add</i></button>
+                        <button onclick="showPopUpApp(${popUpId})" class="decision-btn decision-btn"><i class="material-icons  deny-icon">add</i></button>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -37,6 +38,11 @@
                 <i class="material-icons icon">arrow_drop_down</i>
             </button>
         </div>
+
+        <c:set var="appointmentId" value="${appointment.id}" scope="request"/>
+        <c:set var="id" value="${popUpId}" scope="request"/>
+        <jsp:include page="appointmentPopUp.jsp" />
+
         <div class="accordion-container">
             <c:if test="${confirmed}">
                 <div class="appointment-field contact-container">
@@ -62,7 +68,6 @@
                 </a>
             </c:if>
         </div>
-
     </div>
 </body>
 

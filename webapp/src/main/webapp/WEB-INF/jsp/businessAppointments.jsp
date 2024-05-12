@@ -31,6 +31,7 @@
             <jsp:include page="components/appointmentContainer.jsp"/>
         </c:forEach>
     </div>
+
     <c:if test="${ empty appointmentList}">
         <jsp:include page="components/noResults.jsp"/>
     </c:if>

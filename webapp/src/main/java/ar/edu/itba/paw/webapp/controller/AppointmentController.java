@@ -23,17 +23,13 @@ public class AppointmentController {
     private final ServiceService serviceService;
     private final AppointmentService appointmentService;
     private final SecurityService securityService;
-    private final ImageService is;
-    private final BusinessService businessService;
 
     @Autowired
     public AppointmentController(
-        @Qualifier("imageServiceImpl") final ImageService is, @Qualifier("serviceServiceImpl") final ServiceService serviceService,
-        @Qualifier("BusinessServiceImpl") final BusinessService businessService, @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
+        @Qualifier("serviceServiceImpl") final ServiceService serviceService,
+        @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
         @Qualifier("securityServiceImpl") final SecurityService securityService){
         this.serviceService = serviceService;
-        this.is = is;   // TODO: debe ir en ServiceService, en create() paso MultipartFile como param
-        this.businessService = businessService;
         this.appointmentService = appointmentService;
         this.securityService = securityService;
     }
