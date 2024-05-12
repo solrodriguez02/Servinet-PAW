@@ -12,7 +12,7 @@
 <body>
     <div class="page">
 
-        <img class="img svg" src="${pageContext.request.contextPath}/resources/403.svg" alt="">
+        <img class="svg" src="${pageContext.request.contextPath}/resources/403.svg" alt="">
         <h2 class="header-text"><spring:message code="error.403"/></h2>
 
         <div class="align-center">
