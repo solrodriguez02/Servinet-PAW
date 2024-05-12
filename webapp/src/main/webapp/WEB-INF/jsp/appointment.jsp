@@ -53,14 +53,14 @@
                 <p><span class="highlight-text">Servicio:</span>
                     <a class="service-name none-decoration" href="${pageContext.request.contextPath}/servicio/${appointment.serviceid}">
                         <c:out value="${service.name}"/></a><p>
-                <p><span class="highlight-text">Descripción:</span> ${service.description}<p>
-                <p><span class="highlight-text">Precio:</span> ${service.price}</p>
+                <p><span class="highlight-text">Descripción:</span><c:out value="${service.description}"/><p>
+                <p><span class="highlight-text">Precio:</span> <c:out value="${service.price}"/></p>
 
                 <h3 class="appointment-info">Información del turno</h3>
-                <p><span class="highlight-text">Estado del turno:</span> ${appointment.confirmed ? "Confirmado":"Pendiente de confirmación"}</p>
-                <p><span class="highlight-text">Nombre del solicitante:</span> ${user.name} ${user.surname}</p>
-                <p><span class="highlight-text">Fecha y hora: </span>${appointment.startDateString}</p>
-                <p><span class="highlight-text">Lugar:</span> ${service.homeService? appointment.location : service.location}</p>
+                <p><span class="highlight-text">Estado del turno:</span> <c:out value="${appointment.confirmed ? 'Confirmado':'Pendiente de confirmación'}"/></p>
+                <p><span class="highlight-text">Nombre del solicitante:</span> <c:out value="${user.name}"/> <c:out value="${user.surname}"/></p>
+                <p><span class="highlight-text">Fecha y hora: </span><c:out value="${appointment.startDateString}"/></p>
+                <p><span class="highlight-text">Lugar:</span> <c:out value="${service.homeService? appointment.location : service.location}"/></p>
             </div>
         </div>
 

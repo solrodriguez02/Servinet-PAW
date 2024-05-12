@@ -3,16 +3,22 @@ package ar.edu.itba.paw.webapp.form;
 import ar.edu.itba.paw.model.Neighbourhoods;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 public class AppointmentForm {
+    //acá no toma not empty
+    //armo custom?
     private Neighbourhoods neighbourhood;
+    @NotEmpty
+    @Size(max = 255)
     private String location;
-    @Future
+
+    //no funciona @Future
+    //armar conversor para el formato de fecha
+    //formato que se acepta 'YYYY-MM-DDTHH:MM'
     private LocalDateTime date;
-    private String time;
-    private String serviceid;
-    private String businessid;
 
     public Neighbourhoods getNeighbourhood() {
         return neighbourhood;
@@ -26,18 +32,6 @@ public class AppointmentForm {
         return date;
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public String getServiceid() {
-        return serviceid;
-    }
-
-    public String getBusinessid() {
-        return businessid;
-    }
-
     public void setNeighbourhood(Neighbourhoods neighbourhood) {
         this.neighbourhood = neighbourhood;
     }
@@ -46,19 +40,9 @@ public class AppointmentForm {
         this.location = location;
     }
 
+    //ya probamos pasandole date pero no se toma
     public void setDate(String date) {
         this.date = LocalDateTime.parse(date);
     }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public void setServiceid(String serviceid) {
-        this.serviceid = serviceid;
-    }
-
-    public void setBusinessid(String businessid) {
-        this.businessid = businessid;
-    }
 }

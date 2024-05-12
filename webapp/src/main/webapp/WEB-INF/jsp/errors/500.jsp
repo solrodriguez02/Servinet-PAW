@@ -12,7 +12,7 @@
 <body>
 <div class="page">
 
-    <img class="img svg" src="${pageContext.request.contextPath}/resources/500.svg" alt="">
+    <img class="svg" src="${pageContext.request.contextPath}/resources/500.svg" alt="">
     <h2 class="header-text"><spring:message code="error.500"/></h2>
 
     <div class="align-center">
