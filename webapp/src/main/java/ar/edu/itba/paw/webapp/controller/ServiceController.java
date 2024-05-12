@@ -85,7 +85,6 @@ public class ServiceController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/crear-servicio/{businessId:\\d+}")
     public ModelAndView createService(@PathVariable("businessId") final long businessId, @Valid @ModelAttribute("serviceForm") final ServiceForm form, BindingResult errors) throws IOException {
-
         if (errors.hasErrors()) {
             return registerService(businessId, form);
         }
@@ -134,5 +133,4 @@ public class ServiceController {
         mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
         return mav;
     }
-
 }

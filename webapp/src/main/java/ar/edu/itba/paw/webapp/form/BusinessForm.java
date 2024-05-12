@@ -1,19 +1,27 @@
 package ar.edu.itba.paw.webapp.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class BusinessForm {
     @NotEmpty
-    @Size(max=255, message="El nombre del negocio no puede superar los 255 caracteres")
+    @Size(max=255)
     private String businessName;
+
     @NotEmpty
+    @Email
+    @Size(max=255)
     private String businessEmail;
+
     @NotEmpty
-    //regex? pueden haber varios formatos (se podría ver con front)
+    @Pattern(regexp = "^\\+(\\d{1,3})?\\s?9?\\s?(\\d{1,4})?\\s?(\\d{6,8})$")
+    @Size(max=255)
     private String businessTelephone;
+
     @NotEmpty
-    @Size(max=255, message="La ubicación del negocio no puede superar los 255 caracteres")
+    @Size(max=255)
     //regex? calle, altura, barrio(CABA), depto (?), piso (?) -> (?) opcionales
     private String businessLocation;
 

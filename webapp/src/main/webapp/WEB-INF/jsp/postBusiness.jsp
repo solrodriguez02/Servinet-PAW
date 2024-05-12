@@ -24,7 +24,7 @@
     <label>
         <p class="label"><spring:message code="business-email"/></p>
         <spring:message code="input.business-email" var="inputEmail"/>
-        <form:input type="email" class="input" path="businessEmail" placeholder="${inputEmail}" />
+        <form:input class="input" path="businessEmail" placeholder="${inputEmail}" />
         <form:errors path="businessEmail" cssClass="error" element="p"/>
     </label>
     <label>

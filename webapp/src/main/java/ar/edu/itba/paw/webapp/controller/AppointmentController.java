@@ -49,7 +49,10 @@ public class AppointmentController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/contratar-servicio/{serviceId:\\d+}")
-    public ModelAndView appointment(@PathVariable("serviceId") final long serviceId, @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors) {
+    public ModelAndView appointment(
+            @PathVariable("serviceId") final long serviceId,
+            @Valid @ModelAttribute("appointmentForm") AppointmentForm form, BindingResult errors
+    ){
         //todo: manejo de errores de ingreso del formulario (se lanzarían excepciones a nivel sql)
         if(errors.hasErrors()) {
             return hireService(serviceId, form);
@@ -59,7 +62,6 @@ public class AppointmentController {
         Appointment createdAppointment = appointmentService.create(serviceId,user.getName(),user.getSurname(),user.getEmail(),form.getLocation(),user.getEmail(), form.getDate().toString());
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
-
 
 
     @RequestMapping(method = RequestMethod.GET , path = "/rechazar-turno/{appointmentId:\\d+}")
