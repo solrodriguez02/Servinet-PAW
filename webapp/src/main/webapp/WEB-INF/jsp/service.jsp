@@ -152,6 +152,7 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
+                            <c:if test="${questionPage > 0 || questionsCount > questionPage*10+10}">
                             <c:choose>
                                 <c:when test="${questionPage > 0}">
                                     <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage-1}">
@@ -172,6 +173,7 @@
                                     <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                                 </c:otherwise>
                             </c:choose>
+                            </c:if>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -285,6 +287,7 @@
                         </c:if>
                     </c:when>
                     <c:otherwise>
+                        <c:if test="${reviewPage > 0 || reviewsCount > reviewPage*10+10}">
                         <c:choose>
                             <c:when test="${reviewPage > 0}">
                                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage-1}">
@@ -292,7 +295,7 @@
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
+                                    <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
@@ -305,6 +308,7 @@
                                 <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                             </c:otherwise>
                         </c:choose>
+                        </c:if>
                     </c:otherwise>
                 </c:choose>
                 </div>
