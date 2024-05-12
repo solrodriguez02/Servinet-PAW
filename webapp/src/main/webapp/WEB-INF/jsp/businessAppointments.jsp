@@ -11,6 +11,7 @@
 </head>
 <body>
 <c:set var="isUser" value="false" scope="request" />
+<c:set var="requestForBusiness" value="${!confirmed}" scope="request" />
 <div class="page">
     <div class="header">
         <h2><c:out value="${business.businessName}"/></h2>

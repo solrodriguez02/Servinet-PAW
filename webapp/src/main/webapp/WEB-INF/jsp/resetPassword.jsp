@@ -27,7 +27,9 @@
             <form:errors path="passwordConfirmation" cssClass="error" element="p"/>
             <form:input type="text" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}" required="true"/>
         </label>
-        <input type="submit" value="<spring:message code="reset-password.submit"/>" class="submitBtn"/>
+        <div class="align-center">
+            <input type="submit" value="<spring:message code="reset-password.submit"/>" class="btn submit-btn">
+        </div>
     </form:form>
 </div>
 </body>

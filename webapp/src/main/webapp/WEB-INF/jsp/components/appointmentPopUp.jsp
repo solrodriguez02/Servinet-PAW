@@ -11,17 +11,18 @@
 
 <div class="popup-contenedor" id="${id}">
     <div class="popup">
-        <h2>aaa</h2>
-        <p>aaa</p>
+
+        <h2><spring:message code="${requestForBusiness? 'popup.deny-appointment.title':'popup.appointment.title'}"/></h2>
+        <p><spring:message code="${isUser? 'popup.appointment.message':'popup.deny-appointment.message'}"/> </p>
 
         <div class="btns-box">
             <button class="cancelLinedBtn" onclick="closePopup(${id})"><spring:message code="popup.cancel"/></button>
             <c:choose>
-                <c:when test="${confirmed}">
-                    <button class="cancelBtn" onclick="cancelAppointment(${appointmentId},${loop.count})">Cancelar</button>
+                <c:when test="${requestForBusiness}">
+                    <button class="cancelBtn" onclick="acceptAppointment(${appointmentId},false,${loop.count})"><spring:message code="popup.appointment.deny"/></button>
                 </c:when>
                 <c:otherwise>
-                    <button class="cancelBtn" onclick="acceptAppointment(${appointmentId},false,${loop.count})">Rechazar</button>
+                    <button class="cancelBtn" onclick="cancelAppointment(${appointmentId},${loop.count})"><spring:message code="popup.appointment.cancel"/></button>
                 </c:otherwise>
             </c:choose>
         </div>

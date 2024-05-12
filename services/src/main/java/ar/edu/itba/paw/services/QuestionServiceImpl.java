@@ -7,6 +7,8 @@ import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.QuestionNotFoundException;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class QuestionServiceImpl implements  QuestionService {
     private final UserService userService;
     private final ServiceService serviceService;
     private final BusinessService businessService;
+    private final Logger LOGGER = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     @Autowired
     public QuestionServiceImpl(final QuestionDao questionDao, final EmailService emailService,
@@ -60,7 +63,7 @@ public class QuestionServiceImpl implements  QuestionService {
         try {
             emailService.askedQuestion( service, businessEmail, user, questionString);
         } catch (MessagingException e ){
-            System.err.println(e.getMessage());
+            LOGGER.warn("Error sending email with question: " + e.getMessage());
         }
         return question;
     }
@@ -77,7 +80,7 @@ public class QuestionServiceImpl implements  QuestionService {
             emailService.answeredQuestion(service, user, question.getQuestion(), response );
 
         } catch (MessagingException e ){
-            System.err.println(e.getMessage());
+            LOGGER.warn("Error sending email with response: " + e.getMessage());
         }
 
     }
