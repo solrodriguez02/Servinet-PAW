@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,7 @@ public class ServiceServiceImpl implements ServiceService {
         if (!optionalService.isPresent())
             return;
         final Service service = optionalService.get();
-        final Business business = businessDao.findById(service.getBusinessid()).get();
+        final Business business = businessDao.findById(service.getBusinessid()).orElseThrow(UserNotFoundException::new);
 
         delete(service,business);
     }
@@ -96,7 +97,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
              for ( Appointment appointment : appointmentList){
-                 User client = userService.findById( appointment.getUserid()).get();
+                 User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
                 if (appointment.getConfirmed())
                     emailService.cancelledAppointment(appointment,service,business,client,true);

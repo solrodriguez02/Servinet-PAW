@@ -2,13 +2,13 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.PasswordRecoveryCode;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
     @Transactional
     @Override
     public void sendCode(String email) {
-        User user = userService.findByEmail(email).get();
+        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
         PasswordRecoveryCode passwordRecoveryCode = generateCode(user.getUserId());
         emailService.recoverPassword(user, passwordRecoveryCode);
     }
@@ -61,7 +61,7 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
         if (passwordRecoveryCode == null){
             return;
         }
-        User user = userService.findById(passwordRecoveryCode.getUserId()).get();
+        User user = userService.findById(passwordRecoveryCode.getUserId()).orElseThrow(UserNotFoundException::new);
         userService.changePassword(user.getEmail(), newPassword);
         LOGGER.info("Password changed successfully");
         deleteCode(passwordRecoveryCode.getUserId());
