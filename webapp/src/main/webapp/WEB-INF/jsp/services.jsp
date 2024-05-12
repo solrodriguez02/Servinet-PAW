@@ -90,18 +90,10 @@
         <div class="content">
             <c:choose>
                 <c:when test="${isServicesEmpty}">
-                    <div class="content">
-                        <div class="not-found-page">
-                            <p class="not-found-text"><i class="material-icons">search_off</i><spring:message code="services.no-search-results"/></p>
-                        </div>
-                        <div class="align-center">
-                            <a class="none-decoration" href="${pageContext.request.contextPath}/">
-                                <button class="btn">
-                                    <label class="btn-text"><spring:message code="invalid.back-to-home"/></label>
-                                </button>
-                            </a>
-                        </div>
-                    </div>
+                    <c:set var="urlCallToAction" value="${pageContext.request.contextPath}/" scope="request" />
+                    <c:set var="textCallToAction" scope="request"><spring:message code="invalid.back-to-home"/></c:set>
+                    <c:set var="message" scope="request"><spring:message code="services.no-search-results"/></c:set>
+                    <jsp:include page="components/noResults.jsp"/>
                 </c:when>
                 <c:otherwise>
                     <div class="services-container">

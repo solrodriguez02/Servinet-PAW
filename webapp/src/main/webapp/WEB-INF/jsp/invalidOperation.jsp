@@ -26,6 +26,9 @@
         <c:when test="${argument == 'negocionoexiste'}">
             <h2 class="header-text"><spring:message code="invalid.business"/></h2>
         </c:when>
+        <c:when test="${argument == 'preguntanoexiste'}">
+            <h2 class="header-text"><spring:message code="invalid.question"/></h2>
+        </c:when>
 
 
     </c:choose>

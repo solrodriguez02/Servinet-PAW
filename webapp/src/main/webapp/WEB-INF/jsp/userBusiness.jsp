@@ -27,9 +27,9 @@
 
     <div class="boxes-container">
         <c:forEach items="${businessList}" var="business" varStatus="loop">
-            <div class="service-container">
+            <div class="business-container">
                 <a class="none-decoration" href="${pageContext.request.contextPath}/negocio/${business.businessid}">
-                    <div class="service-box box">
+                    <div class="business-box box">
                         <!--img class="preview-box-img" src="${pageContext.request.contextPath}/images/{business.imageId}" alt="Imagen del servicio"-->
                         <p class="preview-box-text"><c:out value="${business.businessName}"/></p>
                     </div>

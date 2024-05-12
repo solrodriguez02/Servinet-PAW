@@ -46,6 +46,22 @@
             justify-content: center;
             margin-top: 10px;
         }
+        .question-or-answer-container {
+            margin: 0 auto;
+            border-radius: 8px;
+            max-width: 400px;
+            align-items: center;
+            background: #efefef;
+            font-style: italic;
+            padding: 25px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        u {
+            font-style: normal;
+            color: #585bfa;
+        }
     </style>
 </head>
 <body class="bg">
@@ -55,28 +71,45 @@
     </div>
     <div>
         <p>
-            Estimado,
+            Estimado<span th:if="${isClient}" th:text="' '+${client.getFullName()}"/>,
         </p>
         <div>
 
-            El servicio <span th:text="${serviceName}"/> ha sido <span th:switch="${type}">
-                <span th:case="'CREATED'">
-                    Ha recibido una consulta sobre uno de sus servicios.
-                    Si desea contestarla puede vi
-                </span>
-                <span th:case="*">
-                    Su pregunta ha sido enviada exitosamente. La respuesta del
-                    <p>
-                    Si desea crear un nuevo servicio, haga click <a th:href="${url}+'registrar-datos-personales'">aqui</a>.
-                    </p>
-                </span>
-            </span>
-
-            <div class="btn-container" th:if="${type == 'CREATED'}">
-                <a th:href="${url}+'servicio/'+${serviceId}">
-                    <button class="btn confirm">Ver servicio</button>
-                </a>
+            <div th:switch="${type}">
+                <div th:case="'ASKED'">
+                    <div th:switch="${isClient}">
+                        <span th:case="${true}">
+                            Su pregunta para el servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> ha sido enviada exitosamente. Cuando sea contestada, será notificado.
+                        </span>
+                        <div th:case="*">
+                            El servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> ha recibido la siguiente consulta:
+                            <div class="question-or-answer-container">
+                                "<span th:text="${question}"/>"
+                            </div>
+                            Si desea contestarla haga click en
+                            <div class="btn-container">
+                                <a th:href="${url}+'negocios/consultas'">
+                                    <button class="btn confirm">Ver pregunta</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:case="*">
+                    Su consulta para el servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/>
+                    <div class="question-or-answer-container">
+                            "<span th:text="${question}"/>"
+                    </div>
+                    recibió esta respuesta del servicio:
+                    <div class="question-or-answer-container">
+                        "<span th:text="${response}"/>"
+                    </div>
+                </div>
             </div>
+            <p th:if="${isClient}">
+                Si deseao hacer otra pregunta u obtener más información sobre el servicio, haga click  <a th:href="${url}+'servicio/'+${serviceId}">aqui</a>.
+            </p>
+
         </div>
     </div>
 </div>

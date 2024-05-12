@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ServiceDao {
+
     List<Service> getAllServices();
     Optional<Service> findById(long id);
     Optional<BasicService> findBasicServiceById(long id);

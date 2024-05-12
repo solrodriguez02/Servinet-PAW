@@ -44,7 +44,7 @@
 .preview-box {
     height: 180px;
     border-radius: 15px;
-    padding: 25px;
+    padding: 10px;
     width: 190px;
     margin: 25px;
     display: flex;
@@ -125,7 +125,6 @@
 }
 
 .new-service {
-    width: 190px;
     background-color: #585bfa;
     color: white;
     display: flex;
@@ -136,21 +135,22 @@
     padding: 0 25px;
 }
 
-.service-container {
-    height: 200px;
-    margin-right: 40px;
+.business-container {
+    height: 180px;
+    margin: 25px;
+    width: 210px;
 }
 
-.service-box {
+.business-box {
     border-radius: 15px 15px 0 0;
-    height: 180px;
+    height: 140px;
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.service-box:hover {
+.business-box:hover {
     background-color: #efefef;
 }
 

@@ -1,7 +1,14 @@
 package ar.edu.itba.paw.services;
 
+import ar.edu.itba.paw.model.BasicService;
 import ar.edu.itba.paw.model.Question;
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
+import ar.edu.itba.paw.model.exceptions.QuestionNotFoundException;
+import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,13 +24,19 @@ public class QuestionServiceImpl implements  QuestionService {
     private final QuestionDao questionDao;
     private final EmailService emailService;
     private final UserService userService;
+    private final ServiceService serviceService;
+    private final BusinessService businessService;
+    private final Logger LOGGER = LoggerFactory.getLogger(QuestionServiceImpl.class);
 
     @Autowired
     public QuestionServiceImpl(final QuestionDao questionDao, final EmailService emailService,
-                               final UserService userService) {
+                               final UserService userService, final ServiceService serviceService,
+                               final BusinessService businessService) {
         this.questionDao = questionDao;
         this.emailService = emailService;
         this.userService = userService;
+        this.serviceService = serviceService;
+        this.businessService = businessService;
     }
 
     @Transactional(readOnly = true)
@@ -42,25 +55,34 @@ public class QuestionServiceImpl implements  QuestionService {
 
     @Transactional
     @Override
-    public Question create(long serviceid, long userid, String question) {
-        return questionDao.create(serviceid, userid, question);
+    public Question create(long serviceid, long userid, String questionString) {
+        Question question = questionDao.create(serviceid, userid, questionString);
+        BasicService service = serviceService.findBasicServiceById(serviceid).orElseThrow(ServiceNotFoundException::new);
+        String businessEmail = businessService.getBusinessEmail(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
+        User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
+        try {
+            emailService.askedQuestion( service, businessEmail, user, questionString);
+        } catch (MessagingException e ){
+            LOGGER.warn("Error sending email with question: " + e.getMessage());
+        }
+        return question;
     }
 
     @Transactional
     @Override
     public void addResponse(long id, String response) {
         questionDao.addResponse(id, response);
-        Question question = questionDao.findById(id).get();
-        User user = userService.findById(question.getUserid()).get();
-        // todo
-        /*
+        Question question = questionDao.findById(id).orElseThrow(QuestionNotFoundException::new);
+        BasicService service = serviceService.findBasicServiceById(question.getServiceid()).orElseThrow(ServiceNotFoundException::new);
+        User user = userService.findById(question.getUserid()).orElseThrow(UserNotFoundException::new);
+
         try {
-            emailService.answeredQuestion(user, response);
+            emailService.answeredQuestion(service, user, question.getQuestion(), response );
 
         } catch (MessagingException e ){
-            System.err.println(e.getMessage());
+            LOGGER.warn("Error sending email with response: " + e.getMessage());
         }
-         */
+
     }
 
     @Transactional(readOnly = true)

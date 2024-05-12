@@ -13,11 +13,12 @@ public interface BusinessService {
 
     List<Business> findByAdminId(long adminId);
 
+    Optional<String> getBusinessEmail(long businessid);
+
     void deleteBusiness(long businessid);
 
     void changeBusinessEmail(long businessId, String value);
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);
 
-    boolean isBusinessOwner(long businessId, long userId);
 }
