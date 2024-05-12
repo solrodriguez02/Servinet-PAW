@@ -81,8 +81,14 @@
                     </button>
                 </c:if>
             </div>
+            <c:url value="/servicios" var="filtersRemove">
+                <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
+                <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
+            </c:url>
+            <a class="none-decoration" href="${filtersRemove}">
+                <p class="remove-filters"><i class="material-icons">filter_alt_off</i><spring:message code="services.remove-all-filters"/></p>
+            </a>
         </c:if>
-
         <p class="comment"> <spring:message code="services.search-results" arguments="${resultsAmount}"/></p>
     </div>
 
