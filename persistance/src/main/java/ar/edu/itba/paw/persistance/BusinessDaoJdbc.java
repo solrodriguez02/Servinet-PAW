@@ -59,11 +59,23 @@ public class BusinessDaoJdbc implements BusinessDao {
 
     @Override
     public void deleteBusiness(long businessid) {
+        Optional<Business> business = findById(businessid);
+        if (business.isEmpty()) {
+            LOGGER.warn("Business not found");
+            return;
+        }
+        long userId = business.get().getUserId();
         try {
             jdbcTemplate.update("delete from business where businessid = ?", businessid);
             LOGGER.info("Business successfully deleted");
         }catch (DataAccessException e){
             LOGGER.warn("Error deleting business: {}", e.getMessage());
+        }
+        Optional<Integer> count = jdbcTemplate.query("select count(*) from business where userid= ?", new Object[] {userId}, (rs, rowNum) -> rs.getInt(1)).stream().findFirst();
+        if(count.get() == 0){
+            //podría usarse la de userDao
+            jdbcTemplate.update("update users set isprovider = false where userid = ?", userId);
+            LOGGER.info("User status updated");
         }
     }
     private void changeField(final String field, long businessId, String value) {

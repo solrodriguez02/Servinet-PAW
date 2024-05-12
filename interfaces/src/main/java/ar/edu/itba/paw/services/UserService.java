@@ -10,6 +10,7 @@ public interface UserService {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
     void makeProvider(User user);
+    void revokeProviderRole(User user);
     User create(String username, String name,String surname, String password, String email, String telephone);
     void changeUsername(long userid,String value);
     void changeUserType(long userid);

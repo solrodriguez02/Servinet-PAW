@@ -67,6 +67,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    public void revokeProviderRole(User user){
+            List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+            org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));
+    }
+
+    @Transactional
     @Override
     public User create(final String username,final String name, final String surname, final String password, final String email, final String telephone) {
         User user = userDao.findByEmail(email).orElse(null);
