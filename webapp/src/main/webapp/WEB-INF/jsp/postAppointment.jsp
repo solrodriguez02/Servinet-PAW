@@ -13,7 +13,7 @@
 <c:url value="/contratar-servicio/${serviceId}" var="postUrl"/>
 <div class="postForm page">
     <form:form action="${postUrl}" method="post" class="form" modelAttribute="appointmentForm">
-        <h3 class="form-title above-dropdown"><spring:message code="appointment.create" arguments="${service.name}"/></h3>
+        <h3 class="form-title above-dropdown"><spring:message code="appointment.create"/> <c:out value="${service.name}"/> </h3>
 
         <!--
         <label>
