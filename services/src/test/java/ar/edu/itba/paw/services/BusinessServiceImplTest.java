@@ -25,7 +25,7 @@ public class BusinessServiceImplTest {
     private static final String TELEPHONE = "123456789";
     private static final String LOCALE = "en";
     private static final String EMAIL = "mail@mail.com";
-    private static final String LOCATION = null;
+    private static final String LOCATION = "location";
 
     @InjectMocks
     private BusinessServiceImpl businessService;

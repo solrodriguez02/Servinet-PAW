@@ -25,7 +25,7 @@
                             <c:if test="${not empty param.page}"><c:param name="page" value="${param.page}" /></c:if>
                             <c:param name="categoria" value="${category.value}"/>
                         </c:url>
-                        <a href="${categoryChange}">${category.value}</a>
+                        <a href="${categoryChange}"><spring:message code="${category.codeMsg}"/></a>
                     </c:forEach>
                 </div>
             </div>

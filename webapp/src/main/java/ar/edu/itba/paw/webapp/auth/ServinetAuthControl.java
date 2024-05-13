@@ -2,11 +2,14 @@ package ar.edu.itba.paw.webapp.auth;
 
 import ar.edu.itba.paw.model.Appointment;
 import ar.edu.itba.paw.model.Business;
+import ar.edu.itba.paw.model.Service;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
+import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.services.AppointmentService;
 import ar.edu.itba.paw.services.BusinessService;
+import ar.edu.itba.paw.services.ServiceService;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,18 +24,20 @@ import java.util.Optional;
 @Component
 public class ServinetAuthControl {
 
-    private UserService userService;
-    private AppointmentService appointmentService;
-    private BusinessService businessService;
+    private final UserService userService;
+    private final AppointmentService appointmentService;
+    private final BusinessService businessService;
+    private final ServiceService ss;
     @Autowired
     public ServinetAuthControl(@Qualifier("userServiceImpl") final UserService userService,
                                @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
-                               @Qualifier("BusinessServiceImpl") final BusinessService businessService){
+                               @Qualifier("BusinessServiceImpl") final BusinessService businessService,
+                               @Qualifier("serviceServiceImpl") final ServiceService ss){
         this.userService = userService;
         this.appointmentService = appointmentService;
         this.businessService = businessService;
+        this.ss=ss;
     }
-
 
     @Transactional
     public Optional<String> getCurrentUserEmail() {
@@ -42,6 +47,16 @@ public class ServinetAuthControl {
             return Optional.of(context.getAuthentication().getName());
         }
         return Optional.empty();
+    }
+    @Transactional(readOnly = true)
+    public boolean isServiceOwner(long serviceId){
+        User user=getCurrentUser().orElseThrow(UserNotFoundException::new);
+        Optional<Service> service =ss.findById(serviceId);
+        if(service.isEmpty()){
+            return false;
+        }
+       Business business = businessService.findById(service.get().getBusinessid()).orElseThrow(BusinessNotFoundException::new);
+        return business.getUserId() == user.getUserId();
     }
 
     @Transactional(readOnly = true)
