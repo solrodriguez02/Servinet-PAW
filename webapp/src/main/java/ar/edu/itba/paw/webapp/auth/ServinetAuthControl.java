@@ -10,6 +10,7 @@ import ar.edu.itba.paw.services.BusinessService;
 import ar.edu.itba.paw.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -69,4 +70,12 @@ public class ServinetAuthControl {
         return userService.findByEmail(mayBeEmail.get());
     }
 
+    public boolean isLoggedIn(){
+        return !getCurrentUser().isEmpty();
+    }
+
+    public boolean isProvider(){
+        Optional<User> user = getCurrentUser();
+        return user.map(User::isProvider).orElse(false);
+    }
 }

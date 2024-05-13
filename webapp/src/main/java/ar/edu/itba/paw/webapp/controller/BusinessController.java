@@ -43,7 +43,6 @@ public class BusinessController {
         this.appointmentService = appointmentService;
         this.userService = userService;
         this.authControl = authControl;
-
     }
 
 
@@ -110,22 +109,6 @@ public class BusinessController {
         mav.addObject("confirmed",confirmed);
         return mav;
     }
-
-    // TODO
-    /*
-    @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}/turnos/")
-    public List<Appointment> getMoreAppointments(@PathVariable("businessId") final long businessId,
-                                                   @RequestParam(name = "confirmed") final boolean confirmed ) {
-        Optional<List<Service>> services = serviceService.getAllBusinessServices(businessId);
-        Optional<List<Appointment>> appointmentsRequested = Optional.of(new ArrayList<>());
-        List<Long> serviceIds = new ArrayList<>();
-        if ( services.isPresent()){
-            services.get().forEach(service -> serviceIds.add(service.getId()));
-            appointmentsRequested = appointmentService.getAllUpcomingServicesAppointments(serviceIds, confirmed);
-        }
-        return appointmentsRequested.orElse(new ArrayList<>());
-    }
-    */
 
     @RequestMapping(method = RequestMethod.POST, path = "negocio/{businessId:\\d+}/solicitud-turno/{appoinmentId:\\d+}")
     public void acceptOrDenyAppointment(@PathVariable(value = "businessId") final long businessId,

@@ -101,31 +101,6 @@ public class ServinetController {
     }
 
 
-    // @RequestMapping(method = RequestMethod.GET, path = "/publicar-servicio/{businessId:\\d+}")
-    // public ModelAndView postForm(@PathVariable("businessId") final long businessId){
-    //     final ModelAndView mav = new ModelAndView("postService");
-    //     mav.addObject("pricingTypes",pricingTypes);
-    //     mav.addObject("neighbours",neighbourhoods);
-    //     return mav;
-    // }
-
-//@RequestMapping(method = RequestMethod.GET, path="/publicar")
-//    public ModelAndView publish() {
-//@RequestParam(value = "nombre-negocio") final String businessName,
-//@RequestParam(value = "email-negocio") final String businessEmail,
-//@RequestParam(value = "telefono-negocio") final String businessTelephone,
-//@RequestParam(value = "ubicacion-negocio") final String businessLocation
-        // Business newBusiness = bs.findByBusinessName(businessName).orElse(null);
-        // if (newBusiness == null) {
-        //     String finalBusinessName = businessName.equals("") ? String.format("Servinet de %s %s", name, surname) : businessName;
-        //     String finalBusinessEmail = businessEmail.equals("") ? email : businessEmail;
-        //     String finalBusinessTelephone = businessTelephone.equals("") ? telephone : businessTelephone;
-        //     newBusiness = bs.createBusiness(finalBusinessName, newuser.getUserId(), finalBusinessTelephone, finalBusinessEmail, businessLocation);
-        // }else {
-        //     if (newBusiness.getUserId() != newuser.getUserId()){
-        //         return new ModelAndView("redirect:/registrar-datos-personales");
-        //     }
-        // }
     @RequestMapping(method = RequestMethod.POST, path = "/registrarse")
     public ModelAndView post(@ModelAttribute @Valid final RegisterUserForm form, final BindingResult errors
     ) {
