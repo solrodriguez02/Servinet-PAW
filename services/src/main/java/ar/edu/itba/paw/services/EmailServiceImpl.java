@@ -212,22 +212,32 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale) throws MessagingException{
+    public void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale) {
         setLocale(client.getLocale());
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName", service.getName());
         ctx.setVariable("client", client);
         ctx.setVariable("question", question);
-        sendMailToClient(EmailTypes.ASKED_QUESTION, client.getEmail(), ctx );
+        LOGGER.info("Preparing new question notification mail for client");
+        try {
+            sendMailToClient(EmailTypes.ASKED_QUESTION, client.getEmail(), ctx );
+        }catch(MessagingException e){
+            LOGGER.warn("Error while preparing new question notification email: {}", e.getMessage());
+        }
         setLocale(businessLocale);
         ctx.setLocale(LOCALE);
-        sendMailToBusiness(EmailTypes.ASKED_QUESTION, businessEmail, ctx );
+        LOGGER.info("Preparing new question notification mail for  business owner");
+        try {
+            sendMailToBusiness(EmailTypes.ASKED_QUESTION, businessEmail, ctx );
+        }catch(MessagingException e){
+            LOGGER.warn("Error while preparing new question notification email: {}", e.getMessage());
+        }
     }
 
     @Async
     @Override
-    public void answeredQuestion(BasicService service, User client, String question, String response) throws MessagingException{
+    public void answeredQuestion(BasicService service, User client, String question, String response) {
         setLocale(client.getLocale());
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
@@ -235,7 +245,12 @@ public class EmailServiceImpl implements EmailService{
         ctx.setVariable("client", client);
         ctx.setVariable("question", question);
         ctx.setVariable("response", response);
-        sendMailToClient(EmailTypes.ANSWERED_QUESTION, client.getEmail(), ctx );
+        LOGGER.info("Preparing question answer notification mail for client");
+        try {
+            sendMailToClient(EmailTypes.ANSWERED_QUESTION, client.getEmail(), ctx );
+        }catch(MessagingException e){
+            LOGGER.warn("Error while preparing question answer notification email: {}", e.getMessage());
+        }
     }
 
     public void sendMailToClient( EmailTypes emailType, String userMail, Context ctx) throws MessagingException {
