@@ -45,9 +45,6 @@
                         </c:if>
                     </div>
                     <p class="text-with-icon"> <i class="material-icons icon">location_on</i>
-                        <c:if test="${not empty service.location}">
-                            <c:out value="${service.location}, "/>
-                        </c:if>
                         <c:forEach var="neighbour" items="${service.neighbourhoodAvailable}">
                             <c:out value="${neighbour}"/>
                         </c:forEach>
@@ -58,7 +55,9 @@
                                 <spring:message code="service.at-home"/>
                             </c:when>
                             <c:otherwise>
-                                <spring:message code="service.at-professional-house"/>
+                                <c:if test="${not empty service.location}">
+                                    <c:out value="${service.location}"/>
+                                </c:if>
                             </c:otherwise>
                         </c:choose>
                     </p>
