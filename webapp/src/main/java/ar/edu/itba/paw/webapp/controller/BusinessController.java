@@ -146,7 +146,7 @@ public class BusinessController {
     @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}")
     public ModelAndView businesses(
             @PathVariable("businessId") final long businessId,
-            @ModelAttribute("businessForm") final BusinessForm form
+            @ModelAttribute("BusinessForm") final BusinessForm form
     ) {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
@@ -163,7 +163,7 @@ public class BusinessController {
 
     @RequestMapping(method = RequestMethod.POST, path = "/{businessId:\\d+}/editar-negocio")
     public ModelAndView editBusiness (
-            @Valid @ModelAttribute("businessForm") BusinessForm form, final BindingResult errors,
+            @Valid @ModelAttribute("BusinessForm") BusinessForm form, final BindingResult errors,
             @PathVariable("businessId") final long businessId
     ){
         if(errors.hasErrors()) {

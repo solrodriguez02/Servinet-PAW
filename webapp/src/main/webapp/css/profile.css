@@ -169,7 +169,7 @@
 }
 
 .business-info-container {
-    padding: 20px;
+    padding: 20px 40px;
 }
 
 .business-info-text {
@@ -185,3 +185,21 @@
     margin-right: 10px;
 }
 
+.business-input {
+    border-radius: 10px !important;
+    width: 80% !important;
+}
+
+.input-box {
+    margin: 12px 0;
+}
+
+.edit-business-btn {
+    padding: 10px 15px !important;
+    margin-top: 20px;
+    font-size: 14px !important;;
+}
+
+.errors {
+    margin-top: 15px;
+}

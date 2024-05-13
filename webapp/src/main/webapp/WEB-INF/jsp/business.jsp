@@ -58,20 +58,34 @@
         <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
       </div>
       <c:if test="${isOwner}">
-        <div id="edit-business" class="transparent">
-          <c:url value="/${businessId}/editar-negocio" var="editBusiness"/>
-          <form:form action="${editBusiness}" method="post" modelAttribute="businessForm">
+        <c:url value="/${businessId}/editar-negocio" var="editBusiness"/>
+        <form:form action="${editBusiness}" method="post" modelAttribute="BusinessForm">
+          <div id="edit-business" class="transparent">
             <form:input path="businessName" type="text" value="${business.name}" class="transparent"/>
-            <form:errors path="businessName" cssClass="error"/>
-            <form:input path="businessEmail" type="text" value="${business.email}"/>
-            <form:errors path="businessEmail" cssClass="error"/>
-            <form:input path="businessTelephone" type="text" value="${business.telephone}"/>
-            <form:errors path="businessTelephone" cssClass="error"/>
-            <form:input path="businessLocation" type="text" value="${business.location}"/>
-            <form:errors path="businessLocation" cssClass="error"/>
-            <button type="submit" class="btn"><spring:message code="business.save-changes"/></button>
-          </form:form>
-        </div>
+            <div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">mail</i>
+                <form:input path="businessEmail" type="text" value="${business.email}" class="input business-input"/>
+              </div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">call</i>
+                <form:input path="businessTelephone" type="text" value="${business.telephone}" class="input business-input"/>
+              </div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">location_on</i>
+                <form:input path="businessLocation" type="text" value="${business.location}" class="input business-input"/>
+              </div>
+              <div class="align-center">
+                <button type="submit" class="btn edit-business-btn"><spring:message code="business.save-changes"/></button>
+              </div>
+            </div>
+          </div>
+          <div class="errors">
+            <p><form:errors path="businessEmail" cssClass="error"/></p>
+            <p><form:errors path="businessTelephone" cssClass="error"/></p>
+            <p><form:errors path="businessLocation" cssClass="error"/></p>
+          </div>
+        </form:form>
       </c:if>
     </div>
   </div>
