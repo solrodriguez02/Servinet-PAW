@@ -65,7 +65,8 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override
     public int getQuestionsCount(long serviceid) {
-        return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM questions WHERE serviceId = ?", Integer.class, serviceid);
+       Integer count = jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM questions WHERE serviceId = ?", Integer.class, serviceid);
+        return count == null? 0: count;
     }
 
     @Override

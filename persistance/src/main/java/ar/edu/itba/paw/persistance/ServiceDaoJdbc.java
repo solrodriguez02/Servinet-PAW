@@ -138,12 +138,14 @@ public class ServiceDaoJdbc implements ServiceDao {
     public int getServiceCount(String category, String[] location, int rating, String searchQuery) {
         FilterArgument filterArgument = new FilterArgument().addCategory(category).addLocation(location).addSearch(searchQuery).addRating(rating);
         Object[] values = filterArgument.getValues().toArray();
+        Integer count;
         if(values.length==0){
-            return jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);
-
+            count = jdbcTemplate.queryForObject("SELECT count(id) from services", Integer.class);
+            return count == null ? 0 : count;
         }
         String sqlQuery=  filterArgument.formSqlSentence("SELECT count(id) from (select s.* ,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id) ");
-        return jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
+        count = jdbcTemplate.queryForObject(sqlQuery, Integer.class,values);
+        return count == null ? 0 : count;
     }
 
     @Override

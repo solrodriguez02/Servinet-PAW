@@ -62,7 +62,8 @@ public class RatingDaoJdbc implements RatingDao {
 
     @Override
     public int getRatingsCount(long serviceid) {
-        return jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM ratings WHERE serviceId = ?", Integer.class, serviceid);
+        Integer count= jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM ratings WHERE serviceId = ?", Integer.class, serviceid);
+        return count == null ? 0 : count;
     }
 
     @Override
