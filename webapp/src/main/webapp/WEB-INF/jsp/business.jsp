@@ -42,10 +42,31 @@
 
   <div class="business-info box">
     <div class="business-info-container">
-      <h3><spring:message code="business.contact"/></h3>
-      <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
-      <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
-      <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+      <div class="flex">
+        <h3><spring:message code="business.contact"/></h3>
+        <div class="align-right">
+          <button class="edit-btn" onclick="editBusiness()" id="toggle-btn"><spring:message code="business.edit"/></button>
+        </div>
+      </div>
+      <div id="business-info">
+        <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
+        <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
+        <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+      </div>
+      <div id="edit-business" class="transparent">
+        <c:url value="/${businessId}/editar-negocio" var="editBusiness"/>
+        <form:form action="${editBusiness}" method="post" modelAttribute="businessForm">
+          <form:input path="businessName" type="text" value="${business.name}" class="transparent"/>
+          <form:errors path="businessName" cssClass="error"/>
+          <form:input path="businessEmail" type="text" value="${business.email}"/>
+          <form:errors path="businessEmail" cssClass="error"/>
+          <form:input path="businessTelephone" type="text" value="${business.telephone}"/>
+          <form:errors path="businessTelephone" cssClass="error"/>
+          <form:input path="businessLocation" type="text" value="${business.location}"/>
+          <form:errors path="businessLocation" cssClass="error"/>
+          <button type="submit" class="btn"><spring:message code="business.save-changes"/></button>
+        </form:form>
+      </div>
     </div>
   </div>
 
@@ -70,8 +91,29 @@
 </body>
 
 <script>
+
+  var cancelText = "<spring:message code='service.cancel'/>";
+  var editText = "<spring:message code='business.edit'/>";
+
   function showPopUp() {
     document.getElementById("popup").style.display = "block";
   }
+
+  function editBusiness() {
+    var showInfo = document.getElementById('business-info');
+    var showEdit = document.getElementById('edit-business');
+    var toggleButton = document.getElementById('toggle-btn');
+
+    if (showInfo.classList.contains('transparent')) {
+      showInfo.classList.remove('transparent');
+      showEdit.classList.add('transparent');
+      toggleButton.textContent = editText;
+    } else {
+      showInfo.classList.add('transparent');
+      showEdit.classList.remove('transparent');
+      toggleButton.textContent = cancelText;
+    }
+  }
+
 </script>
 </html>

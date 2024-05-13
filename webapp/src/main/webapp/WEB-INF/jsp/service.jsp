@@ -204,7 +204,7 @@
                                     </div>
                                     <p class="date"><c:out value="${hasAlreadyRated.date}"/></p>
                                     <div class="align-right">
-                                        <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.edit-review"/></button>
+                                        <button class="edit-btn" onclick="toggleUserReview()"><spring:message code="service.edit-review"/></button>
                                     </div>
                                 </div>
                                 <p class="text"><c:out value="${hasAlreadyRated.comment}"/></p>
@@ -216,7 +216,7 @@
                                             <i class="material-icons star" onclick="selectRate(${i})">star</i>
                                         </c:forEach>
                                         <div class="align-right">
-                                            <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
+                                            <button class="edit-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
                                         </div>
                                     </div>
                                     <form:input path="editedRating" type="hidden" id="rating" value="${hasAlreadyRated.comment}"/>
