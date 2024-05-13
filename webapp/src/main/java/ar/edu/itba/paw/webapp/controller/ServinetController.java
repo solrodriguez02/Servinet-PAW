@@ -19,7 +19,7 @@ import java.util.*;
 
 
 @Controller
-@Qualifier("HelloWorldController")
+@Qualifier("ServinetController")
 public class ServinetController {
 
     private UserService us;
