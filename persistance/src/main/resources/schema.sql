@@ -12,6 +12,9 @@ CREATE TABLE IF NOT EXISTS users (
     isprovider boolean NOT NULL DEFAULT FALSE
 );
 
+ALTER TABLE users ADD COLUMN IF NOT EXISTS locale varchar(10) DEFAULT 'en' NOT NULL;
+
+
 CREATE TABLE IF NOT EXISTS business(
   businessid SERIAL PRIMARY KEY,
   userid INT references users(userid) ON DELETE CASCADE,
