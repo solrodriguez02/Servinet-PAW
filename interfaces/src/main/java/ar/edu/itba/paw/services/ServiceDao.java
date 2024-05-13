@@ -12,7 +12,7 @@ public interface ServiceDao {
     Optional<BasicService> findBasicServiceById(long id);
 
     Service create(long businessid, String name, String description, boolean homeservice, String location, Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, boolean additionalCharges, long imageId);
-    Service edit(long serviceid, String field, String newvalue);
+    Service editServiceName(long serviceid, String newvalue);
 
     List<BasicService> getAllBusinessBasicServices(long businessId);
     List<Service> getAllBusinessServices(long businessId);

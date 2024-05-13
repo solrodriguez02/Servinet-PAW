@@ -68,8 +68,8 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Transactional
     @Override
-    public Service edit(long serviceid, String field, String newvalue) {
-        return serviceDao.edit(serviceid, field, newvalue);
+    public Service editServiceName(long serviceid, String newvalue) {
+        return serviceDao.editServiceName(serviceid,newvalue);
     }
 
     @Transactional(readOnly = true)

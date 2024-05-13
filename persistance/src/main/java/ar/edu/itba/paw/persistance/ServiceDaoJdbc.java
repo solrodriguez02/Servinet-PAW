@@ -102,7 +102,11 @@ public class ServiceDaoJdbc implements ServiceDao {
     }
 
     @Override
-    public Service edit(long serviceid, String field, String newvalue) {
+    public Service editServiceName(long serviceid,String newvalue){
+       return edit(serviceid, "servicename", newvalue);
+    }
+
+    private Service edit(long serviceid, String field, String newvalue) {
            jdbcTemplate.update(String.format("update services set  %s  = ? where id= ? ", field), newvalue, serviceid);
            return findById(serviceid).orElseThrow(ServiceNotFoundException::new);
     }
