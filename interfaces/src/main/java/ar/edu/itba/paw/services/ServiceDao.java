@@ -13,6 +13,7 @@ public interface ServiceDao {
 
     Service create(long businessid, String name, String description, boolean homeservice, String location, Neighbourhoods[] neighbourhoods, Categories category, int minimalduration, PricingTypes pricing, String price, boolean additionalCharges, long imageId);
     Service editServiceName(long serviceid, String newvalue);
+    void editService(long serviceId, String newDescription, int newDuration, PricingTypes newPricingType, String newPrice, boolean newAdditionalCharges);
 
     List<BasicService> getAllBusinessBasicServices(long businessId);
     List<Service> getAllBusinessServices(long businessId);
