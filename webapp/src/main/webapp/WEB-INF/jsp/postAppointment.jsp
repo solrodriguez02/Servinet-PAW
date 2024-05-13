@@ -61,7 +61,7 @@
 
         <label>
             <p class="label"><spring:message code="appointment.date"/></p>
-            <form:input type="datetime-local" class="input" path="date" required="true"/>
+            <form:input type="datetime-local" class="input" path="date"/>
             <form:errors path="date" cssClass="error" element="p"/>
         </label>
         <c:if test="${service.duration > 0}">
