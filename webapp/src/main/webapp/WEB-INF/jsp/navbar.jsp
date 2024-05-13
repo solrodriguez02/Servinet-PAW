@@ -25,18 +25,37 @@
                             <c:if test="${not empty param.page}"><c:param name="page" value="${param.page}" /></c:if>
                             <c:param name="categoria" value="${category.value}"/>
                         </c:url>
-                        <a href="${categoryChange}">${category.value}</a>
+                        <a href="${categoryChange}"><spring:message code="${category.codeMsg}"/></a>
                     </c:forEach>
                 </div>
             </div>
 
             <div class="dropdown">
-                <p class="nav-item"><spring:message code="navbar.account"/></p>
-                <div class="dropdown-content">
-                    <a href="${pageContext.request.contextPath}/perfil"><spring:message code="navbar.profile"/></a>
-                    <a href="${pageContext.request.contextPath}/turnos/?confirmados=true"><spring:message code="navbar.appointments"/></a>
-                    <a href="${pageContext.request.contextPath}/negocios"><spring:message code="navbar.businesses"/></a>
-                </div>
+            <c:choose>
+                <c:when test="${isLoggedIn}">
+                    <p class="nav-item"><spring:message code="navbar.account"/></p>
+                    <div class="dropdown-content">
+                        <a href="${pageContext.request.contextPath}/perfil"><spring:message code="navbar.profile"/></a>
+                        <a href="${pageContext.request.contextPath}/turnos/?confirmados=true"><spring:message code="navbar.appointments"/></a>
+                        <c:choose>
+                            <c:when test="${isProvider}">
+                                <a href="${pageContext.request.contextPath}/negocios"><spring:message code="navbar.businesses"/></a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="${pageContext.request.contextPath}/negocios"><spring:message code="navbar.create-businesses"/></a>
+                            </c:otherwise>
+                        </c:choose>
+
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <p class="nav-item">
+                        <a href="${pageContext.request.contextPath}/login">
+                            <button class="navbar-btn"><spring:message code="login"/></button>
+                        </a>
+                    </p>
+                </c:otherwise>
+            </c:choose>
             </div>
         </div>
     </div>

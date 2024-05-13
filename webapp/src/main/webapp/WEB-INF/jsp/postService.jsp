@@ -60,7 +60,7 @@
             <div class="service-div">
             <form:select path="pricingtype" class="input" id="priceType">
                 <c:forEach items="${pricingTypes}" var="item">
-                    <form:option  value="${item}">${item.value}</form:option>
+                    <form:option  value="${item}"><spring:message code="${item.codeMsg}"/></form:option>
                 </c:forEach>
             </form:select>
             <spring:message code="input.service.price" var="servicePrice"/>
@@ -73,7 +73,7 @@
             <p class="label"><spring:message code="service.category"/></p>
             <form:select path="category" class="input">
                 <c:forEach items="${categories}" var="item">
-                <form:option value="${item}">${item.value}</form:option>
+                <form:option value="${item}"><spring:message code="${item.codeMsg}"/></form:option>
                 </c:forEach>
             </form:select>
         </label>

@@ -1,23 +1,25 @@
 package ar.edu.itba.paw.model;
 
 public enum Categories {
-    LIMPIEZA("Limpieza", "cleaning_services"),
-    BELLEZA("Belleza", "diamond"),
-    ARREGLOS_CALIFICADOS("Arreglos Calificados", "handyman"),
-    MASCOTAS("Mascotas", "pets"),
-    EXTERIORES("Exteriores", "local_florist"),
-    EVENTOS_Y_CELEBRACIONES ("Eventos y Celebraciones", "celebration"),
-    TRANSPORTE ("Transporte", "local_shipping"),
-    CONSULTORIA ("Consultoria", "help"),
-    PELUQUERIA ("Peluqueria", "face"),
-    SALUD ("Salud", "health_and_safety");
+    LIMPIEZA("Limpieza", "cleaning_services", "category.cleaning"),
+    BELLEZA("Belleza", "diamond", "category.beauty"),
+    ARREGLOS_CALIFICADOS("Arreglos Calificados", "handyman", "category.qualified"),
+    MASCOTAS("Mascotas", "pets", "category.pets"),
+    EXTERIORES("Exteriores", "local_florist", "category.outdoors"),
+    EVENTOS_Y_CELEBRACIONES ("Eventos y Celebraciones", "celebration", "category.events"),
+    TRANSPORTE ("Transporte", "local_shipping", "category.transport"),
+    CONSULTORIA ("Consultoria", "help", "category.consulting"),
+    PELUQUERIA ("Peluqueria", "face", "category.hairdressing"),
+    SALUD ("Salud", "health_and_safety", "category.health"),;
 
     private final String value;
     private final String icon;
+    private final String codeMsg;
 
-    Categories(String value, String icon){
+    Categories(String value, String icon, String codeMsg){
         this.value = value;
         this.icon = icon;
+        this.codeMsg = codeMsg;
     }
 
     public String getValue() {
@@ -26,6 +28,9 @@ public enum Categories {
 
     public String getIcon() {
         return icon;
+    }
+    public String getCodeMsg(){
+        return codeMsg;
     }
 
     //TODO: implementar Interfaz que agrupe enums? -> definir findByValue genérico

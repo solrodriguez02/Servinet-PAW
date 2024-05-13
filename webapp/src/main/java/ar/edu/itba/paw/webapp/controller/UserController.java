@@ -35,7 +35,6 @@ public class UserController {
         this.appointmentService = appointmentService;
     }
 
-//    @RequestMapping(method = RequestMethod.GET, path = "/{userId:\\d+}/perfil")
     @RequestMapping(method = RequestMethod.GET, path = "/perfil")
     public ModelAndView profile() {
         final ModelAndView mav = new ModelAndView("profile");

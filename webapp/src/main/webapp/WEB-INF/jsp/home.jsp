@@ -16,7 +16,7 @@
         <div class="align-center">
             <form class="form-box" action="${pageContext.request.contextPath}/servicios" method="GET">
                 <div class="search-container">
-                    <input type="text" class="search-box" placeholder="Que estas buscando?" name="query" value="<c:out value="${param.query}"/>"/>
+                    <input type="text" class="search-box" placeholder="<spring:message code="services.search-placeholder"/>" name="query" value="<c:out value="${param.query}"/>"/>
                     <button type="submit" class="search-button"><i class="material-icons">search</i></button>
                 </div>
             </form>
@@ -28,7 +28,7 @@
             <c:if test="${loop.index < 5}">
                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicios/?categoria=${category.value}">
                     <div class="box">
-                        <h4 class="box-text"><c:out value="${category.value}"/></h4>
+                        <h4 class="box-text"><spring:message code="${category.codeMsg}"/></h4>
                         <i class="material-icons icon">${category.icon}</i>
                     </div>
                 </a>
@@ -40,7 +40,7 @@
         <c:forEach items="${categories}" var="category" varStatus="loop">
                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicios/?categoria=${category.value}">
                     <div class="box">
-                        <h4 class="box-text"><c:out value="${category.value}"/></h4>
+                        <h4 class="box-text"><spring:message code="${category.codeMsg}"/></h4>
                         <i class="material-icons icon">${category.icon}</i>
                     </div>
                 </a>
@@ -92,7 +92,7 @@
                             <h3> <c:out value="${item.name}"/></h3>
                             <p class="align-right">$
                                 <c:choose>
-                                <c:when test="${item.pricing == TBDPricing}">
+                                <c:when test="${item.pricing.value == TBDPricing}">
                                 <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
                                 </c:when>
                                 <c:otherwise>

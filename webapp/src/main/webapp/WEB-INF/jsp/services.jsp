@@ -45,7 +45,7 @@
 
         <c:if test="${category!=null}">
             <div class="category-header">
-                <h2><c:out value="${category}"/></h2>
+                <h2><spring:message code="${category.codeMsg}"/></h2>
             </div>
         </c:if>
 
@@ -115,7 +115,7 @@
                                                 <h3> <c:out value="${item.name}"/></h3>
                                                 <p class="align-right">$
                                                     <c:choose>
-                                                        <c:when test="${item.pricing == TBDPricing}">
+                                                        <c:when test="${item.pricing.value == TBDPricing}">
                                                             <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
                                                         </c:when>
                                                         <c:otherwise>
@@ -154,12 +154,12 @@
                     <c:param name="calificacion" value="${rate.name}"/>
                 </c:url>
                 <a class="none-decoration filter-text" href="${ratingChange}">
-                    <c:out value="${rate.name}"/>:
+                    <spring:message code="${rate.codeMsg}"/>:
                     <c:forEach begin="1" end="${rate.minValue}">
                         <i class="material-icons stars">star</i>
                     </c:forEach>
                     <c:if test="${rate.minValue != 5}">
-                        o mas
+                        <spring:message code="rating.ormore"/>
                     </c:if>
                 </a>
             </c:forEach>

@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS users (
     surname VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
     telephone VARCHAR(255),
-    isprovider boolean NOT NULL DEFAULT FALSE
+    isprovider boolean NOT NULL DEFAULT FALSE,
+    Locale varchar(20)
 );
 
 CREATE TABLE IF NOT EXISTS business(

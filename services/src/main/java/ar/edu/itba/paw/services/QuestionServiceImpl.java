@@ -61,11 +61,8 @@ public class QuestionServiceImpl implements  QuestionService {
         BasicService service = serviceService.findBasicServiceById(serviceid).orElseThrow(ServiceNotFoundException::new);
         Business business = businessService.findById(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
-        try {
-            emailService.askedQuestion( service, business.getEmail(), user, questionString, userService.getUserLocale(business.getUserId()));
-        } catch (MessagingException e ){
-            LOGGER.warn("Error sending email with question: " + e.getMessage());
-        }
+
+        emailService.askedQuestion( service, business.getEmail(), user, questionString, userService.getUserLocale(business.getUserId()));
         return question;
     }
 
@@ -77,13 +74,7 @@ public class QuestionServiceImpl implements  QuestionService {
         BasicService service = serviceService.findBasicServiceById(question.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         User user = userService.findById(question.getUserid()).orElseThrow(UserNotFoundException::new);
 
-        try {
-            emailService.answeredQuestion(service, user, question.getQuestion(), response );
-
-        } catch (MessagingException e ){
-            LOGGER.warn("Error sending email with response: " + e.getMessage());
-        }
-
+        emailService.answeredQuestion(service, user, question.getQuestion(), response );
     }
 
     @Transactional(readOnly = true)

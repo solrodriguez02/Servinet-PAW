@@ -1,19 +1,24 @@
 package ar.edu.itba.paw.model;
 
 public enum PricingTypes {
-    PER_HOUR ("Por hora"),
-    PER_TOTAL ("Total"),
-    BUDGET ("Producto"),
-    TBD ("A determinar");
+    PER_HOUR ("Por hora", "pricing.perhour"),
+    PER_TOTAL ("Total", "pricing.total"),
+    BUDGET ("Producto", "pricing.budget"),
+    TBD ("A determinar", "pricing.tbd");
     private final String value;
+    private final String codeMsg;
 
-   PricingTypes(String value) {
+   PricingTypes(String value, String codeMsg) {
        this.value = value;
+       this.codeMsg = codeMsg;
    }
     public String getValue() {
         return value;
     }
 
+    public String getCodeMsg() {
+        return codeMsg;
+    }
     //TODO: implementar Interfaz que agrupe enums? -> definir findByValue genérico
     public static PricingTypes findByValue(String value) {
         for (PricingTypes pricingType: values()) {
