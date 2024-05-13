@@ -163,6 +163,7 @@ body {
     color: white;
     height: 45px;
     padding: 0 15px;
+    cursor: pointer;
 }
 
 .search-button:hover {

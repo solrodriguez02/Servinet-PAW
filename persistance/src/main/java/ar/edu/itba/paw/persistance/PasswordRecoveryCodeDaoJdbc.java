@@ -8,41 +8,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Repository
-public class PasswordRecoveryCodeJdbc implements PasswordRecoveryCodeDao {
+public class PasswordRecoveryCodeDaoJdbc implements PasswordRecoveryCodeDao {
     private static final RowMapper<PasswordRecoveryCode> ROW_MAPPER = (rs, rowNum) -> new PasswordRecoveryCode(rs.getLong("userid"),
              UUID.fromString(rs.getString("code")), rs.getTimestamp("expirationdate").toLocalDateTime());
     private final JdbcTemplate jdbcTemplate;
-     private Logger LOGGER = LoggerFactory.getLogger(PasswordRecoveryCodeJdbc.class);
+    private final SimpleJdbcInsert simpleJdbcInsert;
+    private Logger LOGGER = LoggerFactory.getLogger(PasswordRecoveryCodeDaoJdbc.class);
 
     @Autowired
-    public PasswordRecoveryCodeJdbc(final DataSource ds){
+    public PasswordRecoveryCodeDaoJdbc(final DataSource ds){
         jdbcTemplate = new JdbcTemplate(ds);
+        this.simpleJdbcInsert = new SimpleJdbcInsert(ds).withTableName("passwordrecoverycodes").usingGeneratedKeyColumns("userid");
     }
     @Override
-    public void saveCode(long userid, UUID code) {
+    public PasswordRecoveryCode saveCode(long userid, UUID code, LocalDateTime expirationDate) {
         try {
-            jdbcTemplate.update("INSERT INTO passwordrecoverycodes (userid, code, expirationdate) VALUES (?,?,?)", userid, code, LocalDateTime.now().plusHours(1));
+        jdbcTemplate.update("INSERT INTO passwordrecoverycodes (userid, code, expirationdate) VALUES (?,?,?)", userid, code, Timestamp.valueOf(expirationDate));
         }catch(DataAccessException e){
             LOGGER.warn("Error saving password recovery code: {}", e.getMessage());
         }
+        return new PasswordRecoveryCode(userid, code, expirationDate);
     }
 
     @Override
-    public Optional<PasswordRecoveryCode> getCode(long userid) {
+    public Optional<PasswordRecoveryCode> getCodeByUserId(long userid) {
         final List<PasswordRecoveryCode> list = jdbcTemplate.query("SELECT * from passwordrecoverycodes WHERE userid= ?", new Object[] {userid}, ROW_MAPPER);
         return list.stream().findFirst();
     }
     @Override
-    public Optional<PasswordRecoveryCode> getCode(UUID code) {
+    public Optional<PasswordRecoveryCode> getCodeByUUID(UUID code) {
         final List<PasswordRecoveryCode> list = jdbcTemplate.query("SELECT * from passwordrecoverycodes WHERE code= ?", new Object[] {code}, ROW_MAPPER);
         return list.stream().findFirst();
     }

@@ -152,6 +152,7 @@
                             </c:if>
                         </c:when>
                         <c:otherwise>
+                            <c:if test="${questionPage > 0 || questionsCount > questionPage*10+10}">
                             <c:choose>
                                 <c:when test="${questionPage > 0}">
                                     <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=qst&qstPag=${questionPage-1}">
@@ -172,6 +173,7 @@
                                     <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                                 </c:otherwise>
                             </c:choose>
+                            </c:if>
                         </c:otherwise>
                     </c:choose>
                 </div>
@@ -254,21 +256,23 @@
                     <c:otherwise>
                         <h4><spring:message code="service.last-questions"/></h4>
                         <c:forEach items="${reviews}" var="review">
-                            <c:set value="${review.rating}" var="rate"/>
-                            <div class="question-box">
-                                <div class="flex">
-                                    <div class="stars-container">
-                                        <c:forEach begin="1" end="${rate}" var="i">
-                                            <i class="material-icons yellow-star">star</i>
-                                        </c:forEach>
-                                        <c:forEach begin="${rate+1}" end="5" var="i">
-                                            <i class="material-icons gray-star">star</i>
-                                        </c:forEach>
+                            <c:if test="${review.id != hasAlreadyRated.id}">
+                                <c:set value="${review.rating}" var="rate"/>
+                                <div class="question-box">
+                                    <div class="flex">
+                                        <div class="stars-container">
+                                            <c:forEach begin="1" end="${rate}" var="i">
+                                                <i class="material-icons yellow-star">star</i>
+                                            </c:forEach>
+                                            <c:forEach begin="${rate+1}" end="5" var="i">
+                                                <i class="material-icons gray-star">star</i>
+                                            </c:forEach>
+                                        </div>
+                                        <p class="date"><c:out value="${review.date}"/></p>
                                     </div>
-                                    <p class="date"><c:out value="${review.date}"/></p>
+                                    <p class="text"><c:out value="${review.comment}"/></p>
                                 </div>
-                                <p class="text"><c:out value="${review.comment}"/></p>
-                            </div>
+                            </c:if>
                         </c:forEach>
                     </c:otherwise>
                 </c:choose>
@@ -283,6 +287,7 @@
                         </c:if>
                     </c:when>
                     <c:otherwise>
+                        <c:if test="${reviewPage > 0 || reviewsCount > reviewPage*10+10}">
                         <c:choose>
                             <c:when test="${reviewPage > 0}">
                                 <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${serviceId}/?opcion=rw&rwPag=${reviewPage-1}">
@@ -290,7 +295,7 @@
                                 </a>
                             </c:when>
                             <c:otherwise>
-                                <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
+                                    <p class="none-page-text"><spring:message code="pagination.none-previous"/></p>
                             </c:otherwise>
                         </c:choose>
                         <c:choose>
@@ -303,6 +308,7 @@
                                 <p class="none-page-text"><spring:message code="pagination.none-next"/></p>
                             </c:otherwise>
                         </c:choose>
+                        </c:if>
                     </c:otherwise>
                 </c:choose>
                 </div>

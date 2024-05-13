@@ -2,13 +2,14 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.PasswordRecoveryCode;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface PasswordRecoveryCodeDao {
-    void saveCode(long userid, UUID code);
+    PasswordRecoveryCode saveCode(long userid, UUID code, LocalDateTime ExpirationDate);
     void deleteCode(long userid);
-    Optional<PasswordRecoveryCode> getCode(long userid);
+    Optional<PasswordRecoveryCode> getCodeByUserId(long userid);
 
-    Optional<PasswordRecoveryCode> getCode(UUID code);
+    Optional<PasswordRecoveryCode> getCodeByUUID(UUID code);
 }

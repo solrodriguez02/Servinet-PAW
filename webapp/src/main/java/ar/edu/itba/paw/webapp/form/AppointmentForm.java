@@ -1,17 +1,17 @@
 package ar.edu.itba.paw.webapp.form;
 
-import ar.edu.itba.paw.model.Neighbourhoods;
 
-import javax.validation.constraints.Future;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import ar.edu.itba.paw.webapp.validation.FutureDate;
+
+
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+
 
 public class AppointmentForm {
     //acá no toma not empty
     //armo custom?
-    private Neighbourhoods neighbourhood;
+    private String neighbourhood;
 
     @NotEmpty
     @Size(max = 255)
@@ -20,10 +20,10 @@ public class AppointmentForm {
     //no funciona @Future
     //armar conversor para el formato de fecha
     //formato que se acepta 'YYYY-MM-DDTHH:MM'
-    @NotNull
-    private LocalDateTime date;
+    @FutureDate
+    private String date;
 
-    public Neighbourhoods getNeighbourhood() {
+    public String getNeighbourhood() {
         return neighbourhood;
     }
 
@@ -31,11 +31,11 @@ public class AppointmentForm {
         return location;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public String getDate() {
+        return date==null?null:date;
     }
 
-    public void setNeighbourhood(Neighbourhoods neighbourhood) {
+    public void setNeighbourhood(String neighbourhood) {
         this.neighbourhood = neighbourhood;
     }
 
@@ -45,7 +45,11 @@ public class AppointmentForm {
 
     //ya probamos pasandole date pero no se toma
     public void setDate(String date) {
-        this.date = LocalDateTime.parse(date);
+        this.date = date;
     }
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.parse(date);
+    }
+
 
 }

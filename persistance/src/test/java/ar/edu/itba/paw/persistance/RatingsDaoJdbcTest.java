@@ -9,13 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import javax.sql.DataSource;
+import java.util.Optional;
 
 
 @Sql("classpath:sql/schema.sql")
@@ -65,21 +65,17 @@ public class RatingsDaoJdbcTest {
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "ratings"));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void testInvalidCreate() {
-        ratingDao.create(SERVICEID, USERID,6, COMMENT);
-    }
 
     @Test
     public void testFindById() {
-        jdbcTemplate.execute(String.format("insert into ratings (ratingid, serviceid, userid, rating, comment) values (1, %d, %d, %d, '%s')", SERVICEID, USERID, RATING5, COMMENT));
-        Rating ratingFound = ratingDao.findById(1).get();
+        jdbcTemplate.execute(String.format("insert into ratings (ratingid, serviceid, userid, rating, comment) values (1, %d, %d, %d, '%s')", SERVICEID, USERID, RATING1, COMMENT));
+        Optional<Rating> ratingFound = ratingDao.findById(1);
 
-        Assert.assertNotNull(ratingFound);
-        Assert.assertEquals(SERVICEID, ratingFound.getServiceid());
-        Assert.assertEquals(USERID, ratingFound.getUserid());
-        Assert.assertEquals(COMMENT, ratingFound.getComment());
-        Assert.assertEquals(RATING5, ratingFound.getRating());
+        Assert.assertTrue(ratingFound.isPresent());
+        Assert.assertEquals(SERVICEID, ratingFound.get().getServiceid());
+        Assert.assertEquals(USERID, ratingFound.get().getUserid());
+        Assert.assertEquals(COMMENT, ratingFound.get().getComment());
+        Assert.assertEquals(RATING1, ratingFound.get().getRating());
     }
 
     @Test

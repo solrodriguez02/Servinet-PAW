@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,12 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
     @Transactional
     @Override
     public void sendCode(String email) {
-        User user = userService.findByEmail(email).orElseThrow(UserNotFoundException::new);
+        Optional<User> maybeUser = userService.findByEmail(email);
+        if (maybeUser.isEmpty()){
+            LOGGER.warn("The email provided does not belong to an existent user");
+            return;
+        }
+        User user = maybeUser.get();
         PasswordRecoveryCode passwordRecoveryCode = generateCode(user.getUserId());
         emailService.recoverPassword(user, passwordRecoveryCode);
     }
@@ -39,28 +45,31 @@ public class PasswordRecoveryCodeServiceImpl implements PasswordRecoveryCodeServ
     public PasswordRecoveryCode generateCode(long userid) {
         passwordRecoveryCodeDao.deleteCode(userid);
         UUID newCode = UUID.randomUUID();
-        passwordRecoveryCodeDao.saveCode(userid, newCode);
+        PasswordRecoveryCode code = passwordRecoveryCodeDao.saveCode(userid, newCode, LocalDateTime.now().plusHours(1));
         LOGGER.info("Recovery code succesfully generated");
-        return new PasswordRecoveryCode(userid, newCode, LocalDateTime.now().plusHours(1));
+        return code;
     }
 
     @Transactional
     @Override
     public boolean validateCode(UUID code) {
-        //User currentUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        PasswordRecoveryCode passwordRecoveryCode = passwordRecoveryCodeDao.getCode(code).orElse(null);
-        if (passwordRecoveryCode == null){
+        Optional<PasswordRecoveryCode> possiblepasswordRecoveryCode = passwordRecoveryCodeDao.getCodeByUUID(code);
+        if (possiblepasswordRecoveryCode.isEmpty()){
+            LOGGER.warn("The code provided is not valid, it has expired or it has been used already");
             return false;
         }
+        PasswordRecoveryCode passwordRecoveryCode = possiblepasswordRecoveryCode.get();
         return passwordRecoveryCode.getCode().equals(code);
     }
 
     @Transactional
     public void changePassword(UUID code, String newPassword) {
-        PasswordRecoveryCode passwordRecoveryCode = passwordRecoveryCodeDao.getCode(code).orElse(null);
-        if (passwordRecoveryCode == null){
+        Optional<PasswordRecoveryCode> possiblePasswordRecoveryCode = passwordRecoveryCodeDao.getCodeByUUID(code);
+        if (possiblePasswordRecoveryCode.isEmpty()){
+            LOGGER.warn("The code provided is not valid, it has expired or it has been used already");
             return;
         }
+        PasswordRecoveryCode passwordRecoveryCode = possiblePasswordRecoveryCode.get();
         User user = userService.findById(passwordRecoveryCode.getUserId()).orElseThrow(UserNotFoundException::new);
         userService.changePassword(user.getEmail(), newPassword);
         LOGGER.info("Password changed successfully");
