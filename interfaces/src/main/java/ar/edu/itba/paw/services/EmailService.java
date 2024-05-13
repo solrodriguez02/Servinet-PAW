@@ -28,7 +28,7 @@ public interface EmailService {
 
     void deletedBusiness(Business business, String businessLocale);
 
-    void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale)  throws MessagingException;
-    void answeredQuestion(BasicService service, User client, String question, String response) throws MessagingException;
+    void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale);
+    void answeredQuestion(BasicService service, User client, String question, String response);
 
 }

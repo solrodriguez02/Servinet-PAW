@@ -76,37 +76,36 @@
                 <div th:case="'ASKED'">
                     <div th:switch="${isClient}">
                         <span th:case="${true}">
-                            Su pregunta para el servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> ha sido enviada exitosamente. Cuando sea contestada, será notificado.
+                            <span th:text="#{template.question.user}"/> <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> <span th:text="#{template.question.created}"/>
                         </span>
                         <div th:case="*">
-                            El servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> ha recibido la siguiente consulta:
+                            <span th:text="#{template.the-service}"/> <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/> <span th:text="#{template.question.business}"/>
                             <div class="question-or-answer-container">
                                 "<span th:text="${question}"/>"
                             </div>
-                            Si desea contestarla haga click en
+                            <span th:text="#{template.question.make-response}"/>
                             <div class="btn-container">
                                 <a th:href="${url}+'negocios/consultas'">
-                                    <button class="btn confirm">Ver pregunta</button>
+                                    <button class="btn confirm" th:text="#{template.view-question}"/>
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div th:case="*">
-                    Su consulta para el servicio <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/>
+                    <span th:text="#{template.question.answer.intro}"/> <a th:href="${url}+'servicio/'+${serviceId}" th:text="${serviceName}"/>
                     <div class="question-or-answer-container">
                             "<span th:text="${question}"/>"
                     </div>
-                    recibió esta respuesta del servicio:
+                    <span th:text="#{template.question.answer.show-answer}"/>
                     <div class="question-or-answer-container">
                         "<span th:text="${response}"/>"
                     </div>
                 </div>
             </div>
             <p th:if="${isClient}">
-                Si deseao hacer otra pregunta u obtener más información sobre el servicio, haga click  <a th:href="${url}+'servicio/'+${serviceId}">aqui</a>.
+                <span th:text="#{template.question.view-service}"/> <a th:href="${url}+'servicio/'+${serviceId}"><span th:text="#{template.here}"/></a>.
             </p>
-
         </div>
     </div>
 </div>

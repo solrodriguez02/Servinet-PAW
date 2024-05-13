@@ -88,7 +88,13 @@
         </div>
 
         <div class="description-box">
-            <p class="text-description"><c:out value="${service.description}"/></p>
+            <div class="text-description">
+                <p><c:out value="${service.description}"/></p>
+                <c:url value="/negocio/${service.businessid}" var="businessUrl"/>
+                <a class="none-decoration" href="${businessUrl}">
+                    <p class="view-business"><i class="material-icons">storefront</i><spring:message code="service.view-business"/></p>
+                </a>
+            </div>
         </div>
         </c:if>
 
@@ -206,7 +212,7 @@
                                     </div>
                                     <p class="date"><c:out value="${hasAlreadyRated.date}"/></p>
                                     <div class="align-right">
-                                        <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.edit-review"/></button>
+                                        <button class="edit-btn" onclick="toggleUserReview()"><spring:message code="service.edit-review"/></button>
                                     </div>
                                 </div>
                                 <p class="text"><c:out value="${hasAlreadyRated.comment}"/></p>
@@ -218,7 +224,7 @@
                                             <i class="material-icons star" onclick="selectRate(${i})">star</i>
                                         </c:forEach>
                                         <div class="align-right">
-                                            <button class="edit-review-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
+                                            <button class="edit-btn" onclick="toggleUserReview()"><spring:message code="service.cancel"/></button>
                                         </div>
                                     </div>
                                     <form:input path="editedRating" type="hidden" id="rating" value="${hasAlreadyRated.comment}"/>

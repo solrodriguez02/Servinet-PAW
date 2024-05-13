@@ -96,7 +96,7 @@ public class ServiceController {
     public ModelAndView deleteService(@PathVariable("serviceId") final long serviceId){
 
         ss.delete(serviceId);
-        return new ModelAndView("redirect:/operacion-invalida/?argumento=servicionoexiste");
+        return new ModelAndView("redirect:/negocios");
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/servicio/{serviceId:\\d+}")

@@ -16,7 +16,8 @@ public interface BusinessService {
     Optional<String> getBusinessEmail(long businessid);
 
     void deleteBusiness(long businessid);
-
+    void changeBusinessTelephone(long businessId, String value);
+    void changeBusinessLocation(long businessId,String value);
     void changeBusinessEmail(long businessId, String value);
 
     Business createBusiness(String businessName, long userId, String telephone, String email, String location);

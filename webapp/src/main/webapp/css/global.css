@@ -271,3 +271,20 @@ body {
 .btn-selected:hover {
     background-color: #7475ff;
 }
+
+.edit-btn {
+    border: none;
+    color: #585bfa;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.edit-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transform: translateY(-2px);
+}

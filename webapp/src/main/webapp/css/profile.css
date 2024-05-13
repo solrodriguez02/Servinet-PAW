@@ -169,7 +169,7 @@
 }
 
 .business-info-container {
-    padding: 20px;
+    padding: 20px 40px;
 }
 
 .business-info-text {
@@ -185,3 +185,29 @@
     margin-right: 10px;
 }
 
+.input-box {
+    margin: 12px 0;
+}
+
+.edit-business-btn {
+    padding: 10px 15px !important;
+    margin-top: 20px;
+    font-size: 14px !important;;
+}
+
+.errors {
+    margin-top: 15px;
+}
+
+.input {
+    border-radius: 10px;
+    width: 80%;
+    background-color: #efefef;
+    padding: 10px 15px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input:hover {
+    background-color:#e1e1e1;
+}

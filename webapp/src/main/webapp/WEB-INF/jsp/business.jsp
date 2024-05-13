@@ -25,27 +25,68 @@
 <div class="page">
   <div class="header">
     <h2><c:out value="${business.businessName}"/></h2>
-    <div class="flex center-vertically">
-      <button class="cancelBtn" id="deleteBtn" onclick="showPopUp()" >
-        <i class="material-icons ">delete</i>
-      </button>
-      <c:if test="${not empty serviceList}" >
+    <c:if test="${isOwner}">
+      <div class="flex center-vertically">
+        <button class="cancelBtn" id="deleteBtn" onclick="showPopUp()" >
+          <i class="material-icons ">delete</i>
+        </button>
         <a href="${urlCreateService}" class="none-decoration mr">
           <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="business.add-service"/></button>
         </a>
-        <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
-          <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> <spring:message code="business.appointments"/></button>
-        </a>
-      </c:if>
-    </div>
+        <c:if test="${not empty serviceList}" >
+          <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
+            <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> <spring:message code="business.appointments"/></button>
+          </a>
+        </c:if>
+      </div>
+    </c:if>
   </div>
 
   <div class="business-info box">
     <div class="business-info-container">
-      <h3><spring:message code="business.contact"/></h3>
-      <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
-      <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
-      <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+      <div class="flex">
+        <h3><spring:message code="business.contact"/></h3>
+        <c:if test="${isOwner}">
+          <div class="align-right">
+            <button class="edit-btn" onclick="editBusiness()" id="toggle-btn"><spring:message code="business.edit"/></button>
+          </div>
+        </c:if>
+      </div>
+      <div id="business-info">
+        <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
+        <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
+        <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+      </div>
+      <c:if test="${isOwner}">
+        <c:url value="/${businessId}/editar-negocio" var="editBusiness"/>
+        <form:form action="${editBusiness}" method="post" modelAttribute="BusinessForm">
+          <div id="edit-business" class="transparent">
+            <form:input path="businessName" type="text" value="${business.name}" class="transparent"/>
+            <div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">mail</i>
+                <form:input path="businessEmail" type="text" value="${business.email}" class="input business-input"/>
+              </div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">call</i>
+                <form:input path="businessTelephone" type="text" value="${business.telephone}" class="input business-input"/>
+              </div>
+              <div class="flex input-box">
+                <i class="material-icons business-icon">location_on</i>
+                <form:input path="businessLocation" type="text" value="${business.location}" class="input business-input"/>
+              </div>
+              <div class="align-center">
+                <button type="submit" class="btn edit-business-btn"><spring:message code="business.save-changes"/></button>
+              </div>
+            </div>
+          </div>
+          <div class="errors">
+            <p><form:errors path="businessEmail" cssClass="error"/></p>
+            <p><form:errors path="businessTelephone" cssClass="error"/></p>
+            <p><form:errors path="businessLocation" cssClass="error"/></p>
+          </div>
+        </form:form>
+      </c:if>
     </div>
   </div>
 
@@ -70,8 +111,29 @@
 </body>
 
 <script>
+
+  var cancelText = "<spring:message code='service.cancel'/>";
+  var editText = "<spring:message code='business.edit'/>";
+
   function showPopUp() {
     document.getElementById("popup").style.display = "block";
   }
+
+  function editBusiness() {
+    var showInfo = document.getElementById('business-info');
+    var showEdit = document.getElementById('edit-business');
+    var toggleButton = document.getElementById('toggle-btn');
+
+    if (showInfo.classList.contains('transparent')) {
+      showInfo.classList.remove('transparent');
+      showEdit.classList.add('transparent');
+      toggleButton.textContent = editText;
+    } else {
+      showInfo.classList.add('transparent');
+      showEdit.classList.remove('transparent');
+      toggleButton.textContent = cancelText;
+    }
+  }
+
 </script>
 </html>

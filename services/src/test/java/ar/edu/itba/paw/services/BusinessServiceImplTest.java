@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.User;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -9,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.Locale;
 import java.util.Optional;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -39,10 +41,14 @@ public class BusinessServiceImplTest {
     @Test
     public void testCreate(){
         Mockito.when(userService.findById(USER_ID)).thenReturn(Optional.of(new User(USER_ID, USERNAME, PASSWORD, NAME,SURNAME , EMAIL, TELEPHONE, false,LOCALE)));
-        Mockito.when(businessDao.createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION)).thenReturn(new Business(ID, BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION));
+        Mockito.when(businessDao.createBusiness(BUSINESS_NAME,USER_ID,TELEPHONE,EMAIL,LOCATION)).thenReturn(new Business(2,BUSINESS_NAME,USER_ID,TELEPHONE,EMAIL,LOCATION));
+
         Business biz= businessService.createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);
 
-        Mockito.verify(businessDao).createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);
+        Assert.assertEquals(BUSINESS_NAME,biz.getBusinessName());
+        Assert.assertEquals(EMAIL,biz.getEmail());
+        Assert.assertEquals(LOCATION,biz.getLocation());
+        Assert.assertEquals(TELEPHONE,biz.getTelephone());
 
     }
 }
