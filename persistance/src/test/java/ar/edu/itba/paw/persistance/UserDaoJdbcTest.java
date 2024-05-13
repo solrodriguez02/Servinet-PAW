@@ -8,14 +8,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.sql.DataSource;
+import java.util.Optional;
 
 // Uso una base de datos provista por un tercero
-
+@Transactional
+@Rollback
 @Sql("classpath:sql/schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -40,7 +45,6 @@ public class UserDaoJdbcTest {
     @Before
     public void setup() {
         this.jdbcTemplate = new JdbcTemplate(ds);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "users");
     }
 
     @Test
@@ -58,7 +62,16 @@ public class UserDaoJdbcTest {
         Assert.assertEquals(EMAIL, user.getEmail());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "users"));
     }
-
+    @Test
+    public void testFindById() {
+        jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'mepassword', 'name', 'surname', 'email', 'telephone')");
+        Optional<User> user = userDao.findById(USERID);
+        Assert.assertTrue(user.isPresent());
+        Assert.assertEquals(USERID, user.get().getUserId());
+        Assert.assertEquals(USERNAME, user.get().getUsername());
+        Assert.assertEquals(PASSWORD, user.get().getPassword());
+        Assert.assertEquals(NAME, user.get().getName());
+    }
     @Test
     public void testChangeUsername() {
         // 1. Precondiciones

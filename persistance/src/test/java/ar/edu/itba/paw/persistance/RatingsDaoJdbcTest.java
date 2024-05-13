@@ -10,14 +10,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.jdbc.JdbcTestUtils;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.sql.DataSource;
 import java.util.Optional;
 
-
+@Transactional
+@Rollback
 @Sql("classpath:sql/schema.sql")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfig.class)
@@ -42,9 +46,6 @@ public class RatingsDaoJdbcTest {
     @Before
     public void setup(){
         this.jdbcTemplate = new JdbcTemplate(ds);
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "services" );
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "users" );
-        JdbcTestUtils.deleteFromTables(jdbcTemplate, "business" );
         jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
         jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (2, 'username2', 'password2', 'name2', 'surname2', 'email2', 'telephone2')");
         jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (3, 'username3', 'password3', 'name2', 'surname3', 'email3', 'telephone3')");
