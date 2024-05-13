@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.sql.DataSource;
 import java.util.*;
 
@@ -30,18 +32,18 @@ public class RatingDaoJdbc implements RatingDao {
         simpleJdbcInsert = new SimpleJdbcInsert(ds).usingGeneratedKeyColumns("ratingid")
                 .withTableName("ratings");
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<Rating> getAllRatings(long serviceid, int page) {
         return jdbcTemplate.query("SELECT * from ratings WHERE serviceid = ? ORDER BY date DESC OFFSET ? LIMIT 10", new Object[] {serviceid, page*10}, ROW_MAPPER);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public Optional<Rating> findById(long id) {
         final List<Rating> list = jdbcTemplate.query("SELECT * from ratings WHERE ratingid = ?", new Object[] {id}, ROW_MAPPER);
         return list.stream().findFirst();
     }
-
+    @Transactional
     @Override
     public Rating create(long serviceid, long userid, int rating, String comment) {
         final Map<String, Object> ratingData = new HashMap<>();
@@ -53,25 +55,25 @@ public class RatingDaoJdbc implements RatingDao {
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(ratingData);
         return new Rating(generatedId.longValue(), serviceid, userid, rating, comment, null);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public double getRatingsAvg(long serviceid) {
         final Double avg = jdbcTemplate.queryForObject("SELECT AVG(rating) FROM ratings WHERE serviceid = ?", Double.class, serviceid);
         return avg != null ? avg : 0.0;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public int getRatingsCount(long serviceid) {
         Integer count= jdbcTemplate.queryForObject(  "SELECT COUNT(*) FROM ratings WHERE serviceId = ?", Integer.class, serviceid);
         return count == null ? 0 : count;
     }
-
+    @Transactional(readOnly = true)
     @Override
     public Optional<Rating> hasAlreadyRated(long userid, long serviceid) {
         List<Rating> ratings = jdbcTemplate.query("SELECT * FROM ratings WHERE serviceid = ? AND userid = ?", new Object[] {serviceid, userid}, ROW_MAPPER);
         return ratings.stream().findFirst();
     }
-
+    @Transactional
     @Override
     public void edit(long ratingid, int rating, String comment) {
         try {
