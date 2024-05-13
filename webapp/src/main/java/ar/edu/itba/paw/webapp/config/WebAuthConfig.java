@@ -43,6 +43,7 @@ public class WebAuthConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login", "/registrarse", "/olvide-mi-clave", "/restablecer-clave/**").anonymous()
                 .antMatchers("/perfil","/contratar-servicio/{serviceId}","/preguntar/**","/editar-opinion/**","/opinar/**").hasRole("USER")
                 .antMatchers("/negocio/{businessID}/turnos", "/negocio/{businessID}/solicitud-turno/**","/borrar-negocio/{businessID}","/crear-servicio/{businessID}", "/{businessID}/editar-negocio").access(" hasRole('BUSINESS') && @servinetAuthControl.isBusinessOwner(#businessID,@servinetAuthControl.currentUser.get().userId)")
+                .antMatchers("/borrar-servicio/{serviceId}").access("hasRole('BUSINESS') && @servinetAuthControl.isServiceOwner(#serviceId)")
                 .antMatchers("/rechazar-turno/{appointmentId}","/turno/{serviceId}/{appointmentId}","/aceptar-turno/{appointmentId}","/cancelar-turno/{appointmentId}").access("hasRole('USER') && @servinetAuthControl.isUserAppointment(#appointmentId)")
                 .antMatchers("/negocios/**").hasRole("BUSINESS")
                 .antMatchers("/servicios/**").permitAll()
