@@ -75,11 +75,7 @@ public class RatingDaoJdbc implements RatingDao {
 
     @Override
     public void edit(long ratingid, int rating, String comment) {
-        try {
-            jdbcTemplate.update("UPDATE ratings SET rating = ?, comment = ?, date = ? WHERE ratingid = ?", rating, comment, new Date(), ratingid);
-        }catch(DataAccessException e){
-            LOGGER.warn("Error editing rating: {}", e.getMessage());
-        }
+        jdbcTemplate.update("UPDATE ratings SET rating = ?, comment = ?, date = ? WHERE ratingid = ?", rating, comment, new Date(), ratingid);
     }
 
 }

@@ -5,7 +5,6 @@ import ar.edu.itba.paw.services.PasswordRecoveryCodeDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -22,7 +21,7 @@ public class PasswordRecoveryCodeDaoJdbc implements PasswordRecoveryCodeDao {
              UUID.fromString(rs.getString("code")), rs.getTimestamp("expirationdate").toLocalDateTime());
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
-    private Logger LOGGER = LoggerFactory.getLogger(PasswordRecoveryCodeDaoJdbc.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(PasswordRecoveryCodeDaoJdbc.class);
 
     @Autowired
     public PasswordRecoveryCodeDaoJdbc(final DataSource ds){
@@ -31,11 +30,7 @@ public class PasswordRecoveryCodeDaoJdbc implements PasswordRecoveryCodeDao {
     }
     @Override
     public PasswordRecoveryCode saveCode(long userid, UUID code, LocalDateTime expirationDate) {
-        try {
         jdbcTemplate.update("INSERT INTO passwordrecoverycodes (userid, code, expirationdate) VALUES (?,?,?)", userid, code, Timestamp.valueOf(expirationDate));
-        }catch(DataAccessException e){
-            LOGGER.warn("Error saving password recovery code: {}", e.getMessage());
-        }
         return new PasswordRecoveryCode(userid, code, expirationDate);
     }
 
@@ -52,10 +47,6 @@ public class PasswordRecoveryCodeDaoJdbc implements PasswordRecoveryCodeDao {
 
     @Override
     public void deleteCode(long userid) {
-        try {
-            jdbcTemplate.update("DELETE FROM passwordrecoverycodes WHERE userid= ?", userid);
-        }catch(DataAccessException e){
-            LOGGER.warn("Error deleting password recovery code: {}", e.getMessage());
-        }
+        jdbcTemplate.update("DELETE FROM passwordrecoverycodes WHERE userid= ?", userid);
     }
 }

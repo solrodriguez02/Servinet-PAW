@@ -82,19 +82,12 @@ public class UserDaoJdbc implements UserDao {
     }
     @Override
     public void changeUserType(long userid){
-        try {
-            jdbcTemplate.update("update users set isprovider = not isprovider where userid = ?", userid);
-        }catch(DataAccessException e){
-            LOGGER.warn("Error changing user type: {}", e.getMessage());
-        }
+        jdbcTemplate.update("update users set isprovider = not isprovider where userid = ?", userid);
     }
 
     private void changeField(final String field,long userid,String value){//CONSULTAR: si se puede concatenar asi el field
-        try {
-            jdbcTemplate.update(String.format("update users set  %s  = ? where userid = ? ", field), value, userid);//deberia ser seguro, pues field es un parametro que no viene del usuario
-        }catch(DataAccessException e){
-            LOGGER.warn("Error changing field '{}': {}", field, e.getMessage());
-        }
+        jdbcTemplate.update(String.format("update users set  %s  = ? where userid = ? ", field), value, userid);//deberia ser seguro, pues field es un parametro que no viene del usuario
+
     }
 
     @Override

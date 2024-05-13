@@ -56,11 +56,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override
     public void addResponse(long id, String response) {
-        try {
-            jdbcTemplate.update("UPDATE questions SET response = ? WHERE questionid = ?", response, id);
-        }catch(DataAccessException e){
-           LOGGER.warn("Error adding response to question: {}", e.getMessage());
-        }
+        jdbcTemplate.update("UPDATE questions SET response = ? WHERE questionid = ?", response, id);
     }
 
     @Override
