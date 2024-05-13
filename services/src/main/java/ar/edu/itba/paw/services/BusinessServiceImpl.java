@@ -57,7 +57,16 @@ public class BusinessServiceImpl implements BusinessService{
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);
     }
-
+    @Transactional
+    @Override
+    public void changeBusinessLocation(long businessId,String value){
+        businessDao.changeBusinessLocation(businessId,value);
+    }
+    @Transactional
+    @Override
+    public void changeBusinessTelephone(long businessId,String value){
+        businessDao.changeBusinessTelephone(businessId,value);
+    }
     @Transactional
     @Override
     public void deleteBusiness(long businessid){

@@ -91,7 +91,15 @@ public class BusinessDaoJdbc implements BusinessDao {
 
     @Override
     public void changeBusinessEmail(long businessId, String value) {
-        changeField("email", businessId, value);
+        changeField("businessemail", businessId, value);
+    }
+    @Override
+    public void changeBusinessTelephone(long businessId,String value){
+        changeField("businesstelephone",businessId,value);
+    }
+    @Override
+    public void changeBusinessLocation(long businessId,String value){
+        changeField("businesslocation", businessId, value);
     }
 
     @Override

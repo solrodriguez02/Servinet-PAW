@@ -13,7 +13,8 @@ public interface BusinessDao {
      List<Business> findByAdminId(long adminId);
 
      Optional<String> getBusinessEmail(long businessid);
-
+     void changeBusinessLocation(long businessId,String value);
+     void changeBusinessTelephone(long businessId, String value);
      void changeBusinessEmail(long businessId, String value);
 
      boolean deleteBusiness(long businessid);
