@@ -89,6 +89,10 @@
 
         <div class="description-box">
             <p class="text-description"><c:out value="${service.description}"/></p>
+            <c:url value="/negocio/${service.businessid}" var="businessUrl"/>
+            <a href="${businessUrl}">
+                <p><i class="material-icons">storefront</i><spring:message code="service.view-business"/></p>
+            </a>
         </div>
         </c:if>
 

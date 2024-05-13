@@ -151,9 +151,13 @@ public class BusinessController {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId);
+        Optional<User> currentUser = authControl.getCurrentUser();
+        Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
+        boolean isOwner = userId != null && business.getUserId()==userId;
 
         mav.addObject("business",business);
         mav.addObject("serviceList", serviceList);
+        mav.addObject("isOwner", isOwner);
         return mav;
     }
 
