@@ -55,23 +55,25 @@
     <div>
         <p th:text="#{template.greeting}+','"/>
         <div>
-            El servicio <span th:text="${serviceName}"/> ha sido <span th:switch="${type}">
+            <span th:text="#{template.service(${serviceName})}"/> <span th:switch="${type}">
                 <span th:case="'CREATED'">
-                    creado exitosamente. Su número de identificación es el #<span th:text="${serviceId}"></span>.
-                    Ya se encuentra disponible en <a th:href="${url}+'servicio/'+${serviceId}" th:text="${url}+'servicio/'+${serviceId}"></a>.
+                    <span th:text="#{template.operation(#{template.created})}"/>. <span th:text="#{template.id(${serviceId})}"/>
+                    <span th:text="#{template.url}"/> <a th:href="${url}+'servicio/'+${serviceId}" th:text="${url}+'servicio/'+${serviceId}"/>.
                 </span>
                 <span th:case="*">
-                    borrado exitosamente. Todos los turnos solicitados desde nuestra página servinet han sido cancelados.
-                    <p>
-                    Si desea crear un nuevo servicio, haga click <a th:href="${url}+'registrar-datos-personales'">aqui</a>.
-                    </p>
+                    <span th:text="#{template.operation(#{template.deleted})}"/>. <span th:text="#{template.service.deleted-appointments}"/>
                 </span>
             </span>
 
-            <div class="btn-container" th:if="${type == 'CREATED'}">
-                <a th:href="${url}+'servicio/'+${serviceId}">
-                    <button class="btn confirm">Ver servicio</button>
-                </a>
+            <div th:switch="${type}">
+                <div class="btn-container" th:case="'CREATED'">
+                    <a th:href="${url}+'servicio/'+${serviceId}">
+                        <button class="btn confirm" th:text="#{template.service.view-btn}"/>
+                    </a>
+                </div>
+                <p th:case="*">
+                    <span th:text="#{template.service.url.view-all}"/> <a th:href="${url}+'negocios'" th:text="#{template.here}"/>.
+                </p>
             </div>
         </div>
     </div>
