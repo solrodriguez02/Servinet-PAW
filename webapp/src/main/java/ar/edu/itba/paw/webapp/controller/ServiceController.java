@@ -69,7 +69,7 @@ public class ServiceController {
         mav.addObject("services", serviceList);
         mav.addObject("page", page);
         mav.addObject("isServicesEmpty", serviceList.isEmpty());
-        mav.addObject("category", category);
+        mav.addObject("category", Categories.findByValue(category));
         mav.addObject("location", neighbourhoodFilters);
         mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters, ratingFilters, query));
         mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters, ratingFilters, query));

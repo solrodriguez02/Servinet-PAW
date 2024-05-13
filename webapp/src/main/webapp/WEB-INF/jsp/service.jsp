@@ -36,7 +36,7 @@
             <div class="info-box">
                 <div class="info-text">
                     <div class="flex">
-                        <p class="category-text"><c:out value="${service.category}"/></p>
+                        <p class="category-text"><spring:message code="${service.category.codeMsg}"/></p>
                         <c:if test="${avgRating>0}">
                             <div class="align-right service-rate">
                                 <p><c:out value="${avgRating}"/></p>
@@ -65,12 +65,12 @@
                     <p class="text-with-icon"> <i class="material-icons icon">schedule</i> <spring:message code="service.time" arguments="${service.duration}"/> </p>
                     <p class="text-with-icon"><i class="material-icons icon">attach_money</i>
                         <c:choose>
-                            <c:when test="${service.pricing == TBDPricing}">
-                                <label class="TBD-comment"><c:out value="${TBDPricing}"/></label>
+                            <c:when test="${service.pricing.value == TBDPricing}">
+                                <label class="TBD-comment"><spring:message code="${service.pricing.codeMsg}"/></label>
                             </c:when>
                             <c:otherwise>
                                 <c:out value="${service.price}"/>
-                                <label class="comment"><c:out value="${service.pricing}"/></label>
+                                <label class="comment"><spring:message code="${service.pricing.codeMsg}"/></label>
                             </c:otherwise>
                         </c:choose>
                     </p>
@@ -113,7 +113,8 @@
                 <c:url value="/preguntar/${serviceId}" var="askUrl"/>
                 <form:form action="${askUrl}" method="post" modelAttribute="questionForm">
                     <div class="flex">
-                        <form:input path="question" type="text" class="input" placeholder="Escribi una pregunta"/>
+                        <spring:message code="input.service.question" var="questionPlaceholder"/>
+                        <form:input path="question" type="text" class="input" placeholder="${questionPlaceholder}"/>
                         <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                     </div>
                     <form:errors path="question" element="p" cssClass="error"/>
@@ -190,6 +191,7 @@
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
                         <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
+                        <h4><spring:message code="service.yourreview"/></h4>
                         <div class="user-opinion-box">
 
                             <div id="user-review">
@@ -240,7 +242,8 @@
                             </c:forEach>
                             <form:input path="rating" type="hidden" id="rating" value="0"/>
                             <div class="flex">
-                                <form:input  path="comment" type="text" class="input" placeholder="Escribi una opinion"/>
+                                <spring:message code="service.write-review" var="writeReviewPlaceholder"/>
+                                <form:input  path="comment" type="text" class="input" placeholder="${writeReviewPlaceholder}"/>
                                 <input type="submit" value="<spring:message code="service.send"/>" class="send-btn">
                             </div>
                             <form:errors path="rating" element="p" cssClass="error"/>
@@ -254,7 +257,7 @@
                         <p class="comment"><spring:message code="service.first-to-rate"/></p>
                     </c:when>
                     <c:otherwise>
-                        <h4><spring:message code="service.last-questions"/></h4>
+                        <h4><spring:message code="service.last-reviews"/></h4>
                         <c:forEach items="${reviews}" var="review">
                             <c:if test="${review.id != hasAlreadyRated.id}">
                                 <c:set value="${review.rating}" var="rate"/>

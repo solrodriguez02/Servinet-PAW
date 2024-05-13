@@ -63,9 +63,9 @@
         Assert.assertEquals(DESCRIPTION, service.getDescription());
         Assert.assertEquals(HOMESERVICE, service.getHomeService());
         Assert.assertEquals(LOCATION, service.getLocation());
-        Assert.assertEquals(CATEGORY, Categories.findByValue(service.getCategory()));
+        Assert.assertEquals(CATEGORY, service.getCategory());
         Assert.assertEquals(DURATION, service.getDuration());
-        Assert.assertEquals(PRICING, PricingTypes.findByValue(service.getPricing()));
+        Assert.assertEquals(PRICING, service.getPricing());
         Assert.assertEquals(PRICE, service.getPrice());
         Assert.assertEquals(ADDITIONALCHARGES, service.getAdditionalCharges());
         Assert.assertEquals(1, JdbcTestUtils.countRowsInTable(jdbcTemplate, "services"));
@@ -84,9 +84,9 @@
         Assert.assertEquals(DESCRIPTION,service.getDescription());
         Assert.assertEquals(HOMESERVICE,service.getHomeService());
         Assert.assertEquals(LOCATION,service.getLocation());
-        Assert.assertEquals(CATEGORY.getValue(),service.getCategory());
+        Assert.assertEquals(CATEGORY.getValue(),service.getCategory().getValue());
         Assert.assertEquals(DURATION,service.getDuration());
-        Assert.assertEquals(PRICING.getValue(),service.getPricing());
+        Assert.assertEquals(PRICING,service.getPricing());
         Assert.assertEquals(PRICE,service.getPrice());
         Assert.assertEquals(ADDITIONALCHARGES,service.getAdditionalCharges());
     }

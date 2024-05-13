@@ -31,8 +31,8 @@ public class Service extends BasicService {
         this.description = description;
     }
 
-    public String getCategory() {
-        return category.getValue();
+    public Categories getCategory() {
+        return category;
     }
 
     public void setCategory(String category) {
@@ -61,8 +61,8 @@ public class Service extends BasicService {
 
 
 
-    public String getPricing() {
-        return pricing.getValue();
+    public PricingTypes getPricing() {
+        return pricing;
     }
 
     public void setPricing(String pricing) {

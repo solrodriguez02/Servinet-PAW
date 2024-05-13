@@ -23,7 +23,7 @@ public class BusinessServiceImplTest {
     private static final String TELEPHONE = "123456789";
     private static final String LOCALE = "en";
     private static final String EMAIL = "mail@mail.com";
-    private static final String LOCATION = null;
+    private static final String LOCATION = "location";
 
     @InjectMocks
     private BusinessServiceImpl businessService;
@@ -39,6 +39,7 @@ public class BusinessServiceImplTest {
     @Test
     public void testCreate(){
         Mockito.when(userService.findById(USER_ID)).thenReturn(Optional.of(new User(USER_ID, USERNAME, PASSWORD, NAME,SURNAME , EMAIL, TELEPHONE, false,LOCALE)));
+        Mockito.when(businessDao.createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION)).thenReturn(new Business(ID, BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION));
         Business biz= businessService.createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);
 
         Mockito.verify(businessDao).createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);
