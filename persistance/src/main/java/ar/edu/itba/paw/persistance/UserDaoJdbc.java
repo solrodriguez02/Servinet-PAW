@@ -6,6 +6,7 @@ import ar.edu.itba.paw.services.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -19,7 +20,7 @@ public class UserDaoJdbc implements UserDao {
 
     private static final RowMapper<User> ROW_MAPPER = (rs, rowNum) -> new User(rs.getInt("userid") ,
             rs.getString("username"),rs.getString("password"), rs.getString("name"), rs.getString("surname"), rs.getString("email"),
-            rs.getString("telephone"), rs.getBoolean("isprovider"));
+            rs.getString("telephone"), rs.getBoolean("isprovider"), rs.getString("locale"));
 
     private static final RowMapper<Boolean> PROVIDER_MAPPER = (rs, rowNum) -> rs.getBoolean("isprovider");
 
@@ -91,7 +92,7 @@ public class UserDaoJdbc implements UserDao {
     }
 
     @Override
-    public User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final boolean isProvider) {
+    public User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final boolean isProvider, final String locale) {
         final Map<String, Object> userData = new HashMap<>();
         userData.put("username", username);
         userData.put("name", name);
@@ -100,8 +101,9 @@ public class UserDaoJdbc implements UserDao {
         userData.put("email", email);
         userData.put("telephone", telephone);
         userData.put("isprovider", isProvider);
+        userData.put("locale", locale);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(userData);
-        return new User(generatedId.longValue(), username ,password, name,surname, email, telephone, isProvider);
+        return new User(generatedId.longValue(), username ,password, name,surname, email, telephone, isProvider, locale);
     }
 
 }

@@ -10,7 +10,7 @@ public interface UserDao {
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
     boolean isProvider(long userid);
-    User create(String username, String name,String surname, String password, String email, String telephone, boolean isProvider);
+    User create(final String username, final String name,final String surname, final String password, final String email, final String telephone, final boolean isProvider, final String locale);
     void changeEmail(long userid,String value);
     void changeUsername(long userid,String value);
     void changePassword(String email,String value);

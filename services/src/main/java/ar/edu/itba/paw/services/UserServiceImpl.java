@@ -2,6 +2,7 @@ package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 
@@ -75,12 +77,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User create(final String username,final String name, final String surname, final String password, final String email, final String telephone) {
         User user = userDao.findByEmail(email).orElse(null);
-        /*if (user!= null){
-            throw new IllegalArgumentException("User already exists");
-        }
-        */
+        String locale = LocaleContextHolder.getLocale().getLanguage();
 
-        user= userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false);
+        user= userDao.create(username,name,surname, passwordEncoder.encode(password), email, telephone,false,locale);
         Set<GrantedAuthority> authorities= Set.of(new SimpleGrantedAuthority("ROLE_USER"));
         org.springframework.security.core.userdetails.User userDetails = new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userDetails, null, authorities));

@@ -9,7 +9,7 @@ public class User {
     private String email;
     private String telephone;
     private boolean isProvider;
-    private long imageId;
+    private String locale;
     public String getName() {
         return name;
     }
@@ -20,12 +20,6 @@ public class User {
 
     public String getFullName(){
         return name + ' ' + surname;
-    }
-
-    //! TODO, temporal, deberia estar en db (cambiar en profile y navbar jsp)
-    public String getProfileImg(){
-        //if ( imageId==0 )
-            return "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png;";
     }
 
     public String getEmail() {
@@ -44,7 +38,7 @@ public class User {
         return isProvider;
     }
 
-    public User(long userId, String username,String password ,String name, String surname, String email, String telephone, boolean isProvider) {
+    public User(long userId, String username,String password ,String name, String surname, String email, String telephone, boolean isProvider, String locale) {
         this.username = username;
         this.userId = userId;
         this.password=password;
@@ -53,6 +47,7 @@ public class User {
         this.email = email;
         this.telephone = telephone;
         this.isProvider = isProvider;
+        this.locale = locale;
     }
     public String getPassword() {
         return password;
@@ -64,5 +59,13 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }
