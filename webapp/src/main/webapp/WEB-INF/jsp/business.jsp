@@ -40,6 +40,16 @@
     </div>
   </div>
 
+  <div class="business-info box">
+    <div class="business-info-container">
+      <h3><spring:message code="business.contact"/></h3>
+      <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
+      <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
+      <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+    </div>
+  </div>
+
+  <h3><spring:message code="business.services"/></h3>
   <div class="boxes-container">
     <c:forEach items="${serviceList}" var="service" varStatus="loop">
       <a class="none-decoration" href="${pageContext.request.contextPath}/servicio/${service.id}">

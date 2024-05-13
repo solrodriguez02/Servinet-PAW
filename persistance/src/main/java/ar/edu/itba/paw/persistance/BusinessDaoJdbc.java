@@ -97,9 +97,9 @@ public class BusinessDaoJdbc implements BusinessDao {
         Map<String,Object> businessData = new HashMap<>();
         businessData.put("businessname", businessName);
         businessData.put("userid", userId);
-        businessData.put("telephone", telephone);
-        businessData.put("email", email);
-        businessData.put("location", location);
+        businessData.put("businesstelephone", telephone);
+        businessData.put("businessemail", email);
+        businessData.put("businesslocation", location);
         final Number generatedId = simpleJdbcInsert.executeAndReturnKey(businessData);
         return new Business(generatedId.longValue(), businessName, userId, telephone, email, location);
     }
