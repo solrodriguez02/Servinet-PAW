@@ -5,7 +5,7 @@ import ar.edu.itba.paw.webapp.validation.FieldsValueMatch;
 import ar.edu.itba.paw.webapp.validation.UsernameNotUsed;
 
 import javax.validation.constraints.*;
-@FieldsValueMatch(field = "password", fieldMatch = "passwordConfirmation", message = "Las contraseñas no coinciden")
+@FieldsValueMatch(field = "password", fieldMatch = "passwordConfirmation")
 public class RegisterUserForm {
    @NotEmpty
    @NotNull

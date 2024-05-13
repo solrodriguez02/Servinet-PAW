@@ -9,17 +9,12 @@ import java.time.LocalDateTime;
 
 
 public class AppointmentForm {
-    //acá no toma not empty
-    //armo custom?
     private String neighbourhood;
 
     @NotEmpty
     @Size(max = 255)
     private String location;
 
-    //no funciona @Future
-    //armar conversor para el formato de fecha
-    //formato que se acepta 'YYYY-MM-DDTHH:MM'
     @FutureDate
     private String date;
 
@@ -43,7 +38,6 @@ public class AppointmentForm {
         this.location = location;
     }
 
-    //ya probamos pasandole date pero no se toma
     public void setDate(String date) {
         this.date = date;
     }

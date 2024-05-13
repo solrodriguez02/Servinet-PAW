@@ -41,7 +41,6 @@
                         <p class="label"><spring:message code="appointment.home-service"/></p>
                         <p class="label"><spring:message code="input.appointment-neighbourhood"/></p>
                         <form:select id="select" class="appointment-select" path="neighbourhood">
-                            <option value=""></option>
                             <c:forEach var="neighbour" items="${service.neighbourhoodAvailable}">
                                 <option value="${neighbour}"><c:out value="${neighbour}"/></option>
                             </c:forEach>
