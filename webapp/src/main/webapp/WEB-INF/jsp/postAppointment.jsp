@@ -48,24 +48,21 @@
                         </form:select>
                     <!--        <option value="${service.location}"><c:out value="${service.location}"/></option> -->
                     </div>
+                    <form:errors path="neighbourhood" cssClass="error" element="p"/>
                     <p class="label"><spring:message code="address"/></p>
                     <spring:message code="input.address" var="address"/>
-                    <form:input type="text" class="input" path="location" placeholder="${address}" required="true"/>
                 </label>
             </c:when>
             <c:otherwise>
                 <p class="label"><spring:message code="appointment.location"/><c:out value="${service.location}"/></p>
-                <!--
-                <label class="transparent">
-                    <input required="true" type="text" class="input" path="" placeholder="Ingrese su direccion" value="-"/>
-                </label>
-                -->
             </c:otherwise>
         </c:choose>
+        <form:input type="text" class="${service.homeService? 'input':'transparent'}" path="location" placeholder="${address}" value="${service.homeService? '':'-'}"/>
+        <form:errors path="location" cssClass="error" element="p"/>
 
         <label>
             <p class="label"><spring:message code="appointment.date"/></p>
-            <form:input required="true" type="datetime-local" class="input" path="date" />
+            <form:input type="datetime-local" class="input" path="date" required="true"/>
             <form:errors path="date" cssClass="error" element="p"/>
         </label>
         <c:if test="${service.duration > 0}">
