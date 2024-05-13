@@ -61,18 +61,16 @@ public class AppointmentServiceImpl implements AppointmentService{
         LocalDateTime startDate = LocalDateTime.parse(date);
         Appointment appointment = appointmentDao.create(service.getId(), newuser.getUserId(), startDate, startDate.plusMinutes(service.getDuration()), location);
         Business business = businessDao.findById(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
-            //* si ya tiene el Service => ya lo paso x param
-        emailService.requestAppointment(appointment, service, business, newuser);
+
+        emailService.requestAppointment(appointment, service, business, newuser, getBusinessLocale(business.getUserId()));
         LOGGER.info("Appointment request email sent successfully.");
         return appointment;
     }
     @Transactional
     @Override
     public long confirmAppointment(long appointmentid) {
-        Optional<Appointment> optionalAppointment = findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
+
+        Appointment appointment = findById(appointmentid).orElseThrow(AppointmentNonExistentException::new);
         final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
@@ -81,17 +79,14 @@ public class AppointmentServiceImpl implements AppointmentService{
 
         Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.confirmAppointment(appointment.getId());
-        emailService.confirmedAppointment(appointment, service, business, client);
+        emailService.confirmedAppointment(appointment, service, business, client, getBusinessLocale(business.getUserId()) );
         LOGGER.info("Appointment confirmation email sent successfully.");
         return service.getId();
     }
     @Transactional
     @Override
     public long denyAppointment(long appointmentid) {
-        Optional<Appointment> optionalAppointment = findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
+        Appointment appointment = findById(appointmentid).orElseThrow(AppointmentNonExistentException::new);
         final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
@@ -100,7 +95,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
         Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.cancelAppointment(appointment.getId());
-        emailService.deniedAppointment(appointment, service, business, client,false);
+        emailService.deniedAppointment(appointment, service, business, client,false, getBusinessLocale(business.getUserId()));
         LOGGER.info("Denied appointment email sent successfully.");
 
         return service.getId();
@@ -108,18 +103,19 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Transactional
     @Override
     public long cancelAppointment(long appointmentid) {
-        Optional<Appointment> optionalAppointment = findById(appointmentid);
-        if (!optionalAppointment.isPresent())
-            throw new AppointmentNonExistentException();
-        Appointment appointment = optionalAppointment.get();
+        Appointment appointment = findById(appointmentid).orElseThrow(AppointmentNonExistentException::new);
         final Service service = serviceDao.findById(appointment.getServiceid()).orElseThrow(ServiceNotFoundException::new);
         final User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
         Business business = businessDao.findById( service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         appointmentDao.cancelAppointment(appointment.getId());
-        emailService.cancelledAppointment(appointment, service,business, client,false);
+        emailService.cancelledAppointment(appointment, service,business, client,false, getBusinessLocale(business.getUserId()));
         LOGGER.info("Cancel Appointment email sent successfully.");
 
         return service.getId();
+    }
+
+    private String getBusinessLocale(long adminId){
+        return userService.getUserLocale(adminId);
     }
 }

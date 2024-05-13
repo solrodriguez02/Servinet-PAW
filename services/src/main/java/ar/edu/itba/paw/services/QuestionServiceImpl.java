@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.BasicService;
+import ar.edu.itba.paw.model.Business;
 import ar.edu.itba.paw.model.Question;
 import ar.edu.itba.paw.model.User;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
@@ -58,10 +59,10 @@ public class QuestionServiceImpl implements  QuestionService {
     public Question create(long serviceid, long userid, String questionString) {
         Question question = questionDao.create(serviceid, userid, questionString);
         BasicService service = serviceService.findBasicServiceById(serviceid).orElseThrow(ServiceNotFoundException::new);
-        String businessEmail = businessService.getBusinessEmail(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
+        Business business = businessService.findById(service.getBusinessid()).orElseThrow(BusinessNotFoundException::new);
         User user = userService.findById(userid).orElseThrow(UserNotFoundException::new);
         try {
-            emailService.askedQuestion( service, businessEmail, user, questionString);
+            emailService.askedQuestion( service, business.getEmail(), user, questionString, userService.getUserLocale(business.getUserId()));
         } catch (MessagingException e ){
             LOGGER.warn("Error sending email with question: " + e.getMessage());
         }

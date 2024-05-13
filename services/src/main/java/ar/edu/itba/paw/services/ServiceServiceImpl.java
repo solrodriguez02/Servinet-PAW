@@ -94,18 +94,18 @@ public class ServiceServiceImpl implements ServiceService {
     @Transactional
     @Override
     public void delete(Service service, Business business) {
-
+        String businessLocale = userService.getUserLocale(business.getUserId());
         List<Appointment> appointmentList = appointmentService.getAllUpcomingServiceAppointments(service.getId());
              for ( Appointment appointment : appointmentList){
                  User client = userService.findById( appointment.getUserid()).orElseThrow(UserNotFoundException::new);
 
                 if (appointment.getConfirmed())
-                    emailService.cancelledAppointment(appointment,service,business,client,true);
+                    emailService.cancelledAppointment(appointment,service,business,client,true,businessLocale);
                 else
-                    emailService.deniedAppointment(appointment,service,business,client,true);
+                    emailService.deniedAppointment(appointment,service,business,client,true,businessLocale);
              }
         serviceDao.delete(service.getId());
-        emailService.deletedService(service,business,userService.getUserLocale(business.getUserId()));
+        emailService.deletedService(service,business,businessLocale);
     }
 
 

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.*;
@@ -37,34 +35,6 @@ public class EmailServiceImpl implements EmailService{
         this.messageSource = messageSource;
     }
 
-    @Async
-    @Override
-    public void requestAppointment(Appointment appointment, Service service, Business business, User client) {
-        // todo setLocale();
-        final Context ctx = getContext(appointment,service,false, client, business);
-
-        LOGGER.info("Preparing request mail for business owner.");
-        try {
-            sendMailToBusiness(EmailTypes.REQUEST, business.getEmail(), ctx);
-        }catch(MessagingException e){
-            LOGGER.warn("Error while preparing request notification email for business owner: {}", e.getMessage());
-        }
-
-        setLocale(client.getLocale());
-        ctx.setLocale(LOCALE);
-        LOGGER.info("Preparing request mail for client.");
-        try {
-            sendMailToClient(EmailTypes.WAITING, client.getEmail(), ctx);
-        }catch(MessagingException e){
-            LOGGER.warn("Error while preparing request notification email for client: {}", e.getMessage());
-        }
-    }
-
-    @Async
-    @Override
-    public void confirmedAppointment(Appointment appointment, Service service, Business business, User client) {
-        sendAppointmentMails(appointment, EmailTypes.ACCEPTED, service, business, client, false);
-    }
     public void recoverPassword(User user, PasswordRecoveryCode code) {
         setLocale(user.getLocale());
         final Context ctx = new Context(LOCALE);
@@ -93,18 +63,47 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) {
-        sendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, isServiceDeleted);
+    public void requestAppointment(Appointment appointment, Service service, Business business, User client, String businessLocale) {
+        setLocale(businessLocale);
+        final Context ctx = getContext(appointment,service,false, client, business);
+
+        LOGGER.info("Preparing request mail for business owner.");
+        try {
+            sendMailToBusiness(EmailTypes.REQUEST, business.getEmail(), ctx);
+        }catch(MessagingException e){
+            LOGGER.warn("Error while preparing request notification email for business owner: {}", e.getMessage());
+        }
+
+        setLocale(client.getLocale());
+        ctx.setLocale(LOCALE);
+        LOGGER.info("Preparing request mail for client.");
+        try {
+            sendMailToClient(EmailTypes.WAITING, client.getEmail(), ctx);
+        }catch(MessagingException e){
+            LOGGER.warn("Error while preparing request notification email for client: {}", e.getMessage());
+        }
     }
 
     @Async
     @Override
-    public void deniedAppointment(Appointment appointment, Service service, Business business, User client,boolean isServiceDeleted) {
-        sendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, isServiceDeleted);
+    public void confirmedAppointment(Appointment appointment, Service service, Business business, User client, String businessLocale) {
+        sendAppointmentMails(appointment, EmailTypes.ACCEPTED, service, business, client, false, businessLocale);
     }
 
-    private void sendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, boolean isServiceDeleted) {
-        // todo setLocale()
+    @Async
+    @Override
+    public void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted, String businessLocale) {
+        sendAppointmentMails(appointment,EmailTypes.CANCELLED, service, business, client, isServiceDeleted, businessLocale);
+    }
+
+    @Async
+    @Override
+    public void deniedAppointment(Appointment appointment, Service service, Business business, User client,boolean isServiceDeleted, String businessLocale) {
+        sendAppointmentMails(appointment,EmailTypes.DENIED, service, business, client, isServiceDeleted, businessLocale);
+    }
+
+    private void sendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, boolean isServiceDeleted, String businessLocale) {
+        setLocale(businessLocale);
         final Context ctx = getContext(appointment,service,isServiceDeleted, client, business);
 
         if (!isServiceDeleted) {
@@ -116,6 +115,7 @@ public class EmailServiceImpl implements EmailService{
             }
         }
         setLocale(client.getLocale());
+        ctx.setLocale(LOCALE);
         try {
             sendMailToClient(emailType, client.getEmail(), ctx);
             LOGGER.info("{} mail for client sent successfully.", emailType.getType());
@@ -212,7 +212,7 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void askedQuestion(BasicService service, String businessEmail, User client, String question) throws MessagingException{
+    public void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale) throws MessagingException{
         setLocale(client.getLocale());
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
@@ -220,7 +220,7 @@ public class EmailServiceImpl implements EmailService{
         ctx.setVariable("client", client);
         ctx.setVariable("question", question);
         sendMailToClient(EmailTypes.ASKED_QUESTION, client.getEmail(), ctx );
-        // todo setLocale();
+        setLocale(businessLocale);
         ctx.setLocale(LOCALE);
         sendMailToBusiness(EmailTypes.ASKED_QUESTION, businessEmail, ctx );
     }

@@ -8,17 +8,17 @@ import org.springframework.scheduling.annotation.Async;
 
 public interface EmailService {
 
-    void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode) ;
+    void recoverPassword(User user, PasswordRecoveryCode passwordRecoveryCode);
 
-    void confirmNewPassword(User user) ;
+    void confirmNewPassword(User user);
 
-    void requestAppointment(Appointment appointment, Service service, Business business, User client);
+    void requestAppointment(Appointment appointment, Service service, Business business, User client, String businessLocale);
 
-    void confirmedAppointment(Appointment appointment, Service service, Business business, User client) ;
+    void confirmedAppointment(Appointment appointment, Service service, Business business, User client, String businessLocale);
 
-    void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) ;
+    void cancelledAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted, String businessLocale);
 
-    void deniedAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted) ;
+    void deniedAppointment(Appointment appointment, Service service, Business business, User client, boolean isServiceDeleted, String businessLocale);
 
     void deletedService(Service service, Business business, String businessLocale);
 
@@ -28,7 +28,7 @@ public interface EmailService {
 
     void deletedBusiness(Business business, String businessLocale);
 
-    void askedQuestion(BasicService service, String businessEmail, User client, String question)  throws MessagingException;
+    void askedQuestion(BasicService service, String businessEmail, User client, String question, String businessLocale)  throws MessagingException;
     void answeredQuestion(BasicService service, User client, String question, String response) throws MessagingException;
 
 }
