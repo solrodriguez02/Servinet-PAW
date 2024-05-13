@@ -67,10 +67,12 @@ public class BusinessServiceImpl implements BusinessService{
             for ( Service service : servicesList)
                 serviceService.delete(service, business );
 
-        businessDao.deleteBusiness(businessid);
+        boolean isStillProvider = businessDao.deleteBusiness(businessid);
         emailService.deletedBusiness(business,getBusinessLocale(business.getUserId()));
         User user = userService.findById(business.getUserId()).orElseThrow(UserNotFoundException::new);
-        userService.revokeProviderRole(user);
+        if (!isStillProvider) {
+            userService.revokeProviderRole(user);
+        }
     }
 
     @Transactional

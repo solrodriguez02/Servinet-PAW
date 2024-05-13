@@ -21,11 +21,13 @@
  public class BusinessDaoJdbcTest {
 
      private static final long BUS_ID =1;
+     private static final long BUS_ID_SECONDARY= 2;
      private static final String BUSINESS_NAME = "Business";
+     private static final String BUSINESS_NAME_SECONDARY = "Business2";
      private static final long USER_ID = 1;
      private static final String TELEPHONE = "123456789";
      private static final String EMAIL = "mail@mail.com";
-     private static final String LOCATION = null;
+     private static final String LOCATION = "Location";
 
      @Autowired
      private BusinessDaoJdbc businessDaoJdbc;
@@ -54,15 +56,27 @@
      }
 
      @Test
-     public void testDeleteBusiness(){
+     public void testDeleteLastBusiness(){
          // 1. Precondiciones
          jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
          jdbcTemplate.execute(String.format("INSERT INTO business (businessid, businessname, userid, businessTelephone, businessEmail, businessLocation) VALUES (%d,'%s', 1, '%s','%s','%s')",BUS_ID,BUSINESS_NAME, TELEPHONE, EMAIL, LOCATION));
 
-         businessDaoJdbc.deleteBusiness(BUS_ID);
+         boolean isStillProvider = businessDaoJdbc.deleteBusiness(BUS_ID);
 
          Assert.assertEquals(0,JdbcTestUtils.countRowsInTable(jdbcTemplate, "business"));
+         Assert.assertFalse(isStillProvider);
+     }
 
+     @Test
+     public void testDeleteBusinessWithMoreLeft(){
+         jdbcTemplate.execute("INSERT INTO users (userid, username, password, name, surname, email, telephone) VALUES (1, 'username', 'password', 'name', 'surname', 'email', 'telephone')");
+         jdbcTemplate.execute(String.format("INSERT INTO business (businessid, businessname, userid, businessTelephone, businessEmail, businessLocation) VALUES (%d,'%s', 1, '%s','%s','%s')",BUS_ID,BUSINESS_NAME, TELEPHONE, EMAIL, LOCATION));
+         jdbcTemplate.execute(String.format("INSERT INTO business (businessid, businessname, userid, businessTelephone, businessEmail, businessLocation) VALUES (%d,'%s', 1, '%s','%s','%s')",BUS_ID_SECONDARY,BUSINESS_NAME_SECONDARY, TELEPHONE, EMAIL, LOCATION));
+
+         boolean isStillProvider = businessDaoJdbc.deleteBusiness(BUS_ID);
+
+         Assert.assertEquals(1,JdbcTestUtils.countRowsInTable(jdbcTemplate, "business"));
+         Assert.assertTrue(isStillProvider);
      }
 
  }

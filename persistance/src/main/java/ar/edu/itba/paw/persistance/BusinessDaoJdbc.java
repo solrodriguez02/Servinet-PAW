@@ -58,11 +58,11 @@ public class BusinessDaoJdbc implements BusinessDao {
     }
 
     @Override
-    public void deleteBusiness(long businessid) {
+    public boolean deleteBusiness(long businessid) {
         Optional<Business> business = findById(businessid);
         if (business.isEmpty()) {
             LOGGER.warn("Business not found");
-            return;
+            return true;
         }
         long userId = business.get().getUserId();
         try {
@@ -76,7 +76,9 @@ public class BusinessDaoJdbc implements BusinessDao {
             //podría usarse la de userDao
             jdbcTemplate.update("update users set isprovider = false where userid = ?", userId);
             LOGGER.info("User status updated");
+            return false;
         }
+        return true;
     }
     private void changeField(final String field, long businessId, String value) {
         try {
