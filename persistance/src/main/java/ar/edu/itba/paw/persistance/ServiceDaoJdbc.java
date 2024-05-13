@@ -113,12 +113,8 @@ public class ServiceDaoJdbc implements ServiceDao {
 
     @Override
     public void delete(long serviceid) {
-       try {
-           jdbcTemplate.update("delete from services where id= ? ", serviceid);
-           LOGGER.info("Service successfully deleted");
-       }catch(DataAccessException e){
-           LOGGER.warn("Error deleting service: {}", e.getMessage());
-       }
+       jdbcTemplate.update("delete from services where id= ? ", serviceid);
+       LOGGER.info("Service successfully deleted");
     }
 
     @Override

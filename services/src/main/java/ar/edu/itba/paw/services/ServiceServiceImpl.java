@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +50,7 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Transactional
+    @Override
     public Service create(long businessId, String name, String description, boolean homeservice,
                           Neighbourhoods[] neighbourhood, String location, Categories category, int minimalduration,
                           PricingTypes pricing, String price, boolean additionalCharges, MultipartFile image) {

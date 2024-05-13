@@ -53,6 +53,7 @@ public class BusinessServiceImpl implements BusinessService{
         return businessDao.getBusinessEmail(businessid);
     }
 
+    @Transactional
     @Override
     public void changeBusinessEmail(long businessId, String value){
         businessDao.changeBusinessEmail(businessId,value);

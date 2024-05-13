@@ -9,6 +9,8 @@ import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
 
 import ar.edu.itba.paw.webapp.form.BusinessForm;
+import ar.edu.itba.paw.webapp.form.EditReviewForm;
+import ar.edu.itba.paw.webapp.form.ReviewsForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -142,15 +144,35 @@ public class BusinessController {
     }
 
     @RequestMapping(method = RequestMethod.GET, path = "/negocio/{businessId:\\d+}")
-    public ModelAndView businesses(@PathVariable("businessId") final long businessId) {
+    public ModelAndView businesses(
+            @PathVariable("businessId") final long businessId,
+            @ModelAttribute("businessForm") final BusinessForm form
+    ) {
         final ModelAndView mav = new ModelAndView("business");
         Business business = businessService.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         List<BasicService> serviceList = serviceService.getAllBusinessBasicServices(businessId);
+        Optional<User> currentUser = authControl.getCurrentUser();
+        Long userId = currentUser.isPresent() ? currentUser.get().getUserId() : null;
+        boolean isOwner = userId != null && business.getUserId()==userId;
 
         mav.addObject("business",business);
         mav.addObject("serviceList", serviceList);
+        mav.addObject("isOwner", isOwner);
         return mav;
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/{businessId:\\d+}/editar-negocio")
+    public ModelAndView editBusiness (
+            @Valid @ModelAttribute("businessForm") BusinessForm form, final BindingResult errors,
+            @PathVariable("businessId") final long businessId
+    ){
+        if(errors.hasErrors()) {
+            return businesses(businessId, form);
+        }
+        businessService.changeBusinessEmail(businessId, form.getBusinessEmail());
+        businessService.changeBusinessLocation(businessId, form.getBusinessLocation());
+        businessService.changeBusinessTelephone(businessId, form.getBusinessTelephone());
+        return new ModelAndView("redirect:/negocio/"+businessId);
+    }
 
 }
