@@ -9,7 +9,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -73,6 +72,16 @@ public class AppointmentServiceImplTest {
         Assert.assertEquals(APPOINTMENTID, appointment.getId());
         Assert.assertEquals(ENDDATE, appointment.getEndDate());
     }
+    @Test(expected = AppointmentAlreadyConfirmed.class)
+    public void testDenyAlreadyCondirmed(){
+        Mockito.when(appointmentService.findById(Mockito.eq(APPOINTMENTID))).thenReturn(Optional.of(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,LOCATION,true)));
+        Mockito.when(serviceDao.findById(Mockito.eq(SERVICEID))).thenReturn(Optional.of(createService()));
+        Mockito.when(userService.findById(Mockito.anyLong())).thenReturn(Optional.of(new User(USERID,USERNAME,PASSWORD,NAME,SURNAME,EMAIL,TELEPHONE,true,LOCALE)));
+
+        appointmentService.denyAppointment(APPOINTMENTID);
+        Assert.fail();
+    }
+
     @Test(expected= AppointmentAlreadyConfirmed.class)
     public void testCreateExisting(){
         Mockito.when(appointmentService.findById(Mockito.eq(APPOINTMENTID))).thenReturn(Optional.of(new Appointment(APPOINTMENTID,SERVICEID,USERID,STARTDATE,ENDDATE,LOCATION,true)));
