@@ -15,6 +15,7 @@ public abstract class BasicAppointment {
     private static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("EEE dd MMMM yyyy, HH:mm");
     private static final DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
     private final String startDateString;
+    private final String HOMESERVICE="-";
 
     public BasicAppointment(long id, long serviceid, LocalDateTime startDate, LocalDateTime endDate, String location, boolean confirmed) {
         this.id = id;
@@ -66,7 +67,7 @@ public abstract class BasicAppointment {
     }
 
     public boolean getHomeService(){
-        return !Objects.equals(location, null);
+        return !Objects.equals(location, HOMESERVICE);
     }
 
     public boolean getDuration(){
