@@ -5,7 +5,6 @@ import ar.edu.itba.paw.services.BusinessDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -65,12 +64,8 @@ public class BusinessDaoJdbc implements BusinessDao {
             return true;
         }
         long userId = business.get().getUserId();
-        try {
-            jdbcTemplate.update("delete from business where businessid = ?", businessid);
-            LOGGER.info("Business successfully deleted");
-        }catch (DataAccessException e){
-            LOGGER.warn("Error deleting business: {}", e.getMessage());
-        }
+        jdbcTemplate.update("delete from business where businessid = ?", businessid);
+        LOGGER.info("Business successfully deleted");
         int count = jdbcTemplate.queryForObject("select count(*) from business where userid= ?", Integer.class , userId);
         if(count == 0){
             //podría usarse la de userDao
@@ -81,12 +76,9 @@ public class BusinessDaoJdbc implements BusinessDao {
         return true;
     }
     private void changeField(final String field, long businessId, String value) {
-        try {
-            jdbcTemplate.update(String.format("update business set %s = ? where businessid = ?", field), value, businessId);
-            LOGGER.info("Field '{}' successfully changed", field);
-        } catch (DataAccessException e) {
-            LOGGER.warn("Error changing field '{}': {}", field, e.getMessage());
-        }
+        jdbcTemplate.update(String.format("update business set %s = ? where businessid = ?", field), value, businessId);
+        LOGGER.info("Field '{}' successfully changed", field);
+
     }
 
     @Override

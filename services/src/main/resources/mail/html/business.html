@@ -59,7 +59,7 @@
             <span th:text="#{template.business(${businessName})}"/> <span th:switch="${type}">
                 <span th:case="'CREATED'">
                     <span th:text="#{template.operation(#{template.created})}"/>. <span th:text="#{template.id(${businessId})}"/>
-                    <span th:text="#{template.business.url}"/> <a th:href="${url}+'negocio/'+${businessId}" th:text="${url}+'negocio/'+${businessId}"/>.
+                    <span th:text="#{template.url}"/> <a th:href="${url}+'negocio/'+${businessId}" th:text="${url}+'negocio/'+${businessId}"/>.
                 </span>
                 <span th:case="*">
                     <span th:text="#{template.operation(#{template.deleted})}"/>. <span th:text="#{template.business.deleted-services}"/>
