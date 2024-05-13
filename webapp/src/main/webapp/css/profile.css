@@ -185,11 +185,6 @@
     margin-right: 10px;
 }
 
-.business-input {
-    border-radius: 10px !important;
-    width: 80% !important;
-}
-
 .input-box {
     margin: 12px 0;
 }
@@ -202,4 +197,17 @@
 
 .errors {
     margin-top: 15px;
+}
+
+.input {
+    border-radius: 10px;
+    width: 80%;
+    background-color: #efefef;
+    padding: 10px 15px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+}
+
+.input:hover {
+    background-color:#e1e1e1;
 }
