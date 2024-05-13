@@ -26,7 +26,12 @@
         <div class="header">
             <h2><c:out value="${service.name}"/></h2>
             <c:if test="${isOwner}">
-                <button class="cancelBtn" onclick="showPopUp()"><spring:message code="service.delete"/></button>
+                <div>
+                    <a href="${pageContext.request.contextPath}/${service.id}/editar-servicio/" class="none-decoration">
+                        <button class="editBtn"><spring:message code="service.edit"/></button>
+                    </a>
+                    <button class="cancelBtn" onclick="showPopUp()"><spring:message code="service.delete"/></button>
+                </div>
             </c:if>
         </div>
         <div class="info-container">
@@ -78,11 +83,13 @@
                         <p class="text-with-icon warning-text"><i class="material-icons icon">warning</i><spring:message code="service.additional-costs"/></p>
                     </c:if>
 
-                    <div class="btn-container">
-                        <button class="btn">
-                            <a href="${contratarUrl}" class="none-decoration btn-text"><spring:message code="service.new-appointment"/></a>
-                        </button>
-                    </div>
+                    <c:if test="${!isOwner}">
+                        <div class="btn-container">
+                            <button class="btn">
+                                <a href="${contratarUrl}" class="none-decoration btn-text"><spring:message code="service.new-appointment"/></a>
+                            </button>
+                        </div>
+                    </c:if>
                 </div>
             </div>
         </div>

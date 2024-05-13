@@ -149,4 +149,11 @@ public class ServiceServiceImpl implements ServiceService {
     public List<Service> getRecommendedServices() {
         return serviceDao.getRecommendedServices();
     }
+
+    @Transactional
+    @Override
+    public void editService(long serviceId, String newDescription, int newDuration, PricingTypes newPricingType, String newPrice, boolean newAdditionalCharges) {
+        serviceDao.editService(serviceId, newDescription, newDuration, newPricingType, newPrice, newAdditionalCharges);
+    }
+
 }

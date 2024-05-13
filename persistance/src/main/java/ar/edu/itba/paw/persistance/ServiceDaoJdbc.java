@@ -13,11 +13,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Arrays;
+import java.util.*;
 
 @Repository
 public class ServiceDaoJdbc implements ServiceDao {
@@ -149,5 +145,9 @@ public class ServiceDaoJdbc implements ServiceDao {
         return jdbcTemplate.query("select s.*,array_agg(nb.neighbourhood) as neighbourhoods from services s inner join nbservices nb on s.id=nb.serviceid group by s.id ORDER BY id DESC LIMIT 10", ROW_MAPPER);
     }
 
+    @Override
+    public void editService(long serviceId, String newDescription, int newDuration, PricingTypes newPricingType, String newPrice, boolean newAdditionalCharges) {
+        jdbcTemplate.update("UPDATE services SET servicedescription = ?, minimalduration = ?, pricingtype = ?, price = ?, additionalcharges = ? WHERE id = ?", newDescription, newDuration, newPricingType.getValue(), newPrice, newAdditionalCharges, serviceId);
+    }
 
 }

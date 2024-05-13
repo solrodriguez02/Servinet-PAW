@@ -133,4 +133,29 @@ public class ServiceController {
         mav.addObject("hasAlreadyRated", (userId==null)? null : rating.hasAlreadyRated(userId, serviceId));
         return mav;
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}/editar-servicio")
+    public ModelAndView editService(
+            @ModelAttribute("editServiceForm") EditServiceForm form,
+            @PathVariable("serviceId") final long serviceId
+    ) {
+        final ModelAndView mav = new ModelAndView("editService");
+        Service serv = ss.findById(serviceId).orElseThrow(ServiceNotFoundException::new);
+        mav.addObject("service", serv);
+        mav.addObject("durationTypes", DurationTypes.values());
+        return mav;
+    }
+
+    @RequestMapping(method = RequestMethod.POST, path = "/{serviceId:\\d+}/editar-servicio")
+    public ModelAndView changeService (
+            @Valid @ModelAttribute("editServiceForm") EditServiceForm form, final BindingResult errors,
+            @PathVariable("serviceId") final long serviceId
+    ){
+        if(errors.hasErrors()) {
+            return editService(form, serviceId);
+        }
+        ss.editService(serviceId, form.getDescription(), form.getMinimalduration(), form.getPricingtype(), form.getPrice(), form.getAdditionalCharges());
+        return new ModelAndView("redirect:/servicio/" + serviceId);
+    }
+
 }
