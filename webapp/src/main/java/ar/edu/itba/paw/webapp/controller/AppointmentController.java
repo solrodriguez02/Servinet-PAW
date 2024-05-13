@@ -59,7 +59,7 @@ public class AppointmentController {
         }
         User user = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new);
 
-        Appointment createdAppointment = appointmentService.create(serviceId,user.getName(),user.getSurname(),user.getEmail(),form.getLocation(),user.getEmail(), form.getDate().toString());
+        Appointment createdAppointment = appointmentService.create(serviceId,user.getName(),user.getSurname(),user.getEmail(),form.getLocation(),user.getEmail(), form.getLocalDateTime().toString());
         return new ModelAndView("redirect:/turno/"+ serviceId + "/" + createdAppointment.getId());
     }
 
