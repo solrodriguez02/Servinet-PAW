@@ -212,3 +212,15 @@
 .qst-text {
     word-wrap: break-word;
 }
+
+.view-business {
+    display: flex;
+    align-items: center;
+    color: #585bfa;
+    font-weight: bold;
+}
+
+.view-business:hover {
+    color: #7475ff;
+    transform: translateY(-2px);
+}

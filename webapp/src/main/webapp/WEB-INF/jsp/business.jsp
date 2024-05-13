@@ -30,10 +30,10 @@
         <button class="cancelBtn" id="deleteBtn" onclick="showPopUp()" >
           <i class="material-icons ">delete</i>
         </button>
+        <a href="${urlCreateService}" class="none-decoration mr">
+          <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="business.add-service"/></button>
+        </a>
         <c:if test="${not empty serviceList}" >
-          <a href="${urlCreateService}" class="none-decoration mr">
-            <button class="btn center-vertically"><i class="material-icons ">add</i> <spring:message code="business.add-service"/></button>
-          </a>
           <a href="${pageContext.request.contextPath}/negocio/${businessId}/turnos/?confirmados=false" class="none-decoration">
             <button class="btn center-vertically"><i class="material-icons ">calendar_today</i> <spring:message code="business.appointments"/></button>
           </a>

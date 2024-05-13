@@ -88,11 +88,13 @@
         </div>
 
         <div class="description-box">
-            <p class="text-description"><c:out value="${service.description}"/></p>
-            <c:url value="/negocio/${service.businessid}" var="businessUrl"/>
-            <a href="${businessUrl}">
-                <p><i class="material-icons">storefront</i><spring:message code="service.view-business"/></p>
-            </a>
+            <div class="text-description">
+                <p><c:out value="${service.description}"/></p>
+                <c:url value="/negocio/${service.businessid}" var="businessUrl"/>
+                <a class="none-decoration" href="${businessUrl}">
+                    <p class="view-business"><i class="material-icons">storefront</i><spring:message code="service.view-business"/></p>
+                </a>
+            </div>
         </div>
         </c:if>
 
