@@ -1,5 +1,7 @@
 package ar.edu.itba.paw.model;
 
+import java.util.Locale;
+
 public class User {
     private String username;
     private long userId;

@@ -25,8 +25,8 @@ public class EmailServiceImpl implements EmailService{
     private final TemplateEngine templateEngine;
     private final MessageSource messageSource;
     private final static String SERVINET_EMAIL = "servinet.servinet.servinet@gmail.com";
-
-    private final Locale LOCALE = LocaleContextHolder.getLocale(); //Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
+    // TODO temp locale def
+    private Locale LOCALE = Locale.getDefault(); //Locale.of("en"); //Locale.forLanguageTag("es-419"); // Locale.of("es");
     private final String APP_URL = "http://localhost:8080/webapp_war/"; //! CAMBIAR EN DEPLOY
     private final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
 
@@ -37,11 +37,10 @@ public class EmailServiceImpl implements EmailService{
         this.messageSource = messageSource;
     }
 
-    @Async // * funciona pues no invoque a un metodo dentro de la clase
+    @Async
     @Override
     public void requestAppointment(Appointment appointment, Service service, Business business, User client) {
-        // no llama a prepareAndSendMails() pues no necesita user (en sprint1)
-
+        // todo setLocale();
         final Context ctx = getContext(appointment,service,false, client, business);
 
         LOGGER.info("Preparing request mail for business owner.");
@@ -50,6 +49,9 @@ public class EmailServiceImpl implements EmailService{
         }catch(MessagingException e){
             LOGGER.warn("Error while preparing request notification email for business owner: {}", e.getMessage());
         }
+
+        setLocale(client.getLocale());
+        ctx.setLocale(LOCALE);
         LOGGER.info("Preparing request mail for client.");
         try {
             sendMailToClient(EmailTypes.WAITING, client.getEmail(), ctx);
@@ -64,6 +66,7 @@ public class EmailServiceImpl implements EmailService{
         sendAppointmentMails(appointment, EmailTypes.ACCEPTED, service, business, client, false);
     }
     public void recoverPassword(User user, PasswordRecoveryCode code) {
+        setLocale(user.getLocale());
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("user", user);
         ctx.setVariable("token", code.getCode());
@@ -77,6 +80,7 @@ public class EmailServiceImpl implements EmailService{
     @Async
     @Override
     public void confirmNewPassword(User user) {
+        setLocale(user.getLocale());
         final Context ctx = new Context(LOCALE);
         ctx.setVariable("user", user);
         LOGGER.info("Preparing new password confirmation mail for user.");
@@ -100,6 +104,7 @@ public class EmailServiceImpl implements EmailService{
     }
 
     private void sendAppointmentMails(Appointment appointment, EmailTypes emailType,  Service service, Business business, User client, boolean isServiceDeleted) {
+        // todo setLocale()
         final Context ctx = getContext(appointment,service,isServiceDeleted, client, business);
 
         if (!isServiceDeleted) {
@@ -110,6 +115,7 @@ public class EmailServiceImpl implements EmailService{
                 LOGGER.warn("Error while preparing {} notification email: {}", emailType.getType(), e.getMessage());
             }
         }
+        setLocale(client.getLocale());
         try {
             sendMailToClient(emailType, client.getEmail(), ctx);
             LOGGER.info("{} mail for client sent successfully.", emailType.getType());
@@ -132,7 +138,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Async
     @Override
-    public void createdService(Service service, Business business) {
+    public void createdService(Service service, Business business, String businessLocale) {
+        setLocale(businessLocale);
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
@@ -146,8 +153,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     @Async
-    public void deletedService(Service service, Business business ) {
-
+    public void deletedService(Service service, Business business, String businessLocale ) {
+        setLocale(businessLocale);
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName",service.getName());
@@ -161,7 +168,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     @Async
-    public void createdBusiness(Business business) {
+    public void createdBusiness(Business business, String businessLocale) {
+        setLocale(businessLocale);
         Context ctx = new Context(LOCALE);
         ctx.setVariable("type", EmailTypes.CREATED_BUSINESS.getType());
         ctx.setVariable("businessId",business.getBusinessid());
@@ -176,7 +184,8 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     @Async
-    public void deletedBusiness(Business business) {
+    public void deletedBusiness(Business business, String businessLocale) {
+        setLocale(businessLocale);
         Context ctx = new Context(LOCALE);
         ctx.setVariable("type", EmailTypes.DELETED_BUSINESS.getType());
         ctx.setVariable("businessId",business.getBusinessid());
@@ -197,21 +206,29 @@ public class EmailServiceImpl implements EmailService{
         return messageSource.getMessage(emailType.getSubject(), new Object[]{id, name} ,LOCALE ) ;
     }
 
+    private void setLocale(String locale){
+        LOCALE = Locale.of(locale);
+    }
+
     @Async
     @Override
     public void askedQuestion(BasicService service, String businessEmail, User client, String question) throws MessagingException{
+        setLocale(client.getLocale());
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName", service.getName());
         ctx.setVariable("client", client);
         ctx.setVariable("question", question);
         sendMailToClient(EmailTypes.ASKED_QUESTION, client.getEmail(), ctx );
+        // todo setLocale();
+        ctx.setLocale(LOCALE);
         sendMailToBusiness(EmailTypes.ASKED_QUESTION, businessEmail, ctx );
     }
 
     @Async
     @Override
     public void answeredQuestion(BasicService service, User client, String question, String response) throws MessagingException{
+        setLocale(client.getLocale());
         Context ctx = new Context(LOCALE);
         ctx.setVariable("serviceId",service.getId());
         ctx.setVariable("serviceName", service.getName());

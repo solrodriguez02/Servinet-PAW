@@ -1,6 +1,7 @@
 package ar.edu.itba.paw.services;
 
 import ar.edu.itba.paw.model.User;
+import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -53,7 +54,10 @@ public class UserServiceImpl implements UserService {
         return userDao.findByUsername(username);
     }
 
-
+    @Override
+    public String getUserLocale(long id){
+        return userDao.getUserLocale(id).orElseThrow(UserNotFoundException::new);
+    }
     @Transactional
     @Override
     public void makeProvider(User user){

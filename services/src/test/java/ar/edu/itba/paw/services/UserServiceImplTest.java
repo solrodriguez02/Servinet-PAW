@@ -22,7 +22,7 @@ public class UserServiceImplTest {
     private static final String SURNAME = "My surname";
     private static final String EMAIL = "My email";
     private static final String TELEPHONE = "My telephone";
-
+    private static final String LOCALE = "en";
 
     // Los Mocks hacen el constructor automaticamente (no necesito hacer un Before setup)
     @InjectMocks
@@ -48,7 +48,7 @@ public class UserServiceImplTest {
     @Test
     public void testFindByIdExistingUser() {
         // 1. Precondiciones
-        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false)));
+        Mockito.when(userDao.findById(Mockito.eq(USER_ID))).thenReturn(Optional.of(new User(USER_ID, USERNAME,PASSWORD, NAME, SURNAME, EMAIL, TELEPHONE, false,LOCALE)));
 
         // 2. Ejecuta la class under test (una sola)
         Optional<User> maybeUser = userService.findById(USER_ID);

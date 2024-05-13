@@ -27,7 +27,7 @@ public class UserDaoJdbcTest {
     private static final String SURNAME = "surname";
     private static final String EMAIL = "email";
     private static final String TELEPHONE = "telephone";
-
+    private static final String LOCALE = "en";
 
     @Autowired
     private UserDaoJdbc userDao;
@@ -48,7 +48,7 @@ public class UserDaoJdbcTest {
         // 1. Precondiciones (una sola)
 
         // 2. Ejecuta la class under test (una sola)
-        User user = userDao.create(USERNAME, NAME, SURNAME,PASSWORD, EMAIL, TELEPHONE, false);
+        User user = userDao.create(USERNAME, NAME, SURNAME,PASSWORD, EMAIL, TELEPHONE, false, LOCALE);
 
         // 3. Postcondiciones - assertions (todas las que sean necesarias)
         Assert.assertNotNull(user);

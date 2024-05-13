@@ -21,6 +21,7 @@ public class BusinessServiceImplTest {
     private static final String BUSINESS_NAME = "Business";
     private static final long USER_ID = 1;
     private static final String TELEPHONE = "123456789";
+    private static final String LOCALE = "en";
     private static final String EMAIL = "mail@mail.com";
     private static final String LOCATION = null;
 
@@ -37,7 +38,7 @@ public class BusinessServiceImplTest {
 
     @Test
     public void testCreate(){
-        Mockito.when(userService.findById(USER_ID)).thenReturn(Optional.of(new User(USER_ID, USERNAME, PASSWORD, NAME,SURNAME , EMAIL, TELEPHONE, false)));
+        Mockito.when(userService.findById(USER_ID)).thenReturn(Optional.of(new User(USER_ID, USERNAME, PASSWORD, NAME,SURNAME , EMAIL, TELEPHONE, false,LOCALE)));
         Business biz= businessService.createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);
 
         Mockito.verify(businessDao).createBusiness(BUSINESS_NAME, USER_ID, TELEPHONE, EMAIL, LOCATION);

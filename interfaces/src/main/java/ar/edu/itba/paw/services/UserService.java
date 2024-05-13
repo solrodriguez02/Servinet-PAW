@@ -9,6 +9,7 @@ public interface UserService {
     Optional<User> findById(long id);
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
+    String getUserLocale(long id);
     void makeProvider(User user);
     void revokeProviderRole(User user);
     User create(String username, String name,String surname, String password, String email, String telephone);

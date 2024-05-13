@@ -6,7 +6,6 @@ import ar.edu.itba.paw.services.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -24,6 +23,7 @@ public class UserDaoJdbc implements UserDao {
 
     private static final RowMapper<Boolean> PROVIDER_MAPPER = (rs, rowNum) -> rs.getBoolean("isprovider");
 
+    private static final RowMapper<String> LOCALE_MAPPER = (rs, rowNum) -> new String(rs.getString("locale"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert simpleJdbcInsert;
@@ -60,6 +60,12 @@ public class UserDaoJdbc implements UserDao {
     public boolean isProvider(long userid) {
         final List<Boolean> list = jdbcTemplate.query("SELECT isprovider from users WHERE userid = ?", new Object[] {userid}, PROVIDER_MAPPER );
         return list.stream().findFirst().isPresent() ? list.stream().findFirst().get() : false;
+    }
+
+    @Override
+    public Optional<String> getUserLocale(long id){
+        final List<String> list = jdbcTemplate.query("SELECT locale FROM users WHERE userid = ?;", new Object[]{ id },  LOCALE_MAPPER);
+        return list.stream().findFirst();
     }
 
     @Override

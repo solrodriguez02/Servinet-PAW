@@ -62,7 +62,7 @@ public class ServiceServiceImpl implements ServiceService {
         }
 
         Service service = serviceDao.create(business.getBusinessid(), name, description, homeservice,location,neighbourhood, category,minimalduration ,pricing, price, additionalCharges,imageId);
-        emailService.createdService(service, business);
+        emailService.createdService(service, business, userService.getUserLocale(business.getUserId()));
         return service;
     }
 
@@ -105,7 +105,7 @@ public class ServiceServiceImpl implements ServiceService {
                     emailService.deniedAppointment(appointment,service,business,client,true);
              }
         serviceDao.delete(service.getId());
-        emailService.deletedService(service,business);
+        emailService.deletedService(service,business,userService.getUserLocale(business.getUserId()));
     }
 
 

@@ -37,7 +37,7 @@ public class ServiceServiceImplTest {
     private static final String BUSINESS_NAME = "Business";
     private static final long PROVIDERID = 1000;
     private static final String TELEPHONE = "123456789";
-
+    private static final String LOCALE = "en";
     private static final String USERNAME = "username";
     private static final long BUSINESSID = 1;
     private static final String DESCRIPTION = "description";
@@ -102,7 +102,7 @@ public class ServiceServiceImplTest {
         return new Service(SERVICEID,BUSINESSID,SERVICENAME,SERVICEDESCRIPTION,HOMESERVICE,LOCATION, Arrays.stream(NEIGHBOURHOODS).map(Enum::name).toArray(String[]::new),CATEGORY,DURATION,PRICING,PRICE,ADDITIONALCHARGES,1);
     }
     private static User createUser(){
-        return new User(PROVIDERID, USERNAME, PASSWORD,USERNAME,SURNAME, EMAIL, TELEPHONE, false);
+        return new User(PROVIDERID, USERNAME, PASSWORD,USERNAME,SURNAME, EMAIL, TELEPHONE, false,LOCALE);
     }
     static Business createBusiness(){
         return new Business(BUSINESSID, BUSINESS_NAME, PROVIDERID, TELEPHONE,EMAIL, LOCATION );

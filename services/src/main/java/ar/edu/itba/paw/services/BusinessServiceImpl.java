@@ -68,7 +68,7 @@ public class BusinessServiceImpl implements BusinessService{
                 serviceService.delete(service, business );
 
         businessDao.deleteBusiness(businessid);
-        emailService.deletedBusiness(business);
+        emailService.deletedBusiness(business,getBusinessLocale(business.getUserId()));
         User user = userService.findById(business.getUserId()).orElseThrow(UserNotFoundException::new);
         userService.revokeProviderRole(user);
     }
@@ -78,11 +78,14 @@ public class BusinessServiceImpl implements BusinessService{
     public Business createBusiness(String businessName, long userId, String telephone, String email, String location){
         Business business = businessDao.createBusiness(businessName,userId,telephone,email,location);
 
-        emailService.createdBusiness(business);
+        emailService.createdBusiness(business,getBusinessLocale(business.getUserId()));
         User user= userService.findById(userId).orElseThrow(UserNotFoundException::new);
         userService.makeProvider(user);
         return business;
     }
 
+    private String getBusinessLocale( long adminId ){
+        return userService.getUserLocale(adminId);
+    }
 
 }
