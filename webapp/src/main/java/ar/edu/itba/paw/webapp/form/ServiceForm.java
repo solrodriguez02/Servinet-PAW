@@ -4,6 +4,7 @@ import ar.edu.itba.paw.model.Categories;
 import ar.edu.itba.paw.model.Neighbourhoods;
 import ar.edu.itba.paw.model.PricingTypes;
 import ar.edu.itba.paw.webapp.validation.LocationFormatted;
+import ar.edu.itba.paw.webapp.validation.ValidImageFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotEmpty;
@@ -30,6 +31,7 @@ public class ServiceForm {
 
    private Categories category;
 
+   @ValidImageFile
    private MultipartFile image;
 
    private Neighbourhoods[] neighbourhoods;
