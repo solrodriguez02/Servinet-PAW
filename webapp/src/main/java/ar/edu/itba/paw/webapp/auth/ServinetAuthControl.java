@@ -1,19 +1,12 @@
 package ar.edu.itba.paw.webapp.auth;
 
-import ar.edu.itba.paw.model.Appointment;
-import ar.edu.itba.paw.model.Business;
-import ar.edu.itba.paw.model.Service;
+import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.AppointmentNonExistentException;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
 import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
-import ar.edu.itba.paw.model.User;
-import ar.edu.itba.paw.services.AppointmentService;
-import ar.edu.itba.paw.services.BusinessService;
-import ar.edu.itba.paw.services.ServiceService;
-import ar.edu.itba.paw.services.UserService;
+import ar.edu.itba.paw.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -28,15 +21,17 @@ public class ServinetAuthControl {
     private final AppointmentService appointmentService;
     private final BusinessService businessService;
     private final ServiceService ss;
+    private final RatingService ratingService;
     @Autowired
     public ServinetAuthControl(@Qualifier("userServiceImpl") final UserService userService,
                                @Qualifier("appointmentServiceImpl") final AppointmentService appointmentService,
                                @Qualifier("BusinessServiceImpl") final BusinessService businessService,
-                               @Qualifier("serviceServiceImpl") final ServiceService ss){
+                               @Qualifier("serviceServiceImpl") final ServiceService ss,@Qualifier("RatingServiceImpl") RatingService ratingService){
         this.userService = userService;
         this.appointmentService = appointmentService;
         this.businessService = businessService;
         this.ss=ss;
+        this.ratingService=ratingService;
     }
 
     @Transactional
@@ -74,7 +69,12 @@ public class ServinetAuthControl {
         }
         return business.getUserId() == userId;
     }
-
+    @Transactional(readOnly = true)
+    public boolean isRatingOwner(long ratingId){
+        User user=getCurrentUser().orElseThrow(UserNotFoundException::new);
+        Optional<Rating> rating = ratingService.findById(ratingId);
+        return rating.filter(value -> value.getUserid() == user.getUserId()).isPresent();
+    }
 
     @Transactional(readOnly = true)
     public Optional<User> getCurrentUser() {
@@ -85,10 +85,13 @@ public class ServinetAuthControl {
         return userService.findByEmail(mayBeEmail.get());
     }
 
+
+    @Transactional(readOnly = true)
     public boolean isLoggedIn(){
         return !getCurrentUser().isEmpty();
     }
 
+    @Transactional(readOnly = true)
     public boolean isProvider(){
         Optional<User> user = getCurrentUser();
         return user.map(User::isProvider).orElse(false);
