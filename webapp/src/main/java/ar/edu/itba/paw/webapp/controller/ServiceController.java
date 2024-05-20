@@ -2,9 +2,7 @@ package ar.edu.itba.paw.webapp.controller;
 
 import ar.edu.itba.paw.model.*;
 import ar.edu.itba.paw.model.exceptions.BusinessNotFoundException;
-import ar.edu.itba.paw.model.exceptions.ForbiddenOperation;
 import ar.edu.itba.paw.model.exceptions.ServiceNotFoundException;
-import ar.edu.itba.paw.model.exceptions.UserNotFoundException;
 import ar.edu.itba.paw.services.*;
 import ar.edu.itba.paw.webapp.auth.ServinetAuthControl;
 import ar.edu.itba.paw.webapp.form.*;
@@ -17,8 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -134,7 +130,7 @@ public class ServiceController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/{serviceId:\\d+}/editar-servicio")
+    @RequestMapping(method = RequestMethod.GET, path = "/editar-servicio/{serviceId:\\d+}")
     public ModelAndView editService(
             @ModelAttribute("editServiceForm") EditServiceForm form,
             @PathVariable("serviceId") final long serviceId
@@ -146,7 +142,7 @@ public class ServiceController {
         return mav;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/{serviceId:\\d+}/editar-servicio")
+    @RequestMapping(method = RequestMethod.POST, path = "/editar-servicio/{serviceId:\\d+}")
     public ModelAndView changeService (
             @Valid @ModelAttribute("editServiceForm") EditServiceForm form, final BindingResult errors,
             @PathVariable("serviceId") final long serviceId

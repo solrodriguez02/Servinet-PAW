@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/post.css">
 </head>
 <body>
-<c:url value="/${service.id}/editar-servicio" var="editUrl"/>
+<c:url value="/editar-servicio/${service.id}" var="editUrl"/>
 <div class="postForm page">
     <form:form action="${editUrl}" modelAttribute="editServiceForm" method="post" class="form">
     <h2 class="form-title highlight-text"><spring:message code="service.edit-service" arguments="${service.name}"/></h2>
