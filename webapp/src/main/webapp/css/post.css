@@ -58,6 +58,22 @@ select.input {
     bottom: -8px;
     font-size: 16px;
 }
+input#image{
+    cursor: pointer;
+}
+input#image::file-selector-button {
+    cursor: pointer;
+    width: fit-content;
+    height: 100%;
+    color: white;
+    align-self: center;
+    border: 1px solid #DADCE0;
+    border-radius: 7px;
+    font-size: 16px;
+    background: #585bfa;
+    padding: 10px 10px;
+    margin-bottom: 15px;
+}
 
 .cancelBtn {
     padding: 10px 25px;
