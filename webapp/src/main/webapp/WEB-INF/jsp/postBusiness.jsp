@@ -30,7 +30,7 @@
     <label>
         <p class="label"><spring:message code="telephone"/></p>
         <spring:message code="input.telephone" var="inputTelephone"/>
-        <form:input type="text" class="input" path="businessTelephone" placeholder="${inputTelephone}" />
+        <form:input type="text" class="input" path="businessTelephone" placeholder="${inputTelephone}" value="+54 9 "/>
         <form:errors path="businessTelephone" cssClass="error" element="p"/>
     </label>
     <label>

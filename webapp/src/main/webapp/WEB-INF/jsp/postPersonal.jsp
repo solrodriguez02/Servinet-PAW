@@ -37,7 +37,7 @@
             <p class="label"><spring:message code="telephone"/></p>
             <spring:message code="input.telephone" var="inputTelephone"/>
             <form:errors path="telephone" cssClass="error" element="p"/>
-            <form:input type="text" cssClass="input" path="telephone" placeholder="${inputTelephone}"/>
+            <form:input type="text" cssClass="input" path="telephone" placeholder="${inputTelephone}" value="+54 9 "/>
         </label>
         <label>
             <p class="label"><spring:message code="username"/></p>
@@ -57,8 +57,8 @@
             <spring:message code="input.repeat-password" var="inputRepeatPassword"/>
             <form:errors path="passwordConfirmation" cssClass="error" element="p"/>
             <form:input type="password" id="repassword" cssClass="input" path="passwordConfirmation" placeholder="${inputRepeatPassword}"/>
-        </label>
         <p>
+        </label>
             <spring:message code="register.already-registered"/> <a href="<c:url value="/login"/>"><spring:message code="login"/></a>
         </p>
         <div class="align-center">
