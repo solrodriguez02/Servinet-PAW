@@ -146,7 +146,14 @@
 
                 <c:choose>
                     <c:when test="${empty questions}">
-                        <p class="comment"><spring:message code="service.first-to-ask"/></p>
+                        <c:choose>
+                            <c:when test="${isOwner}">
+                                <p class="comment"><spring:message code="service.no-questions"/></p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="comment"><spring:message code="service.first-to-ask"/></p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.last-questions"/></h4>
@@ -212,6 +219,7 @@
                 </c:choose>
 
                 <h3><spring:message code="service.reviews"/></h3>
+                <c:if test="${!isOwner}">
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
                         <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
@@ -275,10 +283,18 @@
                         </form:form>
                     </c:otherwise>
                 </c:choose>
+                </c:if>
 
                 <c:choose>
                     <c:when test="${empty reviews}">
-                        <p class="comment"><spring:message code="service.first-to-rate"/></p>
+                        <c:choose>
+                            <c:when test="${isOwner}">
+                                <p class="comment"><spring:message code="service.no-rates"/></p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="comment"><spring:message code="service.first-to-rate"/></p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.last-reviews"/></h4>
