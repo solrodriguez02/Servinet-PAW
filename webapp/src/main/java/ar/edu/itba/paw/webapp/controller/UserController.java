@@ -48,6 +48,14 @@ public class UserController {
         return mav;
     }
 
+    @RequestMapping(method = RequestMethod.POST, path = "/perfil/cambiar-idioma")
+    public ModelAndView changeLanguage(){
+        long userid = authControl.getCurrentUser().orElseThrow(UserNotFoundException::new).getUserId();
+        userService.changeLocale(userid);
+        return new ModelAndView("redirect:/perfil");
+    }
+
+
     @RequestMapping(method = RequestMethod.GET, path = "/negocios")
     public ModelAndView business() {
         final ModelAndView mav = new ModelAndView("userBusiness");

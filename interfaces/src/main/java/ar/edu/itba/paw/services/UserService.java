@@ -17,4 +17,5 @@ public interface UserService {
     boolean isProvider(long userid);
     void changeEmail(long userid,String value);
     void changePassword(String email,String value);
+    void changeLocale(long userid);
 }

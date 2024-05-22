@@ -211,3 +211,45 @@
 .input:hover {
     background-color:#e1e1e1;
 }
+
+.locale-btn {
+    background-color: #DADCE0;
+    font-weight: normal;
+    border-radius: 8px;
+    padding: 7px;
+    margin-left: 10px;
+    border: none;
+    font-family: 'Poppins', sans-serif;
+    align-self: center;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.accordion-btn.active {
+    rotate: 180deg;
+}
+
+.accordion-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.lang-btn:hover{
+    background-color: #bdbdde;
+}
+
+.lang-btn{
+    display: none;
+}
+
+.lang-btn.active{
+    display: flex;
+    font-weight: normal;
+    font-family: 'Poppins', sans-serif;
+    text-align: left;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}

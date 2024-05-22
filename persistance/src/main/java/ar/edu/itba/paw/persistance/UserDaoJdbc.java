@@ -80,6 +80,11 @@ public class UserDaoJdbc implements UserDao {
     public void changePassword(String email,String value){
         changeField("password",findByEmail(email).orElseThrow(UserNotFoundException::new).getUserId(),value);
     }
+
+    @Override
+    public void changeLocale(long userid,String locale){
+        changeField("locale",userid,locale);
+    }
     @Override
     public void changeUserType(long userid){
         jdbcTemplate.update("update users set isprovider = not isprovider where userid = ?", userid);

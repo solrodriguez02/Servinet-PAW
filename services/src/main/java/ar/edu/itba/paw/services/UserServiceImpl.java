@@ -110,5 +110,12 @@ public class UserServiceImpl implements UserService {
         userDao.changePassword(email,passwordEncoder.encode(password));
     }
 
-
+    // todo: enum de locale
+    @Transactional
+    @Override
+    public void changeLocale(long userid) {
+        String locale = getUserLocale(userid);
+        locale = locale.equals("es")? "en":"es";
+        userDao.changeLocale(userid,locale);
+    }
 }

@@ -16,5 +16,5 @@ public interface UserDao {
     void changeUsername(long userid,String value);
     void changePassword(String email,String value);
     void changeUserType(long userid);
-
+    void changeLocale(long userid, String locale);
 }
