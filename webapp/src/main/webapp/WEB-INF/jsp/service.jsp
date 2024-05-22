@@ -22,6 +22,16 @@
     <jsp:include page="components/popUp.jsp" />
 
     <div class="page">
+
+        <c:if test="${option!=null}">
+            <a href="${pageContext.request.contextPath}/servicio/${serviceId}" class="none-decoration">
+                <label class="go-back">
+                    <i class="material-icons icon">arrow_back</i>
+                    <spring:message code="service.back" arguments="${service.name}"/>
+                </label>
+            </a>
+        </c:if>
+
         <c:if test="${option==null}">
         <div class="header">
             <h2><c:out value="${service.name}"/></h2>

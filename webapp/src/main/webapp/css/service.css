@@ -242,3 +242,17 @@
     background-color: #f1f1f1;
     transform: translateY(-2px);
 }
+
+.go-back {
+    color: #585bfa;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: large;
+}
+
+.go-back:hover {
+    color: #7c7cfd;
+    transform: translateY(-2px);
+}
