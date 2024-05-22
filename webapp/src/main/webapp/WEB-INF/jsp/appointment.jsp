@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <jsp:include page="navbar.jsp" />
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
@@ -22,7 +23,7 @@
                         <c:choose>
                             <c:when test="${confirmed}">
                                 <i class="material-icons confirmed-icon">check</i>
-                                <h2><spring:message code="appointment.ready" arguments="${user.name}"/></h2>
+                                <h2><spring:message code="appointment.ready" arguments="${fn:escapeXml(user.name)}"/></h2>
                             </c:when>
                             <c:otherwise>
                                 <i class="material-icons waiting-icon">schedule</i>

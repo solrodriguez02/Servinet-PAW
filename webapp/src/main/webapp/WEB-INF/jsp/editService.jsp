@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <jsp:include page="navbar.jsp" />
 <html>
 <head>
@@ -14,7 +15,7 @@
 <c:url value="/editar-servicio/${service.id}" var="editUrl"/>
 <div class="postForm page">
     <form:form action="${editUrl}" modelAttribute="editServiceForm" method="post" class="form">
-    <h2 class="form-title highlight-text"><spring:message code="service.edit-service" arguments="${service.name}"/></h2>
+    <h2 class="form-title highlight-text"><spring:message code="service.edit-service" arguments="${fn:escapeXml(service.name)}"/></h2>
     <label>
         <p class="label"><spring:message code="service.description"/></p>
         <spring:message code="input.business" var="inputName"/>
