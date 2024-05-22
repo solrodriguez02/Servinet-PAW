@@ -56,7 +56,7 @@
       <div id="business-info">
         <p class="business-info-text"><i class="material-icons business-icon">mail</i><c:out value="${business.email}"/></p>
         <p class="business-info-text"><i class="material-icons business-icon">call</i> <c:out value="${business.telephone}"/></p>
-        <p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p>
+        <c:if test="${not empty business.location }"><p class="business-info-text"><i class="material-icons business-icon">location_on</i><c:out value="${business.location}"/></p></c:if>
       </div>
       <c:if test="${isOwner}">
         <c:url value="/${businessId}/editar-negocio" var="editBusiness"/>
