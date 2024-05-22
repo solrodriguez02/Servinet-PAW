@@ -22,6 +22,16 @@
     <jsp:include page="components/popUp.jsp" />
 
     <div class="page">
+
+        <c:if test="${option!=null}">
+            <a href="${pageContext.request.contextPath}/servicio/${serviceId}" class="none-decoration">
+                <label class="go-back">
+                    <i class="material-icons icon">arrow_back</i>
+                    <spring:message code="service.back" arguments="${service.name}"/>
+                </label>
+            </a>
+        </c:if>
+
         <c:if test="${option==null}">
         <div class="header">
             <h2><c:out value="${service.name}"/></h2>
@@ -84,9 +94,11 @@
 
                     <c:if test="${!isOwner}">
                         <div class="btn-container">
-                            <button class="btn">
-                                <a href="${contratarUrl}" class="none-decoration btn-text"><spring:message code="service.new-appointment"/></a>
-                            </button>
+                            <a href="${contratarUrl}" class="none-decoration">
+                                <button class="btn btn-text">
+                                    <spring:message code="service.new-appointment"/>
+                                </button>
+                            </a>
                         </div>
                     </c:if>
                 </div>
@@ -134,7 +146,14 @@
 
                 <c:choose>
                     <c:when test="${empty questions}">
-                        <p class="comment"><spring:message code="service.first-to-ask"/></p>
+                        <c:choose>
+                            <c:when test="${isOwner}">
+                                <p class="comment"><spring:message code="service.no-questions"/></p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="comment"><spring:message code="service.first-to-ask"/></p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.last-questions"/></h4>
@@ -200,6 +219,7 @@
                 </c:choose>
 
                 <h3><spring:message code="service.reviews"/></h3>
+                <c:if test="${!isOwner}">
                 <c:choose>
                     <c:when test="${hasAlreadyRated != null}">
                         <c:url value="/editar-opinion/${serviceId}/${hasAlreadyRated.id}" var="rateUrl"/>
@@ -263,10 +283,18 @@
                         </form:form>
                     </c:otherwise>
                 </c:choose>
+                </c:if>
 
                 <c:choose>
                     <c:when test="${empty reviews}">
-                        <p class="comment"><spring:message code="service.first-to-rate"/></p>
+                        <c:choose>
+                            <c:when test="${isOwner}">
+                                <p class="comment"><spring:message code="service.no-rates"/></p>
+                            </c:when>
+                            <c:otherwise>
+                                <p class="comment"><spring:message code="service.first-to-rate"/></p>
+                            </c:otherwise>
+                        </c:choose>
                     </c:when>
                     <c:otherwise>
                         <h4><spring:message code="service.last-reviews"/></h4>
