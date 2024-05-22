@@ -15,6 +15,10 @@
             </div>
         </a>
         <div class="nav-items">
+            <a href="${pageContext.request.contextPath}/servicios" class="none-decoration">
+                <p class="nav-item"><spring:message code="navbar.all-services"/></p>
+            </a>
+
             <div class="dropdown">
                 <p class="nav-item"><spring:message code="navbar.categories"/></p>
                 <div class="dropdown-content">
