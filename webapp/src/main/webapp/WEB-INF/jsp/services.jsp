@@ -71,7 +71,11 @@
                 </c:forEach>
                 <c:if test="${not empty param.calificacion}">
                     <button class="filter-container">
-                        <c:out value="${param.calificacion}"/>
+                        <c:forEach var="rating" items="${ratings}">
+                            <c:if test="${rating.name == param.calificacion}">
+                                <spring:message code="${rating.codeMsg}"/>
+                            </c:if>
+                        </c:forEach>
                         <c:url value="/servicios" var="rateRemove">
                             <c:if test="${not empty param.categoria}"><c:param name="categoria" value="${param.categoria}" /></c:if>
                             <c:if test="${not empty param.query}"><c:param name="query" value="${param.query}" /></c:if>
@@ -116,7 +120,7 @@
                                                 <p class="align-right">$
                                                     <c:choose>
                                                         <c:when test="${item.pricing.value == TBDPricing}">
-                                                            <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
+                                                            <p class="TBD-comment"><spring:message code="pricing.tbd"/></p>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <c:out value="${item.price}"/>

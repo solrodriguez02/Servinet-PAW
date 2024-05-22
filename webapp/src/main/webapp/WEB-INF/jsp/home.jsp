@@ -93,7 +93,7 @@
                             <p class="align-right">$
                                 <c:choose>
                                 <c:when test="${item.pricing.value == TBDPricing}">
-                                <p class="TBD-comment"><c:out value="${TBDPricing}"/></p>
+                                <p class="TBD-comment"><spring:message code="pricing.tbd"/></p>
                                 </c:when>
                                 <c:otherwise>
                                     <c:out value="${item.price}"/>

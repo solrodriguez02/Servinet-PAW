@@ -69,6 +69,7 @@ public class ServiceController {
         mav.addObject("location", neighbourhoodFilters);
         mav.addObject("resultsAmount", ss.getServiceCount(category, neighbourhoodFilters, ratingFilters, query));
         mav.addObject("pageCount", ss.getPageCount(category, neighbourhoodFilters, ratingFilters, query));
+        mav.addObject("TBDPricing", PricingTypes.TBD.getValue());
         return mav;
     }
 
