@@ -54,17 +54,18 @@ select.input {
 
 .appointment-select {
     border: 1px solid #DADCE0;
-    border-radius: 7px;
-    margin-left: 10px;
-    height: 150%;
-    position: relative;
+    border-radius: 10px;
+    margin-left: 20px;
     cursor: pointer;
-    bottom: -11px;
     font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    padding: 10px;
 }
+
 input#image{
     cursor: pointer;
 }
+
 input#image::file-selector-button {
     cursor: pointer;
     width: fit-content;
