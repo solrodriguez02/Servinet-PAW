@@ -12,6 +12,7 @@
 </head>
 <body>
 <c:url value="/logout" var="logout"/>
+<c:set var="urlCreateBusiness" value="${pageContext.request.contextPath}/registrar-negocio" />
 <c:set value="${user.locale=='es'? 'en':'es'}" var="otherLang"/>
 <div class="page">
     <div class="box profile-box">
@@ -65,22 +66,18 @@
                 </div>
             </a>
         </c:forEach>
-        <c:if test="${empty businessList}" >
-            <div class="not-found-page">
-                <spring:message code="profile.no-services"/>
-            </div>
-        </c:if>
     </div>
+
+        <c:if test="${ empty businessList}">
+            <c:set var="urlCallToAction" value="${urlCreateBusiness}" scope="request" />
+            <c:set var="message" scope="request"><spring:message code="businesses.no-results"/></c:set>
+            <c:set var="textCallToAction" scope="request"><spring:message code="business.create"/></c:set>
+            <jsp:include page="components/noResults.jsp"/>
+        </c:if>
 
     </c:if>
 </div>
 </body>
 </html>
-<script>
-
-    function changeLanguage(){
-
-    }
-</script>
 <jsp:include page="appointmentScript.jsp" />
 
