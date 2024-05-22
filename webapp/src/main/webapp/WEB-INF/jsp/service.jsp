@@ -94,9 +94,11 @@
 
                     <c:if test="${!isOwner}">
                         <div class="btn-container">
-                            <button class="btn">
-                                <a href="${contratarUrl}" class="none-decoration btn-text"><spring:message code="service.new-appointment"/></a>
-                            </button>
+                            <a href="${contratarUrl}" class="none-decoration">
+                                <button class="btn btn-text">
+                                    <spring:message code="service.new-appointment"/>
+                                </button>
+                            </a>
                         </div>
                     </c:if>
                 </div>
